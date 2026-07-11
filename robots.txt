@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://reddisoluciones.com/sitemap.xml

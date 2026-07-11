@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://reddisoluciones.com/</loc>
-    <lastmod>2026-06-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
-  </url>
+  <url><loc>https://reddisoluciones.com/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://reddisoluciones.com/servicio-tecnico-medellin.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://reddisoluciones.com/servicio-tecnico-la-pintada.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://reddisoluciones.com/servicio-tecnico-tamesis.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://reddisoluciones.com/servicio-tecnico-valparaiso.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://reddisoluciones.com/servicio-tecnico-caramanta.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://reddisoluciones.com/servicio-tecnico-supia.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://reddisoluciones.com/servicio-tecnico-riosucio.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://reddisoluciones.com/servicio-tecnico-marmato.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://reddisoluciones.com/servicio-tecnico-manizales.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
 </urlset>
