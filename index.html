@@ -327,16 +327,17 @@ h2 span{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-co
 
 .marca-logo{
   background:var(--card);border:1px solid var(--border);border-radius:12px;
-  height:84px;display:flex;align-items:center;justify-content:center;
-  padding:16px 20px;transition:border-color .25s,transform .25s,background .25s;
+  height:88px;display:flex;align-items:center;justify-content:center;
+  padding:14px 18px;transition:border-color .25s,transform .25s,background .25s;
 }
 .marca-logo img{
-  max-width:100%;max-height:100%;object-fit:contain;
-  opacity:.55;transition:opacity .25s;
+  max-width:100%;max-height:46px;object-fit:contain;
+  opacity:.6;transition:opacity .25s;
 }
+.marca-logo img.alto{max-height:60px}
 .marca-logo:hover{border-color:rgba(0,194,255,.35);transform:translateY(-3px);background:rgba(0,87,255,.06)}
 .marca-logo:hover img{opacity:1}
-@media(max-width:520px){ .marca-logo{height:70px;padding:12px 16px} }
+@media(max-width:520px){ .marca-logo{height:74px;padding:12px 14px} .marca-logo img{max-height:38px} .marca-logo img.alto{max-height:48px} }
 
 /* ════════════════════════════════════════════════════
    SERVICIOS — Iconos vectoriales premium
@@ -1342,13 +1343,13 @@ footer{background:var(--deep);border-top:1px solid rgba(255,255,255,.06);padding
     </div>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px;max-width:1000px;margin:0 auto">
       <div class="marca-logo"><img src="samsung.png" alt="Samsung" loading="lazy"></div>
-      <div class="marca-logo"><img src="lg.png" alt="LG" loading="lazy"></div>
+      <div class="marca-logo"><img src="lg.png" class="alto" alt="LG" loading="lazy"></div>
       <div class="marca-logo"><img src="whirlpool.png" alt="Whirlpool" loading="lazy"></div>
       <div class="marca-logo"><img src="haceb.png" alt="Haceb" loading="lazy"></div>
       <div class="marca-logo"><img src="mabe.png" alt="Mabe" loading="lazy"></div>
-      <div class="marca-logo"><img src="centrales.png" alt="Centrales" loading="lazy"></div>
+      <div class="marca-logo"><img src="centrales.png" class="alto" alt="Centrales" loading="lazy"></div>
       <div class="marca-logo"><img src="electrolux.png" alt="Electrolux" loading="lazy"></div>
-      <div class="marca-logo"><img src="general-electric.png" alt="General Electric" loading="lazy"></div>
+      <div class="marca-logo"><img src="general-electric.png" class="alto" alt="General Electric" loading="lazy"></div>
       <div class="marca-logo"><img src="bosch.png" alt="Bosch" loading="lazy"></div>
       <div class="marca-logo"><img src="challenger.png" alt="Challenger" loading="lazy"></div>
       <div class="marca-logo"><img src="abba.png" alt="Abba" loading="lazy"></div>
