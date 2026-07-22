@@ -325,6 +325,19 @@ h2{
 h2 span{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .section-sub{color:var(--dim);font-size:16px;line-height:1.7;max-width:520px;margin-top:12px}
 
+.marca-logo{
+  background:var(--card);border:1px solid var(--border);border-radius:12px;
+  height:84px;display:flex;align-items:center;justify-content:center;
+  padding:16px 20px;transition:border-color .25s,transform .25s,background .25s;
+}
+.marca-logo img{
+  max-width:100%;max-height:100%;object-fit:contain;
+  opacity:.55;transition:opacity .25s;
+}
+.marca-logo:hover{border-color:rgba(0,194,255,.35);transform:translateY(-3px);background:rgba(0,87,255,.06)}
+.marca-logo:hover img{opacity:1}
+@media(max-width:520px){ .marca-logo{height:70px;padding:12px 16px} }
+
 /* ════════════════════════════════════════════════════
    SERVICIOS — Iconos vectoriales premium
    ════════════════════════════════════════════════════ */
@@ -344,15 +357,14 @@ h2 span{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-co
   cursor:pointer;position:relative;overflow:hidden;
   display:flex;flex-direction:column;
   text-decoration:none;color:inherit;
-  /* 4 columnas en pantallas anchas, 3 en medianas, 2 en tablet, 1 en móvil */
-  flex:1 1 calc(25% - 15px);
-  min-width:260px;
-  max-width:320px;
+  /* 3 columnas en pantallas anchas → 6 tarjetas quedan en 3+3 */
+  flex:1 1 calc(33.333% - 14px);
+  min-width:280px;
+  max-width:380px;
   min-height:300px;
 }
-@media(max-width:1100px){ .srv-card{flex:1 1 calc(33.333% - 14px); max-width:340px} }
-@media(max-width:780px){  .srv-card{flex:1 1 calc(50% - 10px);    max-width:none}  }
-@media(max-width:520px){  .srv-card{flex:1 1 100%}                                  }
+@media(max-width:900px){ .srv-card{flex:1 1 calc(50% - 10px); max-width:none} }
+@media(max-width:560px){ .srv-card{flex:1 1 100%}                            }
 .srv-card::before{
   content:'';position:absolute;inset:0;
   background:radial-gradient(ellipse at top left,rgba(0,87,255,.1) 0%,transparent 60%);
@@ -368,8 +380,8 @@ h2 span{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-co
 .srv-card:hover::before,
 .srv-card:focus-visible::before{opacity:1}
 .srv-card .srv-cta{
-  margin-top:auto;display:inline-flex;align-items:center;gap:8px;
-  padding-top:20px;font-family:'Rajdhani',sans-serif;font-weight:700;
+  margin-top:14px;display:inline-flex;align-items:center;gap:8px;
+  font-family:'Rajdhani',sans-serif;font-weight:700;
   font-size:13px;letter-spacing:.08em;text-transform:uppercase;
   color:var(--cyan);opacity:.85;transition:opacity .25s,gap .25s;
 }
@@ -438,14 +450,20 @@ h2 span{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-co
   background:linear-gradient(135deg,rgba(0,87,255,.30),rgba(0,194,255,.18));
   box-shadow:0 8px 28px rgba(0,87,255,.35), inset 0 1px 0 rgba(255,255,255,.08);
 }
-.srv-card h3{font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;color:var(--white);margin-bottom:10px}
-.srv-card p{font-size:14px;color:var(--dim);line-height:1.65}
+.srv-card h3{font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;color:var(--white);margin-bottom:12px;line-height:1.25}
+.srv-card p{
+  font-size:14px;color:var(--dim);line-height:1.65;
+  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:4;
+  overflow:hidden;text-overflow:ellipsis;
+}
 .srv-badge{
-  display:inline-block;margin-top:16px;
+  display:inline-block;margin-top:18px;
   font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;
   letter-spacing:.1em;text-transform:uppercase;color:var(--cyan);
   background:rgba(0,194,255,.08);border:1px solid rgba(0,194,255,.2);
   padding:4px 10px;border-radius:20px;
+  width:fit-content;
+  margin-top:auto;
 }
 
 /* ════════════════════════════════════════════════════
@@ -934,6 +952,7 @@ footer{background:var(--deep);border-top:1px solid rgba(255,255,255,.06);padding
 .prod-card{
   background:var(--card);border:1px solid var(--border);border-radius:16px;
   overflow:hidden;transition:transform .25s,border-color .25s,box-shadow .25s;position:relative;
+  display:flex;flex-direction:column;
 }
 .prod-card:hover{transform:translateY(-6px);border-color:rgba(0,194,255,.4);box-shadow:0 16px 48px rgba(0,87,255,.18)}
 
@@ -951,15 +970,19 @@ footer{background:var(--deep);border-top:1px solid rgba(255,255,255,.06);padding
   color:#fff;font-size:10px;font-family:'Rajdhani',sans-serif;font-weight:700;
   letter-spacing:.1em;text-transform:uppercase;padding:4px 10px;border-radius:20px;z-index:2;
 }
-.prod-body{padding:20px}
+.prod-body{padding:20px;display:flex;flex-direction:column;flex:1}
 .prod-cat{font-size:11px;font-family:'Rajdhani',sans-serif;font-weight:600;
   letter-spacing:.1em;text-transform:uppercase;color:var(--cyan);margin-bottom:6px}
 .prod-name{font-size:1.05rem;font-weight:600;color:var(--white);margin-bottom:8px;line-height:1.3}
-.prod-desc{font-size:13px;color:var(--muted);line-height:1.5;margin-bottom:14px}
+.prod-desc{
+  font-size:13px;color:var(--muted);line-height:1.5;margin-bottom:14px;
+  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;
+  overflow:hidden;text-overflow:ellipsis;
+}
 .prod-price{
   font-family:'Rajdhani',sans-serif;font-size:1.4rem;font-weight:700;
   background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;
-  background-clip:text;margin-bottom:4px;
+  background-clip:text;margin-bottom:4px;margin-top:auto;
 }
 .prod-state{font-size:11px;color:var(--dim);margin-bottom:16px}
 .prod-btn{
@@ -1046,9 +1069,10 @@ footer{background:var(--deep);border-top:1px solid rgba(255,255,255,.06);padding
 <nav id="navbar">
   <a href="#" class="nav-logo" aria-label="REDDI Soluciones Integrales"></a>
   <ul class="nav-links">
-    <li><a href="#servicios">Servicios</a></li>
     <li><a href="#negocios">Negocios</a></li>
+    <li><a href="#servicios">Hogar</a></li>
     <li><a href="#cobertura">Cobertura</a></li>
+    <li><a href="#rastrear">Mi orden</a></li>
     <li><a href="#tienda">Tienda</a></li>
     <li><a href="#contacto">Contacto</a></li>
   </ul>
@@ -1074,9 +1098,9 @@ footer{background:var(--deep);border-top:1px solid rgba(255,255,255,.06);padding
       <span class="dot"></span>
       <span data-loc-zone>Servicio Local</span>
     </div>
-    <h1>Servicio Técnico Integral para <span>Hogares y Negocios</span></h1>
+    <h1>Servicio Técnico para <span>Restaurantes, Hoteles y Comercios</span></h1>
     <p class="hero-sub">
-      Reparación de <strong>electrodomésticos, Smart TV y aires acondicionados</strong> + <strong>desarrollo de software a la medida</strong> (apps, webs, sistemas de gestión) para hogares y negocios en el corredor <strong data-loc-zone>Medellín – La Pintada – Támesis – Supía – Riosucio – Marmato – Manizales</strong>.
+      Contratos de mantenimiento y reparación de <strong>cocinas industriales, aires acondicionados, Smart TV y equipos eléctricos</strong> para negocios, más <strong>desarrollo de software a la medida</strong> (apps, webs, sistemas de gestión), en el corredor <strong data-loc-zone>Medellín – La Pintada – Támesis – Supía – Riosucio – Marmato – Manizales</strong>. También atendemos hogares.
     </p>
     <div class="hero-btns">
       <a href="https://wa.me/573133806300?text=Hola%20REDDI%2C%20necesito%20soporte%20t%C3%A9cnico" target="_blank" rel="noopener" class="btn-primary">
@@ -1087,7 +1111,7 @@ footer{background:var(--deep);border-top:1px solid rgba(255,255,255,.06);padding
     </div>
     <div class="hero-stats">
       <div><div class="stat-num"><span>500</span>+</div><div class="stat-label">Equipos atendidos</div></div>
-      <div><div class="stat-num"><span>8</span></div><div class="stat-label">Líneas de servicio</div></div>
+      <div><div class="stat-num"><span>6</span></div><div class="stat-label">Líneas de servicio</div></div>
       <div><div class="stat-num"><span>100</span>%</div><div class="stat-label">Garantía escrita</div></div>
     </div>
   </div>
@@ -1125,7 +1149,7 @@ footer{background:var(--deep);border-top:1px solid rgba(255,255,255,.06);padding
     { tag:'Diagnóstico rápido',  title:'Smart TV LG 55"',        text:'Falla de imagen detectada en tarjeta de video. Solución en 48h.', pct:85 },
     { tag:'Reparado',            title:'Nevera Haceb',           text:'Cambio de termostato y limpieza del condensador. Enfriando al 100%.', pct:100 },
     { tag:'Desarrollo',          title:'App a la medida',        text:'Sistema web para gestión de pedidos y clientes entregado esta semana.', pct:100 },
-    { tag:'Mecánica rápida',     title:'Cambio de aceite',       text:'Revisión general y frenos completada en 2 horas.', pct:100 }
+    { tag:'Contrato activo',     title:'Cocina industrial',      text:'Mantenimiento preventivo de estufa y freidora en restaurante local.', pct:100 }
   ];
   var botSet = [
     { tag:'Reparado hoy',    title:'Lavadora Samsung',      text:'Módulo de control reemplazado. Funcionando al 100%.' },
@@ -1181,48 +1205,54 @@ footer{background:var(--deep);border-top:1px solid rgba(255,255,255,.06);padding
       <p class="section-sub" style="margin:14px auto 0;max-width:720px">Restaurantes, hoteles, gimnasios, comercios y entidades públicas. Contratos de mantenimiento, respuesta prioritaria y garantía escrita.</p>
     </div>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;margin-bottom:36px">
-      <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:26px;transition:border-color .25s,transform .25s" onmouseover="this.style.borderColor='rgba(0,87,255,.45)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='';this.style.transform=''">
+      <a href="https://wa.me/573133806300?text=Hola%20REDDI%2C%20quiero%20informaci%C3%B3n%20sobre%20mantenimiento%20para%20mi%20restaurante%20o%20cafeter%C3%ADa" target="_blank" rel="noopener" style="text-decoration:none;display:block;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:26px;transition:border-color .25s,transform .25s;cursor:pointer" onmouseover="this.style.borderColor='rgba(0,87,255,.45)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='';this.style.transform=''">
         <div style="width:52px;height:52px;background:var(--grad);border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;box-shadow:0 8px 20px var(--glow)">
           <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2h1v10a1 1 0 0 0 2 0V11h1c1.1 0 2-.9 2-2V2M7 2v7"/><path d="M20 2c-1.5 0-3 1-3 4v6c0 1 1 2 2 2h1v7a1 1 0 0 0 2 0V2z"/></svg>
         </div>
         <h3 style="font-family:'Rajdhani',sans-serif;font-size:20px;color:var(--white);margin-bottom:10px">Restaurantes y cafeterías</h3>
-        <p style="color:var(--dim);font-size:14px;line-height:1.6;margin:0">Estufas industriales, freidoras, planchas, hornos, licuadoras industriales, cafeteras, batidoras, lavaplatos, calentadores y equipos eléctricos de cocina. Mantenimiento preventivo mensual.</p>
-      </div>
-      <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:26px;transition:border-color .25s,transform .25s" onmouseover="this.style.borderColor='rgba(0,87,255,.45)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='';this.style.transform=''">
+        <p style="color:var(--dim);font-size:14px;line-height:1.6;margin:0 0 12px">Estufas industriales, freidoras, planchas, hornos, licuadoras industriales, cafeteras, batidoras, lavaplatos, calentadores y equipos eléctricos de cocina. Mantenimiento preventivo mensual.</p>
+        <span style="display:inline-flex;align-items:center;gap:6px;color:#00C2FF;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:13px;letter-spacing:.05em;text-transform:uppercase">Escribir por WhatsApp →</span>
+      </a>
+      <a href="https://wa.me/573133806300?text=Hola%20REDDI%2C%20quiero%20informaci%C3%B3n%20sobre%20mantenimiento%20para%20mi%20hotel%20u%20hospedaje" target="_blank" rel="noopener" style="text-decoration:none;display:block;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:26px;transition:border-color .25s,transform .25s;cursor:pointer" onmouseover="this.style.borderColor='rgba(0,87,255,.45)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='';this.style.transform=''">
         <div style="width:52px;height:52px;background:var(--grad);border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;box-shadow:0 8px 20px var(--glow)">
           <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20h20M2 4v16M22 4v16M2 12h20"/><circle cx="7" cy="9" r="2"/><path d="M11 12V9a1 1 0 0 1 1-1h9v4"/></svg>
         </div>
         <h3 style="font-family:'Rajdhani',sans-serif;font-size:20px;color:var(--white);margin-bottom:10px">Hoteles y hospedajes</h3>
-        <p style="color:var(--dim);font-size:14px;line-height:1.6;margin:0">Aires acondicionados por habitación, Smart TV, lavadoras y secadoras industriales de lencería, calentadores centrales y equipos de cocina. Reparación con mínima afectación al huésped.</p>
-      </div>
-      <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:26px;transition:border-color .25s,transform .25s" onmouseover="this.style.borderColor='rgba(0,87,255,.45)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='';this.style.transform=''">
+        <p style="color:var(--dim);font-size:14px;line-height:1.6;margin:0 0 12px">Aires acondicionados por habitación, Smart TV, lavadoras y secadoras industriales de lencería, calentadores centrales y equipos de cocina. Reparación con mínima afectación al huésped.</p>
+        <span style="display:inline-flex;align-items:center;gap:6px;color:#00C2FF;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:13px;letter-spacing:.05em;text-transform:uppercase">Escribir por WhatsApp →</span>
+      </a>
+      <a href="https://wa.me/573133806300?text=Hola%20REDDI%2C%20quiero%20informaci%C3%B3n%20sobre%20mantenimiento%20para%20mi%20gimnasio%20o%20centro%20deportivo" target="_blank" rel="noopener" style="text-decoration:none;display:block;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:26px;transition:border-color .25s,transform .25s;cursor:pointer" onmouseover="this.style.borderColor='rgba(0,87,255,.45)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='';this.style.transform=''">
         <div style="width:52px;height:52px;background:var(--grad);border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;box-shadow:0 8px 20px var(--glow)">
           <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 6.5 17.5 17.5"/><path d="M4 12l1.4-1.4c.4-.4.4-1 0-1.4L4 7.8c-.4-.4-.4-1 0-1.4l.9-.9c.4-.4 1-.4 1.4 0L7.7 6.9c.4.4 1 .4 1.4 0M20 12l-1.4 1.4c-.4.4-.4 1 0 1.4l1.4 1.4c.4.4.4 1 0 1.4l-.9.9c-.4.4-1 .4-1.4 0l-1.4-1.4c-.4-.4-1-.4-1.4 0"/></svg>
         </div>
         <h3 style="font-family:'Rajdhani',sans-serif;font-size:20px;color:var(--white);margin-bottom:10px">Gimnasios y centros deportivos</h3>
-        <p style="color:var(--dim);font-size:14px;line-height:1.6;margin:0">Aires de alto flujo, ventilación industrial, Smart TV y sonido, dispensadores de agua, calentadores de duchas colectivas. Servicio en horarios de bajo flujo.</p>
-      </div>
-      <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:26px;transition:border-color .25s,transform .25s" onmouseover="this.style.borderColor='rgba(0,87,255,.45)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='';this.style.transform=''">
+        <p style="color:var(--dim);font-size:14px;line-height:1.6;margin:0 0 12px">Aires de alto flujo, ventilación industrial, Smart TV y sonido, dispensadores de agua, calentadores de duchas colectivas. Servicio en horarios de bajo flujo.</p>
+        <span style="display:inline-flex;align-items:center;gap:6px;color:#00C2FF;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:13px;letter-spacing:.05em;text-transform:uppercase">Escribir por WhatsApp →</span>
+      </a>
+      <a href="https://wa.me/573133806300?text=Hola%20REDDI%2C%20quiero%20informaci%C3%B3n%20sobre%20contratos%20de%20mantenimiento%20para%20mi%20entidad%20p%C3%BAblica" target="_blank" rel="noopener" style="text-decoration:none;display:block;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:26px;transition:border-color .25s,transform .25s;cursor:pointer" onmouseover="this.style.borderColor='rgba(0,87,255,.45)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='';this.style.transform=''">
         <div style="width:52px;height:52px;background:var(--grad);border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;box-shadow:0 8px 20px var(--glow)">
           <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20h20M4 20V10M8 20V10M12 20V10M16 20V10M20 20V10M2 10l10-7 10 7M2 10h20"/></svg>
         </div>
         <h3 style="font-family:'Rajdhani',sans-serif;font-size:20px;color:var(--white);margin-bottom:10px">Alcaldías y entidades públicas</h3>
-        <p style="color:var(--dim);font-size:14px;line-height:1.6;margin:0">Facturación con RUT, cumplimiento de plazos, contratos por vigencia. Atendemos alcaldías, hospitales, colegios y casas de la cultura del corredor. Órdenes y actas.</p>
-      </div>
-      <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:26px;transition:border-color .25s,transform .25s" onmouseover="this.style.borderColor='rgba(0,87,255,.45)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='';this.style.transform=''">
+        <p style="color:var(--dim);font-size:14px;line-height:1.6;margin:0 0 12px">Facturación con RUT, cumplimiento de plazos, contratos por vigencia. Atendemos alcaldías, hospitales, colegios y casas de la cultura del corredor. Órdenes y actas.</p>
+        <span style="display:inline-flex;align-items:center;gap:6px;color:#00C2FF;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:13px;letter-spacing:.05em;text-transform:uppercase">Escribir por WhatsApp →</span>
+      </a>
+      <a href="https://wa.me/573133806300?text=Hola%20REDDI%2C%20quiero%20informaci%C3%B3n%20sobre%20mantenimiento%20para%20mi%20comercio%20o%20supermercado" target="_blank" rel="noopener" style="text-decoration:none;display:block;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:26px;transition:border-color .25s,transform .25s;cursor:pointer" onmouseover="this.style.borderColor='rgba(0,87,255,.45)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='';this.style.transform=''">
         <div style="width:52px;height:52px;background:var(--grad);border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;box-shadow:0 8px 20px var(--glow)">
           <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3h2l2.4 12.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/><circle cx="9" cy="21" r="1.5"/><circle cx="18" cy="21" r="1.5"/></svg>
         </div>
         <h3 style="font-family:'Rajdhani',sans-serif;font-size:20px;color:var(--white);margin-bottom:10px">Comercios y supermercados</h3>
-        <p style="color:var(--dim);font-size:14px;line-height:1.6;margin:0">Aires acondicionados, Smart TV para publicidad interna, sistemas de audio, iluminación LED, mantenimiento eléctrico, cafeteras y equipos de aseo. Servicio programado sin interrumpir la operación.</p>
-      </div>
-      <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:26px;transition:border-color .25s,transform .25s" onmouseover="this.style.borderColor='rgba(0,87,255,.45)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='';this.style.transform=''">
+        <p style="color:var(--dim);font-size:14px;line-height:1.6;margin:0 0 12px">Aires acondicionados, Smart TV para publicidad interna, sistemas de audio, iluminación LED, mantenimiento eléctrico, cafeteras y equipos de aseo. Servicio programado sin interrumpir la operación.</p>
+        <span style="display:inline-flex;align-items:center;gap:6px;color:#00C2FF;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:13px;letter-spacing:.05em;text-transform:uppercase">Escribir por WhatsApp →</span>
+      </a>
+      <a href="https://wa.me/573133806300?text=Hola%20REDDI%2C%20quiero%20informaci%C3%B3n%20sobre%20contratos%20de%20mantenimiento%20mensual%2Ftrimestral%2Fsemestral" target="_blank" rel="noopener" style="text-decoration:none;display:block;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:26px;transition:border-color .25s,transform .25s;cursor:pointer" onmouseover="this.style.borderColor='rgba(0,87,255,.45)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='';this.style.transform=''">
         <div style="width:52px;height:52px;background:var(--grad);border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;box-shadow:0 8px 20px var(--glow)">
           <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M9 15l2 2 4-4"/></svg>
         </div>
         <h3 style="font-family:'Rajdhani',sans-serif;font-size:20px;color:var(--white);margin-bottom:10px">Contratos de mantenimiento</h3>
-        <p style="color:var(--dim);font-size:14px;line-height:1.6;margin:0">Planes mensuales, trimestrales o semestrales con revisión programada, respuesta prioritaria, descuento en repuestos y reporte técnico. Para negocios que no pueden estar sin equipos por más de 24 horas.</p>
-      </div>
+        <p style="color:var(--dim);font-size:14px;line-height:1.6;margin:0 0 12px">Planes mensuales, trimestrales o semestrales con revisión programada, respuesta prioritaria, descuento en repuestos y reporte técnico. Para negocios que no pueden estar sin equipos por más de 24 horas.</p>
+        <span style="display:inline-flex;align-items:center;gap:6px;color:#00C2FF;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:13px;letter-spacing:.05em;text-transform:uppercase">Escribir por WhatsApp →</span>
+      </a>
 
       <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:26px;transition:border-color .25s,transform .25s" onmouseover="this.style.borderColor='rgba(0,87,255,.45)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='';this.style.transform=''">
         <div style="width:52px;height:52px;background:var(--grad);border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;box-shadow:0 8px 20px var(--glow)">
@@ -1232,10 +1262,21 @@ footer{background:var(--deep);border-top:1px solid rgba(255,255,255,.06);padding
         <p style="color:var(--dim);font-size:14px;line-height:1.6;margin:0">Apps móviles Android/iOS, páginas web y tiendas en línea, sistemas de gestión (POS, inventarios, facturación), paneles administrativos, automatizaciones y chatbots de WhatsApp, integraciones con IA. Cualquier idea, la construimos con tecnología actual.</p>
       </div>
     </div>
-    <div style="text-align:center">
+    <div style="text-align:center;margin-bottom:28px">
       <a href="https://wa.me/573133806300?text=Hola%20REDDI%2C%20necesito%20mantenimiento%20t%C3%A9cnico%20para%20mi%20negocio" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:10px;background:var(--grad);color:#fff;padding:16px 32px;border-radius:10px;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:15px;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;box-shadow:0 0 28px var(--glow)">
         Solicitar propuesta para mi negocio
       </a>
+    </div>
+    <div style="text-align:center">
+      <details style="display:inline-block;text-align:left">
+        <summary style="cursor:pointer;color:var(--dim);font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:600;list-style:none;display:inline-flex;align-items:center;gap:8px">
+          <span>🏠 También tenemos soluciones para su hogar — toca aquí</span>
+        </summary>
+        <div style="margin-top:16px;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px;max-width:420px">
+          <p style="color:var(--dim);font-size:14px;line-height:1.6;margin:0 0 14px">Lavadoras, neveras, Smart TV, secadoras, aires acondicionados y calentadores para tu casa, con la misma garantía escrita de nuestros contratos comerciales.</p>
+          <a href="https://wa.me/573133806300?text=Hola%20REDDI%2C%20necesito%20soporte%20t%C3%A9cnico%20para%20mi%20hogar" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;color:#00C2FF;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:14px;letter-spacing:.05em;text-transform:uppercase;text-decoration:none">Escribir por WhatsApp →</a>
+        </div>
+      </details>
     </div>
   </div>
 </section>
@@ -1299,46 +1340,35 @@ footer{background:var(--deep);border-top:1px solid rgba(255,255,255,.06);padding
       <div class="section-label" style="justify-content:center">Marcas que reparamos</div>
       <h2 style="font-size:clamp(24px,3vw,36px)">Servicio técnico para todas las <span>marcas</span></h2>
     </div>
-    <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:12px">
-      <span style="background:var(--card);border:1px solid var(--border);border-radius:999px;padding:10px 22px;font-family:'Rajdhani',sans-serif;font-weight:600;color:var(--light);font-size:15px">Samsung</span>
-      <span style="background:var(--card);border:1px solid var(--border);border-radius:999px;padding:10px 22px;font-family:'Rajdhani',sans-serif;font-weight:600;color:var(--light);font-size:15px">LG</span>
-      <span style="background:var(--card);border:1px solid var(--border);border-radius:999px;padding:10px 22px;font-family:'Rajdhani',sans-serif;font-weight:600;color:var(--light);font-size:15px">Whirlpool</span>
-      <span style="background:var(--card);border:1px solid var(--border);border-radius:999px;padding:10px 22px;font-family:'Rajdhani',sans-serif;font-weight:600;color:var(--light);font-size:15px">Haceb</span>
-      <span style="background:var(--card);border:1px solid var(--border);border-radius:999px;padding:10px 22px;font-family:'Rajdhani',sans-serif;font-weight:600;color:var(--light);font-size:15px">Mabe</span>
-      <span style="background:var(--card);border:1px solid var(--border);border-radius:999px;padding:10px 22px;font-family:'Rajdhani',sans-serif;font-weight:600;color:var(--light);font-size:15px">Centrales</span>
-      <span style="background:var(--card);border:1px solid var(--border);border-radius:999px;padding:10px 22px;font-family:'Rajdhani',sans-serif;font-weight:600;color:var(--light);font-size:15px">Electrolux</span>
-      <span style="background:var(--card);border:1px solid var(--border);border-radius:999px;padding:10px 22px;font-family:'Rajdhani',sans-serif;font-weight:600;color:var(--light);font-size:15px">General Electric</span>
-      <span style="background:var(--card);border:1px solid var(--border);border-radius:999px;padding:10px 22px;font-family:'Rajdhani',sans-serif;font-weight:600;color:var(--light);font-size:15px">Bosch</span>
-      <span style="background:var(--card);border:1px solid var(--border);border-radius:999px;padding:10px 22px;font-family:'Rajdhani',sans-serif;font-weight:600;color:var(--light);font-size:15px">Challenger</span>
-      <span style="background:var(--card);border:1px solid var(--border);border-radius:999px;padding:10px 22px;font-family:'Rajdhani',sans-serif;font-weight:600;color:var(--light);font-size:15px">Abba</span>
-      <span style="background:var(--card);border:1px solid var(--border);border-radius:999px;padding:10px 22px;font-family:'Rajdhani',sans-serif;font-weight:600;color:var(--light);font-size:15px">Frigidaire</span>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px;max-width:1000px;margin:0 auto">
+      <div class="marca-logo"><img src="logos/samsung.png" alt="Samsung" loading="lazy"></div>
+      <div class="marca-logo"><img src="logos/lg.png" alt="LG" loading="lazy"></div>
+      <div class="marca-logo"><img src="logos/whirlpool.png" alt="Whirlpool" loading="lazy"></div>
+      <div class="marca-logo"><img src="logos/haceb.png" alt="Haceb" loading="lazy"></div>
+      <div class="marca-logo"><img src="logos/mabe.png" alt="Mabe" loading="lazy"></div>
+      <div class="marca-logo"><img src="logos/centrales.png" alt="Centrales" loading="lazy"></div>
+      <div class="marca-logo"><img src="logos/electrolux.png" alt="Electrolux" loading="lazy"></div>
+      <div class="marca-logo"><img src="logos/general-electric.png" alt="General Electric" loading="lazy"></div>
+      <div class="marca-logo"><img src="logos/bosch.png" alt="Bosch" loading="lazy"></div>
+      <div class="marca-logo"><img src="logos/challenger.png" alt="Challenger" loading="lazy"></div>
+      <div class="marca-logo"><img src="logos/abba.png" alt="Abba" loading="lazy"></div>
+      <div class="marca-logo"><img src="logos/frigidaire.png" alt="Frigidaire" loading="lazy"></div>
     </div>
+    <p style="text-align:center;color:var(--dim);font-size:12px;line-height:1.6;max-width:640px;margin:28px auto 0">REDDI Soluciones Integrales es un servicio técnico independiente. No somos taller autorizado ni tenemos vínculo comercial con las marcas mencionadas. Todas las marcas y logotipos pertenecen a sus respectivos propietarios y se muestran únicamente para indicar los equipos que reparamos.</p>
   </div>
 </section>
 
 <!-- ═══════════════ SERVICIOS ═══════════════ -->
 <section id="servicios">
-  <div class="services-head">
-    <div class="reveal">
-      <div class="section-label">Nuestros Servicios</div>
-      <h2>Todo lo que <span>resolvemos</span></h2>
-      <p class="section-sub">Reparación electrónica, mecánica rápida, pintura y encomiendas. Diagnóstico preciso, repuestos de calidad y garantía escrita.</p>
+  <div class="services-head" style="flex-direction:column;align-items:center;text-align:center">
+    <div class="reveal" style="display:flex;flex-direction:column;align-items:center">
+      <h2 style="margin-bottom:22px">También tenemos servicio técnico para el <span>hogar</span></h2>
+      <div class="section-label" style="justify-content:center">Nuestros Servicios</div>
+      <p style="font-family:'Rajdhani',sans-serif;font-size:clamp(20px,2.4vw,28px);font-weight:700;color:var(--cyan);line-height:1.25;letter-spacing:.01em">Todo lo que resolvemos</p>
+      <p class="section-sub" style="margin-left:auto;margin-right:auto">Lavadoras, neveras, Smart TV, secadoras, aires acondicionados y calentadores para tu casa. Diagnóstico preciso, repuestos de calidad y garantía escrita.</p>
     </div>
   </div>
   <div class="services-grid" id="servicesGrid"><!-- contenido dinámico inyectado por JS --></div>
-
-  <!-- Franja informativa: Servicio a Domicilio (fuera del grid) -->
-  <aside class="domicilio-banner reveal" id="domicilioBanner" aria-label="Servicio a domicilio">
-    <div class="dom-icon" id="domIcon"><!-- icono inyectado --></div>
-    <div class="dom-text">
-      <h3>También vamos hasta donde estés</h3>
-      <p>Atendemos hogares, restaurantes, hoteles, gimnasios y comercios en <strong data-loc-zone>Medellín, Támesis, Valparaíso, Caramanta, La Pintada, Supía, Riosucio, Marmato y Manizales</strong>. Visita técnica programada, diagnóstico en sitio y traslado seguro del equipo cuando se requiera.</p>
-    </div>
-    <a class="dom-cta" id="domCta" href="#" target="_blank" rel="noopener">
-      <span id="domCtaIcon"></span>
-      <span>Agendar visita</span>
-    </a>
-  </aside>
 </section>
 
 <!-- ═══════════════ GARANTÍAS MÚLTIPLES ═══════════════ -->
@@ -1475,7 +1505,7 @@ footer{background:var(--deep);border-top:1px solid rgba(255,255,255,.06);padding
         <li><strong>Variable:</strong> Condición informada en detalle al momento de la consulta.</li>
       </ul>
       <h4>3. Garantía</h4>
-      <p>La garantía depende del tipo de producto y se indica en cada caso. Como referencia: <strong>reparaciones electrónicas hasta 6 meses</strong>, <strong>productos de segunda hasta 1 año</strong> según estado, y <strong>mecánica/pintura hasta 3 meses</strong>. Cubre fallas de funcionamiento por defectos internos desde la entrega. REDDI repara sin costo de mano de obra; los repuestos se evalúan caso a caso. Requiere comprobante de compra.</p>
+      <p>La garantía depende del tipo de producto y se indica en cada caso. Como referencia: <strong>reparaciones electrónicas hasta 6 meses</strong> y <strong>productos de segunda hasta 1 año</strong> según estado. Cubre fallas de funcionamiento por defectos internos desde la entrega. REDDI repara sin costo de mano de obra; los repuestos se evalúan caso a caso. Requiere comprobante de compra.</p>
       <h4>4. Exclusiones</h4>
       <ul>
         <li>Daños por golpes, caídas o líquidos.</li>
@@ -1571,11 +1601,9 @@ footer{background:var(--deep);border-top:1px solid rgba(255,255,255,.06);padding
       <ul>
         <li><a href="#servicios">Televisores y Pantallas</a></li>
         <li><a href="#servicios">Electrodomésticos</a></li>
-        <li><a href="#servicios">Soluciones para Negocios</a></li>
+        <li><a href="#negocios">Soluciones para Negocios</a></li>
         <li><a href="#servicios">Desarrollo de Software a la Medida</a></li>
         <li><a href="#servicios">Cómputo y Celulares</a></li>
-        <li><a href="#servicios">Mecánica Rápida</a></li>
-        <li><a href="#servicios">Servicio de Pintura / Estética</a></li>
         <li><a href="#servicios">Encomiendas</a></li>
       </ul>
     </div>
@@ -1729,47 +1757,34 @@ const DATA = {
       wa:'Hola REDDI, me interesa el servicio de reparación de Electrodomésticos.'
     },
     {
-      ico:'business', titulo:'Soluciones para Negocios',
-      desc:'Mantenimiento técnico para restaurantes, hoteles, gimnasios, comercios y entidades públicas: aires acondicionados, estufas industriales, hornos, licuadoras, cafeteras, lavadoras/secadoras industriales, Smart TV y equipos eléctricos. Contratos de mantenimiento con respuesta prioritaria.',
-      badge:'Restaurantes · Hoteles · Gimnasios · Alcaldías',
-      wa:'Hola REDDI, me interesa el servicio de mantenimiento técnico para mi negocio.'
-    },
-    {
       ico:'software', titulo:'Desarrollo de Software a la Medida',
-      desc:'Diseñamos y programamos cualquier tipo de software para tu empresa o proyecto: aplicaciones móviles Android/iOS, páginas web modernas, tiendas en línea, sistemas de gestión (POS, inventarios, facturación), paneles administrativos, automatizaciones, chatbots de WhatsApp, integraciones con IA y APIs. Desde una idea sencilla hasta una plataforma completa — hecho con tecnología actual y soporte incluido.',
-      badge:'Apps · Web · Sistemas · IA · Automatización',
+      desc:'Apps móviles, páginas web, sistemas de gestión (POS, inventarios, facturación) y automatizaciones con IA a la medida de tu negocio.',
+      badge:'Apps · Web · Sistemas · IA',
       wa:'Hola REDDI, me interesa el servicio de desarrollo de software (app, web, sistema o automatización).'
     },
     {
       ico:'compuPhone', titulo:'Cómputo y Celulares',
-      desc:'Diagnóstico y reparación de computadores, portátiles, smartphones y tablets. Cambio de pantallas, baterías, pines de carga, recuperación de datos y reinstalación de software.',
+      desc:'Diagnóstico y reparación de computadores, portátiles, smartphones y tablets. Cambio de pantallas, baterías y recuperación de datos.',
       badge:'PC · Laptop · Smartphones · Tablets',
       wa:'Hola REDDI, me interesa el servicio de Cómputo y Celulares (reparación de PC, laptop o smartphone).'
-    },
-    {
-      ico:'car', titulo:'Mecánica Rápida',
-      desc:'Diagnóstico, latonería y mantenimiento ágil para tu vehículo. Cambios de aceite, frenos, batería y revisión general en horas.',
-      badge:'Diagnóstico ágil',
-      wa:'Hola REDDI, me interesa el servicio de Mecánica Rápida.'
-    },
-    {
-      ico:'paint', titulo:'Servicio de Pintura / Estética',
-      desc:'Pintura automotriz y restauración estética. Acabados profesionales con materiales premium para vehículos, equipos y mobiliario.',
-      badge:'Acabados premium',
-      wa:'Hola REDDI, me interesa el servicio de Pintura / Estética.'
     },
     {
       ico:'package', titulo:'Encomiendas',
       desc:'Envíos seguros y entregas locales de paquetes y equipos. Logística confiable con seguimiento en cada paso del recorrido.',
       badge:'Envíos seguros',
       wa:'Hola REDDI, me interesa el servicio de Encomiendas.'
+    },
+    {
+      ico:'home', titulo:'Servicio a Domicilio',
+      desc:'Vamos hasta donde estés: visita técnica programada, diagnóstico en sitio y traslado seguro del equipo cuando se requiera.',
+      badge:'Medellín · Suroeste · Eje Cafetero',
+      wa:'Hola REDDI, quiero agendar una visita técnica a domicilio.'
     }
   ],
 
   garantias: [
     { num:'6',   sub:'meses',  label:'Reparaciones electrónicas' },
     { num:'12',  sub:'meses',  label:'Productos de segunda' },
-    { num:'3',   sub:'meses',  label:'Mecánica y pintura' },
     { num:'100', sub:'%',      label:'Cobertura encomiendas' },
     { num:'30',  sub:'días',   label:'Soporte de software incluido' }
   ],
@@ -1803,13 +1818,13 @@ const DATA = {
   ],
 
   productos: [
-    { cat:'Celulares',         nom:'Smartphone Android — Gama media',  desc:'Revisado y desbloqueado. Batería y pantalla en perfecto estado.', estado:'Excelente · Stock variable',  warranty:'Hasta 3 meses', img:'phone',
+    { cat:'Celulares',         nom:'Smartphone Android',              desc:'Gama media revisado y desbloqueado. Batería y pantalla en perfecto estado.', estado:'Excelente · Stock variable',  warranty:'Hasta 3 meses', img:'phone',
       wa:'Hola%20REDDI%2C%20me%20interesa%20el%20smartphone%20de%20segunda.' },
-    { cat:'Televisores',       nom:'Smart TV LED — 32" a 55"',         desc:'Reparado y probado. Imagen, sonido y conectividad 100% funcionales.', estado:'Bueno · Tallas variables',     warranty:'Hasta 6 meses', img:'tv',
+    { cat:'Televisores',       nom:'Smart TV LED',                    desc:'De 32" a 55", reparado y probado. Imagen, sonido y conectividad funcionales.', estado:'Bueno · Tallas variables',     warranty:'Hasta 6 meses', img:'tv',
       wa:'Hola%20REDDI%2C%20me%20interesa%20el%20Smart%20TV%20de%20segunda.' },
-    { cat:'Audio',             nom:'Equipo de Sonido / Minicomponente', desc:'Verificado: radio, USB, Bluetooth. Parlantes en buen estado.',     estado:'Bueno · Modelos variables',    warranty:'Hasta 3 meses', img:'audio',
+    { cat:'Audio',             nom:'Equipo de Sonido',                desc:'Minicomponente verificado: radio, USB, Bluetooth. Parlantes en buen estado.',     estado:'Bueno · Modelos variables',    warranty:'Hasta 3 meses', img:'audio',
       wa:'Hola%20REDDI%2C%20me%20interesa%20el%20equipo%20de%20sonido%20de%20segunda.' },
-    { cat:'Electrodomésticos', nom:'Electrodomésticos de Línea Blanca', desc:'Neveras, lavadoras, microondas. Revisados y con garantía de funcionamiento.', estado:'Variable · Consultar disponibilidad', warranty:'Hasta 1 año', img:'fridge',
+    { cat:'Electrodomésticos', nom:'Línea Blanca',                    desc:'Neveras, lavadoras y microondas revisados, con garantía de funcionamiento.', estado:'Variable · Consultar stock', warranty:'Hasta 1 año', img:'fridge',
       wa:'Hola%20REDDI%2C%20qu%C3%A9%20electrodom%C3%A9sticos%20de%20segunda%20tienen%20disponibles%3F' }
   ],
 
@@ -1858,15 +1873,6 @@ function renderServicios(){
       <span class="srv-cta">${ICONS.whatsapp}<span>Pedir por WhatsApp</span></span>
     </a>`;
   }).join('');
-}
-
-function renderDomicilio(){
-  const ico = document.getElementById('domIcon');
-  const cta = document.getElementById('domCta');
-  const ctaIco = document.getElementById('domCtaIcon');
-  if (ico) ico.innerHTML = ICONS.home;
-  if (ctaIco) ctaIco.innerHTML = ICONS.whatsapp;
-  if (cta) cta.href = waLink('Hola REDDI, quiero agendar una visita técnica a domicilio.');
 }
 
 function renderGarantias(){
@@ -2370,7 +2376,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   injectLogo();
   renderServicios();
-  renderDomicilio();
   renderGarantias();
   renderValores();
   renderProceso();
