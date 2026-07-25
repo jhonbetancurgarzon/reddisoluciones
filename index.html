@@ -2198,6 +2198,13 @@ function initTracker(){
     const d = ts.toDate ? ts.toDate() : new Date(ts);
     return d.toLocaleDateString('es-CO', { day:'2-digit', month:'short', year:'numeric' });
   };
+  /* Escapa texto antes de insertarlo en el HTML.
+     Necesario porque el diagnóstico lo escribe una persona y podría
+     contener caracteres que rompan la página. */
+  const esc = (s) => String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+
   const hide = (id) => document.getElementById(id).classList.add('hidden');
   const show = (id) => document.getElementById(id).classList.remove('hidden');
   const hideAll = () => ['trackLoading','trackError','trackResult'].forEach(hide);
@@ -2220,50 +2227,49 @@ function initTracker(){
     return Array.from(variantes);
   }
 
-  /* ─── Estrategia multi-lookup tolerante a cómo Torque haya guardado los datos.
-         1) doc(orderId).get()           ← el ID es el ID del documento
-         2) where('orderId','==',v)      ← campo orderId
-         3) where('id','==',v)           ← campo id
-         4) where('numero','==',v / num) ← campo numero (string o int) */
+  /* ─── Identificador de este negocio.
+         Cada negocio que use TORQUE tiene el suyo; así el buscador de
+         REDDI nunca muestra órdenes de otra empresa. */
+  const REDDI_BUSINESS_ID = 'reddi-soluciones-integrales';
+
+  /* ─── Búsqueda en `public_orders`: copia recortada y segura de la orden.
+         La colección `orders` (con teléfono, cédula y costos internos) ya no
+         se consulta desde la web.
+         El ID del documento es "{businessId}__{ORD-XXXX}", así que basta
+         con una lectura directa: sin consultas, más rápido y más barato. */
   async function buscarOrden(variantes){
     if (!_db) throw new Error('Firebase no disponible');
-    const col = _db.collection('orders');
+    const col = _db.collection('public_orders');
 
-    // 1) Intento directo por document ID
-    for (const v of variantes){
+    // Solo tienen sentido las variantes con formato ORD-XXXX
+    const ids = variantes.filter(v => /^ORD-\d+$/i.test(v)).map(v => v.toUpperCase());
+
+    for (const id of ids){
       try {
-        const doc = await col.doc(v).get();
+        const doc = await col.doc(REDDI_BUSINESS_ID + '__' + id).get();
         if (doc.exists){
           const data = doc.data() || {};
-          if (!data.id) data.id = doc.id;
+          if (!data.id) data.id = id;
+          return data;
+        }
+      } catch(_){ /* sigue con la siguiente variante */ }
+    }
+
+    // Respaldo: por si alguna copia quedó guardada con otro formato de ID
+    for (const id of ids){
+      try {
+        const snap = await col
+          .where('businessId', '==', REDDI_BUSINESS_ID)
+          .where('id', '==', id)
+          .limit(1).get();
+        if (!snap.empty){
+          const data = snap.docs[0].data() || {};
+          if (!data.id) data.id = id;
           return data;
         }
       } catch(_){ /* sigue */ }
     }
 
-    // 2-4) Intento por distintos campos
-    const campos = ['orderId', 'id', 'numero', 'numeroOrden', 'order_id'];
-    for (const campo of campos){
-      for (const v of variantes){
-        try {
-          const snap = await col.where(campo, '==', v).limit(1).get();
-          if (!snap.empty){
-            const data = snap.docs[0].data() || {};
-            if (!data.id) data.id = snap.docs[0].id;
-            return data;
-          }
-          // Si v es numérico, probamos también la versión int
-          if (/^\d+$/.test(v)){
-            const snap2 = await col.where(campo, '==', parseInt(v, 10)).limit(1).get();
-            if (!snap2.empty){
-              const data = snap2.docs[0].data() || {};
-              if (!data.id) data.id = snap2.docs[0].id;
-              return data;
-            }
-          }
-        } catch(_){ /* sigue */ }
-      }
-    }
     return null;
   }
 
@@ -2325,13 +2331,58 @@ function initTracker(){
     });
     tl += '</div>';
 
+    /* ─── Bloque de diagnóstico: qué reportó el cliente y qué encontró
+           el técnico. Solo se muestra si hay contenido. */
+    let diagHtml = '';
+    if (data.reported || data.technical){
+      diagHtml = `<div style="padding:18px 22px;border-top:1px solid rgba(255,255,255,.06)">`;
+      if (data.reported){
+        diagHtml += `<div style="margin-bottom:${data.technical ? '14px' : '0'}">`
+                 +  `<div style="font-family:Rajdhani,sans-serif;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--cyan);margin-bottom:5px">Falla reportada</div>`
+                 +  `<div style="font-size:13.5px;color:var(--dim);line-height:1.6">${esc(data.reported)}</div>`
+                 +  `</div>`;
+      }
+      if (data.technical){
+        diagHtml += `<div>`
+                 +  `<div style="font-family:Rajdhani,sans-serif;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--cyan);margin-bottom:5px">Diagnóstico técnico</div>`
+                 +  `<div style="font-size:13.5px;color:var(--dim);line-height:1.6">${esc(data.technical)}</div>`
+                 +  `</div>`;
+      }
+      diagHtml += `</div>`;
+    }
+
+    /* ─── Fotos del equipo tomadas en la recepción ─── */
+    let fotosHtml = '';
+    if (Array.isArray(data.photos) && data.photos.length){
+      fotosHtml = `<div style="padding:18px 22px;border-top:1px solid rgba(255,255,255,.06)">`
+                + `<div style="font-family:Rajdhani,sans-serif;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--cyan);margin-bottom:10px">Fotos del equipo</div>`
+                + `<div style="display:flex;gap:10px;flex-wrap:wrap">`
+                + data.photos.slice(0, 6).map(u =>
+                    `<a href="${esc(u)}" target="_blank" rel="noopener">`
+                  + `<img src="${esc(u)}" alt="Foto del equipo" loading="lazy" `
+                  + `style="width:82px;height:82px;object-fit:cover;border-radius:8px;border:1px solid rgba(255,255,255,.1)"></a>`
+                  ).join('')
+                + `</div></div>`;
+    }
+
+    /* ─── Total, solo cuando ya está definido ─── */
+    let totalHtml = '';
+    if (Number(data.total) > 0){
+      totalHtml = `<div style="padding:16px 22px;border-top:1px solid rgba(255,255,255,.06);display:flex;justify-content:space-between;align-items:center">`
+                + `<span style="font-family:Rajdhani,sans-serif;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)">Total del servicio</span>`
+                + `<span style="font-family:Rajdhani,sans-serif;font-size:20px;font-weight:700;color:var(--cyan)">$${Number(data.total).toLocaleString('es-CO')}</span>`
+                + `</div>`;
+    }
+
+    const nombre = data.customerFirstName || (data.customer && data.customer.name) || '';
+
     const html =
       `<div class="track-card">`
       + `<div class="track-card-header">`
       +   `<div>`
-      +     `<div class="track-order-id">Orden · ${data.id || '—'}</div>`
+      +     `<div class="track-order-id">Orden · ${esc(data.id || '—')}</div>`
       +     `<div style="font-family:DM Sans,sans-serif;font-size:13px;color:var(--dim);margin-top:4px">`
-      +       `Cliente: ${data.customer && data.customer.name ? data.customer.name : 'No especificado'}`
+      +       `Cliente: ${nombre ? esc(nombre) : 'No especificado'}`
       +     `</div>`
       +   `</div>`
       +   `<div class="track-badge ${BADGE[status] || 'badge-received'}">${LABEL[status] || 'Recibido'}</div>`
@@ -2339,17 +2390,20 @@ function initTracker(){
       + `<div class="track-equipment">`
       +   `<div class="track-equip-icon">${equIcon(equip.type)}</div>`
       +   `<div>`
-      +     `<div class="track-equip-name">${equipStr}</div>`
-      +     `<div class="track-equip-sub">${equip.type || ''}${equip.serial ? ' · S/N: ' + equip.serial : ''}</div>`
+      +     `<div class="track-equip-name">${esc(equipStr)}</div>`
+      +     `<div class="track-equip-sub">${esc(equip.type || '')}</div>`
       +   `</div>`
       + `</div>`
       + `<div class="track-timeline">`
       +   `<div class="track-tl-title">Progreso del servicio</div>`
       +   tl
       + `</div>`
+      + diagHtml
+      + fotosHtml
+      + totalHtml
       + `<div class="track-card-footer">`
-      +   `<div class="track-footer-item">${ICONS.calendar} Recibido: ${fmtDate(data.createdAt)}</div>`
-      +   `<div class="track-footer-item">${ICONS.refresh} Actualizado: ${fmtDate(data.updatedAt || data.createdAt)}</div>`
+      +   `<div class="track-footer-item">${ICONS.calendar} Recibido: ${fmtDate(data.date || data.createdAt)}</div>`
+      +   `<div class="track-footer-item">${ICONS.refresh} Actualizado: ${fmtDate(data.updatedAt || data.date || data.createdAt)}</div>`
       +   `<div class="track-footer-item">`
       +     `<a href="${waLink('Hola REDDI, consulto por la orden ' + (data.id || ''))}" `
       +        `style="color:var(--cyan);text-decoration:none;font-family:Rajdhani,sans-serif;font-weight:600;font-size:12px;letter-spacing:.06em;display:inline-flex;align-items:center;gap:6px" `
