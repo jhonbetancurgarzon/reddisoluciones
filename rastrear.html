@@ -1271,6 +1271,9 @@ function initTracker(){
          diagnóstico y los repuestos. Así no hay que redactar nada
          aparte para cada orden. ─── */
   function construirMensaje(estado, data){
+    const tipo  = data.serviceType || 'electronica';
+    const esMant = tipo === 'mantenimiento';
+    const esInst = tipo === 'instalacion';
     const diag  = (data.technical || '').trim();
     const total = Number(data.total) || 0;
     const plata = total > 0 ? '$' + total.toLocaleString('es-CO') : '';
@@ -1292,14 +1295,27 @@ function initTracker(){
         };
 
       case 'quoted': {
-        let txt = diag
-          ? 'Esto fue lo que encontramos: ' + sinPunto(diag) + '.'
-          : 'Ya terminamos el diagnóstico de tu equipo.';
+        let txt;
+        if (esInst){
+          txt = diag ? 'Alcance del trabajo: ' + sinPunto(diag) + '.'
+                     : 'Ya tenemos definido el alcance de la instalación.';
+        } else if (esMant){
+          txt = diag ? 'Esto incluye el mantenimiento: ' + sinPunto(diag) + '.'
+                     : 'Ya tenemos definido el alcance del mantenimiento.';
+        } else {
+          txt = diag ? 'Esto fue lo que encontramos: ' + sinPunto(diag) + '.'
+                     : 'Ya terminamos el diagnóstico de tu equipo.';
+        }
+        const queCosa = esInst ? 'La instalación' : esMant ? 'El mantenimiento' : 'La reparación';
         txt += plata
-          ? ' La reparación tiene un valor de ' + plata + '.'
-          : ' Te pasamos el valor de la reparación por WhatsApp.';
+          ? ' ' + queCosa + ' tiene un valor de ' + plata + '.'
+          : ' Te pasamos el valor por WhatsApp.';
         txt += ' Confirmanos si querés que procedamos.';
-        return { titulo: 'Tenemos el diagnóstico y el presupuesto', texto: txt, accion: 'aceptar' };
+        return {
+          titulo: (esInst || esMant) ? 'Tenemos el presupuesto' : 'Tenemos el diagnóstico y el presupuesto',
+          texto:  txt,
+          accion: 'aceptar'
+        };
       }
 
       case 'pending_parts': {
@@ -1314,14 +1330,32 @@ function initTracker(){
       }
 
       case 'ready': {
-        let txt = diag
-          ? 'Listo: ' + sinPunto(diag) + '. Tu equipo quedó funcionando y probado.'
-          : 'La reparación terminó y tu equipo quedó funcionando.';
-        txt += plata
-          ? ' El valor a cancelar es de ' + plata + '.'
-          : '';
-        txt += ' Ya podés pasar a recogerlo o coordinar la entrega con nosotros.';
-        return { titulo: 'Tu equipo está listo', texto: txt };
+        let txt;
+        if (esInst){
+          txt = diag
+            ? 'Instalación terminada: ' + sinPunto(diag) + '. El equipo quedó probado y funcionando.'
+            : 'La instalación quedó terminada y el equipo probado.';
+          if (data.installLocation) txt += ' Sitio: ' + sinPunto(data.installLocation) + '.';
+        } else if (esMant){
+          txt = diag
+            ? 'Mantenimiento realizado: ' + sinPunto(diag) + '.'
+            : 'El mantenimiento quedó realizado.';
+          if (data.nextMaintenanceDate){
+            const f = new Date(data.nextMaintenanceDate + 'T12:00:00');
+            if (!isNaN(f)) txt += ' Próximo mantenimiento recomendado: '
+              + f.toLocaleDateString('es-CO', { day:'numeric', month:'long', year:'numeric' }) + '.';
+          }
+        } else {
+          txt = diag
+            ? 'Listo: ' + sinPunto(diag) + '. Tu equipo quedó funcionando y probado.'
+            : 'La reparación terminó y tu equipo quedó funcionando.';
+        }
+        if (plata) txt += ' El valor a cancelar es de ' + plata + '.';
+        if (!esInst && !esMant) txt += ' Ya podés pasar a recogerlo o coordinar la entrega con nosotros.';
+        return {
+          titulo: esInst ? 'Instalación terminada' : esMant ? 'Mantenimiento realizado' : 'Tu equipo está listo',
+          texto:  txt
+        };
       }
 
       case 'delivered':
