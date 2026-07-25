@@ -1271,48 +1271,49 @@ function initTracker(){
          diagnóstico y los repuestos. Así no hay que redactar nada
          aparte para cada orden. ─── */
   function construirMensaje(estado, data){
-    const tipo  = data.serviceType || 'electronica';
+    const tipo   = data.serviceType || 'electronica';
     const esMant = tipo === 'mantenimiento';
     const esInst = tipo === 'instalacion';
-    const diag  = (data.technical || '').trim();
-    const total = Number(data.total) || 0;
-    const plata = total > 0 ? '$' + total.toLocaleString('es-CO') : '';
-    const rep   = Array.isArray(data.partsNames) ? data.partsNames.filter(Boolean) : [];
+    const diag   = (data.technical || '').trim();
+    const total  = Number(data.total) || 0;
+    const plata  = total > 0 ? '$' + total.toLocaleString('es-CO') : '';
+    const rep    = Array.isArray(data.partsNames) ? data.partsNames.filter(Boolean) : [];
 
-    // Une una lista en lenguaje natural: "a, b y c"
     const listar = (arr) => arr.length <= 1 ? (arr[0] || '')
       : arr.slice(0, -1).join(', ') + ' y ' + arr[arr.length - 1];
 
-    // Quita el punto final para poder encadenar frases sin doble punto
-    const sinPunto = (s) => s.replace(/[.\s]+$/, '');
+    // Quita el punto final para poder encadenar frases
+    const sp = (s) => s.replace(/[.\s]+$/, '');
+    // Primera letra en minúscula, para que encaje dentro de una frase
+    const min = (s) => s.charAt(0).toLowerCase() + s.slice(1);
 
     switch (estado){
 
       case 'diagnosing':
         return {
           titulo: 'Estamos revisando tu equipo',
-          texto:  'Nuestro técnico está identificando la falla. Apenas tengamos el diagnóstico te informamos qué encontramos y cuánto cuesta la reparación.'
+          texto:  'Nuestro técnico lo está revisando para saber qué tiene. Apenas terminemos te contamos qué encontramos y cuánto costaría dejarlo funcionando.'
         };
 
       case 'quoted': {
         let txt;
         if (esInst){
-          txt = diag ? 'Alcance del trabajo: ' + sinPunto(diag) + '.'
-                     : 'Ya tenemos definido el alcance de la instalación.';
+          txt = diag ? 'Esto es lo que incluye la instalación: ' + min(sp(diag)) + '.'
+                     : 'Ya tenemos definido todo lo que incluye la instalación.';
         } else if (esMant){
-          txt = diag ? 'Esto incluye el mantenimiento: ' + sinPunto(diag) + '.'
-                     : 'Ya tenemos definido el alcance del mantenimiento.';
+          txt = diag ? 'Esto es lo que incluye el mantenimiento: ' + min(sp(diag)) + '.'
+                     : 'Ya tenemos definido todo lo que incluye el mantenimiento.';
         } else {
-          txt = diag ? 'Esto fue lo que encontramos: ' + sinPunto(diag) + '.'
-                     : 'Ya terminamos el diagnóstico de tu equipo.';
+          txt = diag ? 'Ya revisamos tu equipo. Esto es lo que necesita: ' + min(sp(diag)) + '.'
+                     : 'Ya revisamos tu equipo y sabemos qué necesita.';
         }
-        const queCosa = esInst ? 'La instalación' : esMant ? 'El mantenimiento' : 'La reparación';
+        const eso = esInst ? 'La instalación' : esMant ? 'El mantenimiento' : 'El trabajo';
         txt += plata
-          ? ' ' + queCosa + ' tiene un valor de ' + plata + '.'
+          ? ' ' + eso + ' cuesta ' + plata + '.'
           : ' Te pasamos el valor por WhatsApp.';
-        txt += ' Confirmanos si querés que procedamos.';
+        txt += ' Si estás de acuerdo, avísanos y arrancamos.';
         return {
-          titulo: (esInst || esMant) ? 'Tenemos el presupuesto' : 'Tenemos el diagnóstico y el presupuesto',
+          titulo: (esInst || esMant) ? 'Ya tenemos tu presupuesto' : 'Ya sabemos qué necesita tu equipo',
           texto:  txt,
           accion: 'aceptar'
         };
@@ -1320,40 +1321,37 @@ function initTracker(){
 
       case 'pending_parts': {
         let txt = rep.length
-          ? 'Tu equipo necesita: ' + listar(rep) + '. Ya estamos gestionando '
-            + (rep.length > 1 ? 'los repuestos' : 'el repuesto') + '.'
-          : 'Estamos consiguiendo los repuestos necesarios para tu equipo.';
+          ? 'Estamos consiguiendo ' + (rep.length > 1 ? 'los repuestos' : 'el repuesto')
+            + ' que necesita tu equipo: ' + listar(rep.map(min)) + '.'
+          : 'Estamos consiguiendo los repuestos que necesita tu equipo.';
         txt += rep.length === 1
-          ? ' Te avisamos apenas llegue y retomemos la reparación.'
-          : ' Te avisamos apenas lleguen y retomemos la reparación.';
-        return { titulo: 'Consiguiendo los repuestos', texto: txt };
+          ? ' Apenas llegue seguimos con la reparación y te avisamos.'
+          : ' Apenas lleguen seguimos con la reparación y te avisamos.';
+        return { titulo: 'Buscando los repuestos', texto: txt };
       }
 
       case 'ready': {
         let txt;
         if (esInst){
-          txt = diag
-            ? 'Instalación terminada: ' + sinPunto(diag) + '. El equipo quedó probado y funcionando.'
-            : 'La instalación quedó terminada y el equipo probado.';
-          if (data.installLocation) txt += ' Sitio: ' + sinPunto(data.installLocation) + '.';
+          txt = diag ? 'Terminamos la instalación: ' + min(sp(diag)) + '. Quedó probada y funcionando.'
+                     : 'Terminamos la instalación. Quedó probada y funcionando.';
+          if (data.installLocation) txt += ' La dejamos en ' + min(sp(data.installLocation)) + '.';
         } else if (esMant){
-          txt = diag
-            ? 'Mantenimiento realizado: ' + sinPunto(diag) + '.'
-            : 'El mantenimiento quedó realizado.';
+          txt = diag ? 'Ya le hicimos el mantenimiento: ' + min(sp(diag)) + '.'
+                     : 'Ya le hicimos el mantenimiento a tu equipo.';
           if (data.nextMaintenanceDate){
             const f = new Date(data.nextMaintenanceDate + 'T12:00:00');
-            if (!isNaN(f)) txt += ' Próximo mantenimiento recomendado: '
+            if (!isNaN(f)) txt += ' Te recomendamos el próximo para el '
               + f.toLocaleDateString('es-CO', { day:'numeric', month:'long', year:'numeric' }) + '.';
           }
         } else {
-          txt = diag
-            ? 'Listo: ' + sinPunto(diag) + '. Tu equipo quedó funcionando y probado.'
-            : 'La reparación terminó y tu equipo quedó funcionando.';
+          txt = diag ? 'Ya quedó listo: ' + min(sp(diag)) + '. Lo probamos y está funcionando bien.'
+                     : 'Tu equipo ya quedó reparado y funcionando.';
         }
-        if (plata) txt += ' El valor a cancelar es de ' + plata + '.';
-        if (!esInst && !esMant) txt += ' Ya podés pasar a recogerlo o coordinar la entrega con nosotros.';
+        if (plata) txt += ' Son ' + plata + '.';
+        if (!esInst && !esMant) txt += ' Cuando quieras pasas por él, o coordinamos la entrega.';
         return {
-          titulo: esInst ? 'Instalación terminada' : esMant ? 'Mantenimiento realizado' : 'Tu equipo está listo',
+          titulo: esInst ? 'Instalación terminada' : esMant ? 'Mantenimiento listo' : 'Tu equipo ya está listo',
           texto:  txt
         };
       }
@@ -1361,13 +1359,13 @@ function initTracker(){
       case 'delivered':
         return {
           titulo: 'Equipo entregado',
-          texto:  'Tu equipo ya está contigo. Conservá el comprobante: la reparación cuenta con garantía escrita. Cualquier novedad, escribinos.'
+          texto:  'Tu equipo ya está contigo. Guarda el comprobante: el trabajo tiene garantía por escrito. Si notas algo raro, escríbenos y lo revisamos.'
         };
 
       default:
         return {
           titulo: 'Recibimos tu equipo',
-          texto:  'Tu equipo está registrado en nuestro taller. En breve comenzamos la revisión técnica.'
+          texto:  'Ya tenemos tu equipo en el taller y quedó registrado. En un momento empezamos a revisarlo.'
         };
     }
   }
@@ -1532,17 +1530,29 @@ function initTracker(){
       + `<div style="font-family:Rajdhani,sans-serif;font-size:16px;font-weight:700;color:var(--white);margin-bottom:6px">${esc(msg.titulo)}</div>`
       + `<div style="font-size:14px;color:var(--dim);line-height:1.65">${esc(msg.texto)}</div>`;
 
-    // En "Presupuestado" el cliente puede aprobar la reparación de una vez
+    // En "Presupuestado" el cliente puede aprobar el trabajo de una vez
     if (msg.accion === 'aceptar'){
-      const valor = Number(data.total) > 0 ? ' por $' + Number(data.total).toLocaleString('es-CO') : '';
-      const txtWa = 'Hola REDDI, acepto el presupuesto de la orden ' + (data.id || '') + valor + ' y autorizo la reparación.';
-      msgHtml += `<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px">`
-        + `<a href="${waLink(txtWa)}" target="_blank" rel="noopener" `
-        + `style="display:inline-flex;align-items:center;gap:8px;background:var(--grad);color:#fff;padding:12px 22px;border-radius:9px;font-family:Rajdhani,sans-serif;font-weight:700;font-size:14px;letter-spacing:.05em;text-transform:uppercase;text-decoration:none;box-shadow:0 0 22px var(--glow)">`
-        + `${ICONS.whatsapp} Aceptar presupuesto</a>`
-        + `<a href="${waLink('Hola REDDI, tengo una consulta sobre el presupuesto de la orden ' + (data.id || ''))}" target="_blank" rel="noopener" `
-        + `style="display:inline-flex;align-items:center;gap:8px;border:1px solid var(--border);color:var(--light);padding:12px 22px;border-radius:9px;font-family:Rajdhani,sans-serif;font-weight:600;font-size:14px;letter-spacing:.05em;text-transform:uppercase;text-decoration:none">`
-        + `Tengo una duda</a></div>`;
+      const valor  = Number(data.total) > 0 ? ' ($' + Number(data.total).toLocaleString('es-CO') + ')' : '';
+      const orden  = data.id || '';
+      const txtSi  = '¡Hola! Vi el presupuesto de mi orden ' + orden + valor + ' y estoy de acuerdo. Pueden empezar.';
+      const txtDuda= 'Hola, tengo una pregunta sobre el presupuesto de mi orden ' + orden + '.';
+
+      msgHtml += `<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:18px">`
+        + `<a href="${waLink(txtSi)}" target="_blank" rel="noopener" `
+        + `style="display:inline-flex;align-items:center;justify-content:center;gap:9px;background:#25D366;color:#fff;`
+        + `padding:13px 24px;border-radius:10px;font-family:Rajdhani,sans-serif;font-weight:700;font-size:14.5px;`
+        + `letter-spacing:.04em;text-decoration:none;white-space:nowrap;transition:filter .2s" `
+        + `onmouseover="this.style.filter='brightness(1.08)'" onmouseout="this.style.filter=''">`
+        + `<svg viewBox="0 0 24 24" width="19" height="19" fill="currentColor" style="flex-shrink:0"><path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.25-.46-2.39-1.47-.88-.79-1.48-1.76-1.65-2.06-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.61-.92-2.21-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.22 3.08c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.23 1.36.19 1.87.12.57-.09 1.76-.72 2.01-1.41.25-.7.25-1.29.17-1.41-.07-.12-.27-.2-.57-.35z"/><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.86 9.86 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2zm0 18.13h-.01a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.19 8.19 0 0 1-1.26-4.36c0-4.54 3.7-8.23 8.25-8.23a8.19 8.19 0 0 1 5.82 2.42 8.17 8.17 0 0 1 2.41 5.82c0 4.54-3.7 8.23-8.23 8.23z"/></svg>`
+        + `Sí, procedan</a>`
+        + `<a href="${waLink(txtDuda)}" target="_blank" rel="noopener" `
+        + `style="display:inline-flex;align-items:center;justify-content:center;background:transparent;`
+        + `border:1px solid var(--border);color:var(--light);padding:13px 24px;border-radius:10px;`
+        + `font-family:Rajdhani,sans-serif;font-weight:600;font-size:14.5px;letter-spacing:.04em;`
+        + `text-decoration:none;white-space:nowrap;transition:border-color .2s,color .2s" `
+        + `onmouseover="this.style.borderColor='rgba(255,255,255,.3)';this.style.color='#fff'" `
+        + `onmouseout="this.style.borderColor='';this.style.color=''">`
+        + `Tengo una pregunta</a></div>`;
     }
     msgHtml += `</div>`;
 
