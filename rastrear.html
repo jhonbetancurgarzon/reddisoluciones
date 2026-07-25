@@ -1279,7 +1279,7 @@ function initTracker(){
     const diag   = (data.technical || '').trim();
     const total  = Number(data.total) || 0;
     const plata  = total > 0 ? '$' + total.toLocaleString('es-CO') : '';
-    const rep    = Array.isArray(data.partsNames) ? data.partsNames.filter(Boolean) : [];
+    let   rep    = Array.isArray(data.partsNames) ? data.partsNames.filter(Boolean) : [];
 
     const listar = (arr) => arr.length <= 1 ? (arr[0] || '')
       : arr.slice(0, -1).join(', ') + ' y ' + arr[arr.length - 1];
@@ -1329,7 +1329,10 @@ function initTracker(){
 
       case 'pending_parts': {
         // Este estado ocurre durante la reparación: se detuvo el trabajo
-        // porque falta una pieza.
+        // porque falta una pieza. `pendingParts` es lo que el técnico
+        // indicó que falta; la lista de partes es solo respaldo.
+        const pend = (data.pendingParts || '').trim();
+        if (pend) rep = pend.split(',').map(s => s.trim()).filter(Boolean);
         let txt = rep.length
           ? 'La reparación está en pausa mientras conseguimos '
             + (rep.length > 1 ? 'los repuestos' : 'el repuesto') + ' que necesita tu equipo: '
