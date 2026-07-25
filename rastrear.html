@@ -812,6 +812,7 @@ footer{background:var(--deep);border-top:1px solid rgba(255,255,255,.06);padding
   letter-spacing:.14em;text-transform:uppercase;padding:5px 14px;border-radius:20px}
 .badge-received{background:rgba(0,87,255,.15);color:var(--cyan);border:1px solid rgba(0,87,255,.3)}
 .badge-diagnosing{background:rgba(250,180,0,.12);color:#fbbf24;border:1px solid rgba(250,180,0,.3)}
+.badge-quoted{background:rgba(167,139,250,.14);color:#a78bfa;border:1px solid rgba(167,139,250,.32)}
 .badge-pending{background:rgba(255,80,80,.12);color:#f87171;border:1px solid rgba(255,80,80,.3)}
 .badge-ready{background:rgba(0,200,120,.12);color:#34d399;border:1px solid rgba(0,200,120,.3)}
 .badge-delivered{background:rgba(100,100,140,.15);color:var(--dim);border:1px solid rgba(100,100,140,.3)}
@@ -997,7 +998,7 @@ noscript ~ * .reveal { opacity:1; transform:none; }
 </head>
 <body>
 <nav id="navbar">
-  <a href="/#" class="nav-logo" aria-label="REDDI Soluciones Integrales"></a>
+  <a href="/" class="nav-logo" aria-label="REDDI Soluciones Integrales"></a>
   <ul class="nav-links">
     <li><a href="/#negocios">Negocios</a></li>
     <li><a href="/#servicios">Hogar</a></li>
@@ -1250,18 +1251,52 @@ function initTracker(){
   const ESTADOS = [
     { key:'received',      icon:ICONS.package,   label:'Recibido' },
     { key:'diagnosing',    icon:ICONS.search,    label:'Diagnóstico' },
+    { key:'quoted',        icon:ICONS.digitalDoc, label:'Presupuesto' },
     { key:'pending_parts', icon:ICONS.parts,     label:'Repuestos' },
     { key:'ready',         icon:ICONS.check,     label:'Listo' },
     { key:'delivered',     icon:ICONS.truck,     label:'Entregado' }
   ];
   const BADGE = {
     received:'badge-received', diagnosing:'badge-diagnosing',
+    quoted:'badge-quoted',
     pending_parts:'badge-pending', ready:'badge-ready', delivered:'badge-delivered'
   };
   const LABEL = {
     received:'Recibido', diagnosing:'En Diagnóstico',
+    quoted:'Presupuestado',
     pending_parts:'Pend. Repuestos', ready:'Listo para Entrega', delivered:'Entregado'
   };
+  /* ─── Mensaje que explica al cliente qué significa el estado
+         actual y qué se espera de él. La línea de etapas dice
+         DÓNDE va; esto dice QUÉ pasa y QUÉ sigue. ─── */
+  const MENSAJE = {
+    received: {
+      titulo: 'Recibimos tu equipo',
+      texto:  'Tu equipo está registrado en nuestro taller. En breve comenzamos la revisión técnica.'
+    },
+    diagnosing: {
+      titulo: 'Estamos revisando tu equipo',
+      texto:  'Nuestro técnico está identificando la falla. Apenas tengamos el diagnóstico te informamos qué encontramos y cuánto cuesta la reparación.'
+    },
+    quoted: {
+      titulo: 'Tenemos el diagnóstico y el presupuesto',
+      texto:  'Ya sabemos qué tiene tu equipo y cuánto vale repararlo. Revisá el detalle aquí abajo y confirmanos si querés que procedamos.',
+      accion: 'aceptar'
+    },
+    pending_parts: {
+      titulo: 'Consiguiendo los repuestos',
+      texto:  'Aprobaste la reparación y estamos gestionando los repuestos necesarios. Te avisamos apenas lleguen y retomemos el trabajo.'
+    },
+    ready: {
+      titulo: 'Tu equipo está listo',
+      texto:  'La reparación terminó y tu equipo quedó funcionando. Ya podés pasar a recogerlo o coordinar la entrega con nosotros.'
+    },
+    delivered: {
+      titulo: 'Equipo entregado',
+      texto:  'Tu equipo ya está contigo. Conservá el comprobante: la reparación cuenta con garantía escrita. Cualquier novedad, escribinos.'
+    }
+  };
+
   const EQUIP_ICONS = {
     laptop:ICONS.laptop, computador:ICONS.laptop, pc:ICONS.laptop,
     smartphone:ICONS.tv, celular:ICONS.tv, tablet:ICONS.tv,
@@ -1416,6 +1451,26 @@ function initTracker(){
     });
     tl += '</div>';
 
+    /* ─── Mensaje contextual del estado actual ─── */
+    const msg = MENSAJE[status] || MENSAJE.received;
+    let msgHtml = `<div style="padding:20px 22px;border-top:1px solid rgba(255,255,255,.06);background:rgba(0,87,255,.05)">`
+      + `<div style="font-family:Rajdhani,sans-serif;font-size:16px;font-weight:700;color:var(--white);margin-bottom:6px">${esc(msg.titulo)}</div>`
+      + `<div style="font-size:14px;color:var(--dim);line-height:1.65">${esc(msg.texto)}</div>`;
+
+    // En "Presupuestado" el cliente puede aprobar la reparación de una vez
+    if (msg.accion === 'aceptar'){
+      const valor = Number(data.total) > 0 ? ' por $' + Number(data.total).toLocaleString('es-CO') : '';
+      const txtWa = 'Hola REDDI, acepto el presupuesto de la orden ' + (data.id || '') + valor + ' y autorizo la reparación.';
+      msgHtml += `<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px">`
+        + `<a href="${waLink(txtWa)}" target="_blank" rel="noopener" `
+        + `style="display:inline-flex;align-items:center;gap:8px;background:var(--grad);color:#fff;padding:12px 22px;border-radius:9px;font-family:Rajdhani,sans-serif;font-weight:700;font-size:14px;letter-spacing:.05em;text-transform:uppercase;text-decoration:none;box-shadow:0 0 22px var(--glow)">`
+        + `${ICONS.whatsapp} Aceptar presupuesto</a>`
+        + `<a href="${waLink('Hola REDDI, tengo una consulta sobre el presupuesto de la orden ' + (data.id || ''))}" target="_blank" rel="noopener" `
+        + `style="display:inline-flex;align-items:center;gap:8px;border:1px solid var(--border);color:var(--light);padding:12px 22px;border-radius:9px;font-family:Rajdhani,sans-serif;font-weight:600;font-size:14px;letter-spacing:.05em;text-transform:uppercase;text-decoration:none">`
+        + `Tengo una duda</a></div>`;
+    }
+    msgHtml += `</div>`;
+
     /* ─── Bloque de diagnóstico: qué reportó el cliente y qué encontró
            el técnico. Solo se muestra si hay contenido. */
     let diagHtml = '';
@@ -1483,6 +1538,7 @@ function initTracker(){
       +   `<div class="track-tl-title">Progreso del servicio</div>`
       +   tl
       + `</div>`
+      + msgHtml
       + diagHtml
       + fotosHtml
       + totalHtml
