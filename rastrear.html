@@ -1,0 +1,1529 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Consulta el Estado de tu Reparación | Seguimiento de Orden | REDDI</title>
+<meta name="description" content="Consulta en tiempo real el estado de tu equipo en reparación. Ingresa tu número de orden y mira en qué etapa va, qué encontró el técnico y cuándo estará listo. REDDI Soluciones Integrales.">
+<link rel="canonical" href="https://reddisoluciones.com/rastrear">
+<meta name="robots" content="index, follow">
+<meta name="author" content="REDDI Soluciones Integrales">
+
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://reddisoluciones.com/rastrear">
+<meta property="og:title" content="Estado de tu reparación | REDDI">
+<meta property="og:description" content="Consulta en qué etapa va tu equipo. Seguimiento en tiempo real con tu número de orden.">
+<meta property="og:locale" content="es_CO">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Estado de tu reparación | REDDI">
+<meta name="twitter:description" content="Seguimiento en tiempo real de tu equipo en reparación.">
+
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=DM+Sans:wght@300;400;500&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+
+<script defer src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script defer src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
+<style>
+/* ════════════════════════════════════════════════════
+   SISTEMA DE DISEÑO – Variables y reset
+   ════════════════════════════════════════════════════ */
+:root{
+  --ink:    #0a0a14;
+  --deep:   #111122;
+  --panel:  #161628;
+  --card:   #1c1c35;
+  --border: rgba(255,255,255,.06);
+  --blue:   #0057FF;
+  --cyan:   #00C2FF;
+  --glow:   #0057ff55;
+  --dim:    #8888aa;
+  --muted:  #8888aa;
+  --light:  #e8eaf6;
+  --white:  #ffffff;
+  --grad:   linear-gradient(135deg,#0057FF,#00C2FF);
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+
+/* PERFORMANCE: secciones lejanas no se renderizan hasta acercarse al viewport.
+   Reduce work del CPU/GPU en la primera carga, ganando fluidez (~30% menos paint). */
+section:not(#hero){
+  content-visibility:auto;
+  contain-intrinsic-size:auto 800px;
+}
+/* Hint al browser para que el hero termine pintando primero */
+#hero{contain:layout style paint}
+/* Imágenes con intrínseca size para no causar layout shifts */
+img{display:block;max-width:100%}
+
+body{
+  font-family:'DM Sans',system-ui,sans-serif;
+  background:var(--ink);
+  color:var(--light);
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+
+@media(prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms !important;transition-duration:.01ms !important}
+  html{scroll-behavior:auto}
+}
+
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:var(--deep)}
+::-webkit-scrollbar-thumb{background:var(--blue);border-radius:4px}
+
+img,svg{max-width:100%;display:block}
+
+/* ════════════════════════════════════════════════════
+   ICONO BASE — todas las clases comunes para los SVG
+   ════════════════════════════════════════════════════ */
+.ico{width:1em;height:1em;display:inline-block;vertical-align:-.125em;flex-shrink:0}
+.ico-stroke{fill:none;stroke:url(#brandGrad);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.ico-fill{fill:url(#brandGrad)}
+.ico-soft{fill:url(#brandGrad);opacity:.18}
+.ico-accent{fill:#00C2FF}
+
+/* ════════════════════════════════════════════════════
+   NAVEGACIÓN
+   ════════════════════════════════════════════════════ */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  padding:0 5%;
+  display:flex;align-items:center;justify-content:space-between;
+  height:72px;
+  background:rgba(10,10,20,.85);
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+  border-bottom:1px solid rgba(0,87,255,.18);
+  transition:background .3s;
+  will-change:background;
+}
+.nav-logo{display:flex;align-items:center;text-decoration:none}
+/* Logo PNG (cliente): aplicamos filtros sutiles para que el navy se vea
+   bien sobre fondos oscuros — sin alterar los colores de la marca,
+   solo aumentamos brillo y nitidez. */
+.reddi-logo{
+  display:block;
+  /* Filtro pre-computable, GPU-accelerated, mucho más fluido */
+  filter:brightness(1.55) contrast(1.05);
+  will-change:filter;
+  transition:transform .25s ease;
+}
+.reddi-logo-nav{height:48px;width:auto}
+.reddi-logo-hero{width:88%;max-width:380px;height:auto}
+.nav-logo:hover .reddi-logo{
+  transform:scale(1.04);
+}
+@media(max-width:639px){
+  .reddi-logo-nav{height:40px}
+}
+@media(max-width:380px){
+  .reddi-logo-nav{height:36px}
+}
+.nav-links{display:flex;gap:32px;list-style:none}
+.nav-links a{
+  color:var(--dim);font-family:'Rajdhani',sans-serif;font-weight:600;
+  font-size:15px;letter-spacing:.08em;text-transform:uppercase;
+  text-decoration:none;transition:color .2s;position:relative;
+}
+.nav-links a::after{
+  content:'';position:absolute;bottom:-4px;left:0;width:0;height:2px;
+  background:var(--grad);transition:width .3s;
+}
+.nav-links a:hover{color:var(--white)}
+.nav-links a:hover::after{width:100%}
+.nav-cta{
+  background:var(--grad);color:#fff;padding:10px 22px;
+  border-radius:6px;font-family:'Rajdhani',sans-serif;font-weight:700;
+  font-size:14px;letter-spacing:.1em;text-transform:uppercase;
+  text-decoration:none;transition:opacity .2s,transform .2s;
+  box-shadow:0 0 20px var(--glow);
+  display:inline-flex;align-items:center;gap:8px;
+}
+.nav-cta:hover{opacity:.85;transform:translateY(-1px)}
+.nav-cta svg{width:16px;height:16px;fill:#fff}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:4px}
+.hamburger span{display:block;width:24px;height:2px;background:var(--light);transition:.3s;border-radius:2px}
+
+/* ════════════════════════════════════════════════════
+   HERO
+   ════════════════════════════════════════════════════ */
+#hero{
+  min-height:100vh;display:flex;align-items:center;
+  padding:100px 5% 60px;
+  position:relative;overflow:hidden;
+}
+.hero-bg{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 80% 60% at 70% 40%, rgba(0,87,255,.15) 0%, transparent 65%),
+    radial-gradient(ellipse 50% 40% at 20% 80%, rgba(0,194,255,.08) 0%, transparent 60%),
+    var(--ink);
+}
+.circuit-lines{
+  position:absolute;top:0;right:0;width:55%;height:100%;opacity:.07;
+  background-image:
+    repeating-linear-gradient(0deg,  transparent, transparent 39px, rgba(0,87,255,.6) 40px),
+    repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(0,87,255,.6) 40px);
+}
+.hero-content{position:relative;z-index:2;max-width:620px}
+.hero-tag{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(0,87,255,.12);border:1px solid rgba(0,87,255,.35);
+  padding:6px 14px;border-radius:20px;margin-bottom:24px;
+  font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:600;
+  color:var(--cyan);letter-spacing:.12em;text-transform:uppercase;
+}
+.hero-tag .dot{width:7px;height:7px;background:var(--cyan);border-radius:50%;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(1.4)}}
+h1{
+  font-family:'Rajdhani',sans-serif;font-size:clamp(42px,6vw,76px);
+  font-weight:700;line-height:1.05;color:var(--white);margin-bottom:20px;
+  letter-spacing:-.02em;
+}
+h1 span{
+  background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.hero-sub{font-size:17px;color:var(--dim);line-height:1.7;margin-bottom:36px;max-width:480px}
+.hero-btns{display:flex;gap:14px;flex-wrap:wrap}
+.btn-primary{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--grad);color:#fff;padding:14px 28px;border-radius:8px;
+  font-family:'Rajdhani',sans-serif;font-weight:700;font-size:15px;
+  letter-spacing:.08em;text-transform:uppercase;text-decoration:none;
+  box-shadow:0 0 28px var(--glow);transition:transform .2s,box-shadow .2s;
+}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 0 40px var(--glow)}
+.btn-primary svg{width:18px;height:18px;fill:#fff}
+.btn-secondary{
+  display:inline-flex;align-items:center;gap:8px;
+  background:transparent;color:var(--white);padding:13px 28px;
+  border:1.5px solid rgba(255,255,255,.2);border-radius:8px;
+  font-family:'Rajdhani',sans-serif;font-weight:600;font-size:15px;
+  letter-spacing:.08em;text-transform:uppercase;text-decoration:none;
+  transition:border-color .2s,background .2s;
+}
+.btn-secondary:hover{border-color:var(--cyan);background:rgba(0,194,255,.06)}
+.hero-stats{
+  display:flex;gap:40px;margin-top:56px;padding-top:36px;
+  border-top:1px solid rgba(255,255,255,.07);flex-wrap:wrap;
+}
+.stat-num{font-family:'Rajdhani',sans-serif;font-size:38px;font-weight:700;color:var(--white)}
+.stat-num span{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.stat-label{font-size:13px;color:var(--dim);margin-top:2px}
+.hero-visual{
+  position:absolute;right:-2%;top:50%;transform:translateY(-50%);
+  width:48%;max-width:620px;z-index:1;
+}
+.hero-card-stack{position:relative;width:100%;padding-bottom:70%}
+.floating-card{
+  position:absolute;background:var(--card);border:1px solid rgba(0,87,255,.25);
+  border-radius:16px;padding:20px 24px;
+  box-shadow:0 20px 60px rgba(0,0,0,.5);
+  will-change:transform;
+}
+.fc1{width:72%;left:14%;top:0;animation:float1 6s ease-in-out infinite}
+.fc2{width:55%;right:0;top:30%;animation:float2 7s ease-in-out infinite .5s}
+.fc3{width:58%;left:0;bottom:0;animation:float1 5s ease-in-out infinite 1s}
+@keyframes float1{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+@keyframes float2{0%,100%{transform:translateY(0)}50%{transform:translateY(10px)}}
+.fc-tag{font-size:11px;color:var(--cyan);font-family:'Rajdhani',sans-serif;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px;font-weight:600}
+.fc-title{font-family:'Rajdhani',sans-serif;font-size:17px;font-weight:700;color:var(--white);margin-bottom:6px}
+.fc-text{font-size:12px;color:var(--dim);line-height:1.5}
+.fc-icon{width:36px;height:36px;background:var(--grad);border-radius:8px;
+  display:flex;align-items:center;justify-content:center;margin-bottom:10px}
+.fc-icon svg{width:20px;height:20px;fill:#fff}
+.fc-row{display:flex;align-items:center;gap:10px;margin-top:8px}
+.fc-bar{flex:1;height:4px;background:rgba(255,255,255,.08);border-radius:4px;overflow:hidden}
+.fc-fill{height:100%;background:var(--grad);border-radius:4px}
+
+/* ════════════════════════════════════════════════════
+   COMUNES DE SECCIÓN
+   ════════════════════════════════════════════════════ */
+section{padding:90px 5%}
+.section-label{
+  font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--cyan);
+  margin-bottom:12px;display:flex;align-items:center;gap:8px;
+}
+.section-label::before{content:'';display:block;width:24px;height:2px;background:var(--grad)}
+h2{
+  font-family:'Rajdhani',sans-serif;font-size:clamp(28px,4vw,46px);
+  font-weight:700;color:var(--white);line-height:1.1;letter-spacing:-.01em;
+}
+h2 span{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.section-sub{color:var(--dim);font-size:16px;line-height:1.7;max-width:520px;margin-top:12px}
+
+.marca-logo{
+  background:var(--card);border:1px solid var(--border);border-radius:12px;
+  height:88px;display:flex;align-items:center;justify-content:center;
+  padding:14px 18px;transition:border-color .25s,transform .25s,background .25s;
+}
+.marca-logo img{
+  max-width:100%;max-height:46px;object-fit:contain;
+  opacity:.6;transition:opacity .25s;
+}
+.marca-logo img.alto{max-height:60px}
+.marca-logo:hover{border-color:rgba(0,194,255,.35);transform:translateY(-3px);background:rgba(0,87,255,.06)}
+.marca-logo:hover img{opacity:1}
+@media(max-width:520px){ .marca-logo{height:74px;padding:12px 14px} .marca-logo img{max-height:38px} .marca-logo img.alto{max-height:48px} }
+
+/* ════════════════════════════════════════════════════
+   SERVICIOS — Iconos vectoriales premium
+   ════════════════════════════════════════════════════ */
+#servicios{background:var(--deep)}
+.services-head{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:20px;margin-bottom:52px}
+/* Grid simétrico — 7 tarjetas → 4 arriba + 3 centradas abajo en desktop */
+.services-grid{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:20px;
+}
+.srv-card{
+  background:var(--card);border:1px solid rgba(255,255,255,.06);
+  border-radius:16px;padding:30px 26px;
+  transition:border-color .3s,transform .3s,box-shadow .3s;
+  cursor:pointer;position:relative;overflow:hidden;
+  display:flex;flex-direction:column;
+  text-decoration:none;color:inherit;
+  /* 3 columnas en pantallas anchas → 6 tarjetas quedan en 3+3 */
+  flex:1 1 calc(33.333% - 14px);
+  min-width:280px;
+  max-width:380px;
+  min-height:300px;
+}
+@media(max-width:900px){ .srv-card{flex:1 1 calc(50% - 10px); max-width:none} }
+@media(max-width:560px){ .srv-card{flex:1 1 100%}                            }
+.srv-card::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at top left,rgba(0,87,255,.1) 0%,transparent 60%);
+  opacity:0;transition:opacity .3s;
+}
+.srv-card:hover,
+.srv-card:focus-visible{
+  border-color:rgba(0,87,255,.45);
+  transform:translateY(-6px);
+  box-shadow:0 20px 50px rgba(0,0,0,.35);
+  outline:none;
+}
+.srv-card:hover::before,
+.srv-card:focus-visible::before{opacity:1}
+.srv-card .srv-cta{
+  margin-top:14px;display:inline-flex;align-items:center;gap:8px;
+  font-family:'Rajdhani',sans-serif;font-weight:700;
+  font-size:13px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--cyan);opacity:.85;transition:opacity .25s,gap .25s;
+}
+.srv-card .srv-cta svg{width:18px;height:18px;color:var(--cyan)}
+.srv-card:hover .srv-cta{opacity:1;gap:12px}
+
+/* ════════════════════════════════════════════════════
+   DOMICILIO BANNER — Franja informativa
+   ════════════════════════════════════════════════════ */
+.domicilio-banner{
+  margin-top:36px;
+  background:linear-gradient(135deg,rgba(0,87,255,.12),rgba(0,194,255,.06));
+  border:1px solid rgba(0,194,255,.25);
+  border-radius:18px;
+  padding:26px 30px;
+  display:flex;align-items:center;gap:24px;flex-wrap:wrap;
+  position:relative;overflow:hidden;
+}
+.domicilio-banner::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at right center,rgba(0,194,255,.10) 0%,transparent 60%);
+  pointer-events:none;
+}
+.dom-icon{
+  width:64px;height:64px;flex-shrink:0;
+  background:linear-gradient(135deg,rgba(0,87,255,.22),rgba(0,194,255,.12));
+  border:1px solid rgba(0,194,255,.30);
+  border-radius:16px;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 8px 24px rgba(0,87,255,.2);
+}
+.dom-icon svg{width:36px;height:36px}
+.dom-text{flex:1 1 280px;min-width:0}
+.dom-text h3{
+  font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;
+  color:var(--white);margin-bottom:6px;letter-spacing:.01em;
+}
+.dom-text p{color:var(--dim);font-size:14px;line-height:1.6}
+.dom-cta{
+  display:inline-flex;align-items:center;gap:10px;
+  background:var(--grad);color:#fff;text-decoration:none;
+  padding:14px 24px;border-radius:12px;
+  font-family:'Rajdhani',sans-serif;font-weight:700;
+  font-size:14px;letter-spacing:.06em;text-transform:uppercase;
+  transition:transform .25s,box-shadow .25s;
+  box-shadow:0 8px 24px rgba(0,87,255,.35);
+}
+.dom-cta:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(0,87,255,.45)}
+.dom-cta svg{width:18px;height:18px}
+@media(max-width:640px){
+  .domicilio-banner{padding:22px;gap:18px}
+  .dom-cta{width:100%;justify-content:center}
+}
+.srv-icon{
+  width:64px;height:64px;
+  background:linear-gradient(135deg,rgba(0,87,255,.18),rgba(0,194,255,.10));
+  border:1px solid rgba(0,194,255,.25);
+  border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:20px;
+  position:relative;
+  box-shadow:0 8px 24px rgba(0,87,255,.18), inset 0 1px 0 rgba(255,255,255,.05);
+}
+.srv-icon svg{width:36px;height:36px}
+.srv-card:hover .srv-icon{
+  background:linear-gradient(135deg,rgba(0,87,255,.30),rgba(0,194,255,.18));
+  box-shadow:0 8px 28px rgba(0,87,255,.35), inset 0 1px 0 rgba(255,255,255,.08);
+}
+.srv-card h3{font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;color:var(--white);margin-bottom:12px;line-height:1.25}
+.srv-card p{
+  font-size:14px;color:var(--dim);line-height:1.65;
+  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:4;
+  overflow:hidden;text-overflow:ellipsis;
+}
+.srv-badge{
+  display:inline-block;margin-top:18px;
+  font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--cyan);
+  background:rgba(0,194,255,.08);border:1px solid rgba(0,194,255,.2);
+  padding:4px 10px;border-radius:20px;
+  width:fit-content;
+  margin-top:auto;
+}
+
+/* ════════════════════════════════════════════════════
+   GARANTÍA STRIP — Multi-tipo de garantía
+   ════════════════════════════════════════════════════ */
+.garantia-strip{
+  background:var(--grad);padding:40px 5%;
+  display:grid;grid-template-columns:1fr 1.6fr;align-items:center;gap:40px;
+}
+.gs-info .gs-text{font-family:'Rajdhani',sans-serif;font-size:24px;font-weight:700;color:#fff;line-height:1.2}
+.gs-info .gs-sub{font-size:14px;color:rgba(255,255,255,.85);margin-top:8px;line-height:1.5}
+.gs-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px}
+.gs-pill{
+  background:rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.22);
+  border-radius:14px;
+  padding:18px 16px;
+  text-align:center;
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+  transition:transform .25s,background .25s;
+}
+.gs-pill:hover{background:rgba(255,255,255,.20);transform:translateY(-3px)}
+.gs-pill-num{
+  display:block;font-family:'Rajdhani',sans-serif;font-size:30px;font-weight:700;
+  color:#fff;line-height:1;margin-bottom:4px;
+}
+.gs-pill-num small{font-size:14px;font-weight:500;opacity:.85;margin-left:2px}
+.gs-pill-prefix{
+  font-size:14px;font-weight:600;font-style:normal;opacity:.85;
+  display:inline-block;margin-right:3px;letter-spacing:.02em;
+  text-transform:lowercase;
+}
+.gs-pill-label{font-size:11px;color:rgba(255,255,255,.9);font-family:'Rajdhani',sans-serif;letter-spacing:.06em;text-transform:uppercase;font-weight:600}
+@media(max-width:780px){
+  .garantia-strip{grid-template-columns:1fr;text-align:center}
+}
+
+/* ════════════════════════════════════════════════════
+   NOSOTROS
+   ════════════════════════════════════════════════════ */
+#nosotros{background:var(--ink)}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+.about-img-wrap{position:relative}
+.about-img-box{
+  background:var(--card);border:1px solid rgba(0,87,255,.2);border-radius:20px;
+  padding:40px;display:flex;align-items:center;justify-content:center;
+  min-height:340px;position:relative;overflow:hidden;
+}
+.about-img-box::after{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at center,rgba(0,87,255,.15),transparent 70%);
+  pointer-events:none;
+}
+.about-img-box svg,
+.about-img-box img{width:88%;max-width:380px;height:auto;position:relative;z-index:1;display:block}
+.about-logo-mark{
+  width:100%;display:flex;align-items:center;justify-content:center;
+}
+.about-logo-mark .reddi-logo-hero{
+  filter:brightness(1.6) contrast(1.05);
+}
+.about-badge{
+  position:absolute;bottom:-16px;right:-16px;
+  background:var(--grad);border-radius:14px;padding:16px 20px;
+  box-shadow:0 12px 32px rgba(0,87,255,.4);text-align:center;z-index:2;
+}
+.ab-num{font-family:'Rajdhani',sans-serif;font-size:32px;font-weight:700;color:#fff;line-height:1}
+.ab-lbl{font-size:11px;color:rgba(255,255,255,.8);text-transform:uppercase;letter-spacing:.08em}
+.about-text h2{margin-bottom:16px}
+.about-text p{color:var(--dim);font-size:15px;line-height:1.75;margin-bottom:16px}
+
+/* Valores con iconos vectoriales premium */
+.valores-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:28px}
+.valor-item{
+  display:flex;align-items:flex-start;gap:14px;
+  background:var(--card);border:1px solid rgba(255,255,255,.06);
+  border-radius:12px;padding:16px;
+  transition:border-color .3s,transform .2s;
+}
+.valor-item:hover{border-color:rgba(0,194,255,.35);transform:translateY(-2px)}
+.valor-icon{
+  width:42px;height:42px;
+  background:linear-gradient(135deg,rgba(0,87,255,.20),rgba(0,194,255,.10));
+  border:1px solid rgba(0,194,255,.25);
+  border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+.valor-icon svg{width:24px;height:24px}
+.valor-title{font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;color:var(--white)}
+.valor-desc{font-size:12px;color:var(--dim);margin-top:2px;line-height:1.4}
+
+/* ════════════════════════════════════════════════════
+   PROCESO
+   ════════════════════════════════════════════════════ */
+#proceso{background:var(--deep)}
+.proceso-head{text-align:center;max-width:540px;margin:0 auto 56px}
+.proceso-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0;position:relative}
+.proceso-grid::before{
+  content:'';position:absolute;top:36px;left:10%;right:10%;height:2px;
+  background:linear-gradient(90deg,rgba(0,87,255,.1),rgba(0,87,255,.5),rgba(0,194,255,.5),rgba(0,87,255,.1));
+  z-index:0;
+}
+.paso{text-align:center;padding:20px;position:relative;z-index:1}
+.paso-num{
+  width:72px;height:72px;border-radius:50%;
+  background:var(--card);border:2px solid rgba(0,87,255,.4);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Rajdhani',sans-serif;font-size:26px;font-weight:700;
+  color:var(--white);margin:0 auto 20px;
+  box-shadow:0 0 24px rgba(0,87,255,.2);transition:.3s;
+}
+.paso:hover .paso-num{background:var(--blue);border-color:var(--cyan);box-shadow:0 0 32px rgba(0,194,255,.35)}
+.paso h4{font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;color:var(--white);margin-bottom:8px}
+.paso p{font-size:13px;color:var(--dim);line-height:1.55;max-width:180px;margin:0 auto}
+
+/* ════════════════════════════════════════════════════
+   POR QUÉ NOSOTROS — iconos vectoriales premium
+   ════════════════════════════════════════════════════ */
+#porque{background:var(--ink)}
+.porque-wrap{display:grid;grid-template-columns:1fr 1.2fr;gap:60px;align-items:center}
+.porque-list{display:flex;flex-direction:column;gap:16px}
+.pq-item{
+  display:flex;align-items:flex-start;gap:16px;
+  background:var(--card);border:1px solid rgba(255,255,255,.06);
+  border-radius:12px;padding:20px;
+  transition:border-color .3s,transform .2s;cursor:default;
+}
+.pq-item:hover{border-color:rgba(0,87,255,.4);transform:translateX(6px)}
+.pq-icon{
+  width:48px;height:48px;
+  background:linear-gradient(135deg,rgba(0,87,255,.20),rgba(0,194,255,.10));
+  border:1px solid rgba(0,194,255,.30);
+  border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+.pq-icon svg{width:26px;height:26px}
+.pq-title{font-family:'Rajdhani',sans-serif;font-size:17px;font-weight:700;color:var(--white);margin-bottom:4px}
+.pq-desc{font-size:13px;color:var(--dim);line-height:1.55}
+
+/* Mapa de cobertura */
+.porque-visual{position:relative}
+.map-card{
+  background:var(--card);border:1px solid rgba(0,87,255,.2);
+  border-radius:20px;padding:36px;text-align:center;
+}
+.map-card-icon{
+  width:72px;height:72px;margin:0 auto 16px;
+  background:linear-gradient(135deg,rgba(0,87,255,.2),rgba(0,194,255,.10));
+  border:1px solid rgba(0,194,255,.30);
+  border-radius:18px;
+  display:flex;align-items:center;justify-content:center;
+}
+.map-card-icon svg{width:40px;height:40px}
+.map-title{font-family:'Rajdhani',sans-serif;font-size:24px;font-weight:700;color:var(--white);margin-bottom:8px}
+.map-desc{font-size:14px;color:var(--dim);line-height:1.6}
+.coverage-list{display:flex;flex-direction:column;gap:10px;margin-top:20px;text-align:left}
+.cov-item{
+  display:flex;align-items:center;gap:10px;
+  font-size:14px;color:var(--light);padding:10px 14px;
+  background:rgba(0,87,255,.07);border-radius:8px;
+}
+.cov-dot{width:8px;height:8px;background:var(--cyan);border-radius:50%;flex-shrink:0}
+
+/* ════════════════════════════════════════════════════
+   TESTIMONIOS
+   ════════════════════════════════════════════════════ */
+#testimonios{background:var(--deep)}
+.test-head{text-align:center;max-width:500px;margin:0 auto 48px}
+.test-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px}
+.test-card{
+  background:var(--card);border:1px solid rgba(255,255,255,.06);
+  border-radius:16px;padding:28px;
+  transition:border-color .3s;
+}
+.test-card:hover{border-color:rgba(0,87,255,.35)}
+.test-stars{display:flex;gap:3px;margin-bottom:14px}
+.test-stars svg{width:16px;height:16px;fill:#f59e0b}
+.test-text{font-size:14px;color:var(--dim);line-height:1.7;font-style:italic;margin-bottom:20px}
+.test-author{display:flex;align-items:center;gap:12px}
+.test-avatar{
+  width:42px;height:42px;border-radius:50%;
+  background:var(--grad);display:flex;align-items:center;justify-content:center;
+  font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;color:#fff;
+}
+.test-name{font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;color:var(--white)}
+.test-role{font-size:12px;color:var(--dim)}
+
+/* ════════════════════════════════════════════════════
+   CONTACTO
+   ════════════════════════════════════════════════════ */
+#contacto{background:var(--ink)}
+.contact-wrap{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start}
+.contact-info h2{margin-bottom:16px}
+.contact-info p{color:var(--dim);font-size:15px;line-height:1.7;margin-bottom:32px}
+.contact-items{display:flex;flex-direction:column;gap:16px}
+.ci-item{
+  display:flex;align-items:center;gap:14px;
+  background:var(--card);border:1px solid rgba(255,255,255,.06);
+  border-radius:12px;padding:16px;
+  transition:border-color .2s,transform .2s;
+}
+.ci-item:hover{border-color:rgba(0,194,255,.35);transform:translateX(4px)}
+.ci-icon{
+  width:44px;height:44px;
+  background:linear-gradient(135deg,rgba(0,87,255,.20),rgba(0,194,255,.10));
+  border:1px solid rgba(0,194,255,.30);
+  border-radius:10px;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.ci-icon svg{width:22px;height:22px}
+.ci-label{font-size:11px;color:var(--cyan);font-family:'Rajdhani',sans-serif;letter-spacing:.1em;text-transform:uppercase;font-weight:700}
+.ci-value{font-size:15px;color:var(--white);margin-top:2px;font-weight:500}
+
+.contact-form{background:var(--card);border:1px solid rgba(255,255,255,.06);border-radius:20px;padding:36px}
+.form-title{font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;color:var(--white);margin-bottom:24px}
+.form-group{margin-bottom:18px}
+.form-group label{display:block;font-size:11px;color:var(--cyan);font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px}
+.form-group input,.form-group textarea,.form-group select{
+  width:100%;background:rgba(255,255,255,.04);border:1.5px solid rgba(255,255,255,.1);
+  border-radius:10px;padding:12px 16px;color:var(--white);font-family:'DM Sans',sans-serif;font-size:15px;outline:none;
+  transition:border-color .2s;
+}
+.form-group input:focus,.form-group textarea:focus,.form-group select:focus{border-color:var(--blue)}
+.form-group select option{background:var(--card)}
+.form-group textarea{resize:vertical;min-height:100px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.btn-submit{
+  width:100%;padding:15px;background:var(--grad);
+  border:none;border-radius:10px;color:#fff;
+  font-family:'Rajdhani',sans-serif;font-weight:700;font-size:16px;
+  letter-spacing:.08em;text-transform:uppercase;cursor:pointer;
+  box-shadow:0 0 28px var(--glow);transition:opacity .2s,transform .2s;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+}
+.btn-submit:hover{opacity:.85;transform:translateY(-2px)}
+.btn-submit svg{width:18px;height:18px;fill:#fff}
+.form-note{text-align:center;font-size:12px;color:var(--dim);margin-top:12px}
+
+/* ════════════════════════════════════════════════════
+   FOOTER
+   ════════════════════════════════════════════════════ */
+footer{background:var(--deep);border-top:1px solid rgba(255,255,255,.06);padding:56px 5% 28px}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:48px}
+.footer-brand p{font-size:13px;color:var(--dim);line-height:1.7;max-width:240px;margin-bottom:20px}
+.footer-logo svg,
+.footer-logo img{height:44px;width:auto;margin-bottom:16px}
+.social-row{display:flex;gap:10px}
+.social-btn{
+  width:38px;height:38px;border-radius:10px;
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);
+  display:flex;align-items:center;justify-content:center;
+  text-decoration:none;transition:.2s;color:var(--light);
+}
+.social-btn svg{width:18px;height:18px;fill:currentColor}
+.social-btn:hover{background:var(--blue);border-color:var(--blue);color:#fff;transform:translateY(-2px)}
+.footer-col h4{font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;color:var(--white);margin-bottom:16px;letter-spacing:.05em}
+.footer-col ul{list-style:none}
+.footer-col ul li{margin-bottom:10px}
+.footer-col ul li a{font-size:13px;color:var(--dim);text-decoration:none;transition:color .2s}
+.footer-col ul li a:hover{color:var(--cyan)}
+.footer-bottom{
+  border-top:1px solid rgba(255,255,255,.06);padding-top:24px;
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;
+}
+.footer-bottom p{font-size:12px;color:var(--dim)}
+.footer-bottom a{color:var(--cyan);text-decoration:none}
+.nit-badge{
+  background:rgba(0,87,255,.1);border:1px solid rgba(0,87,255,.2);
+  padding:6px 14px;border-radius:20px;font-family:'Rajdhani',sans-serif;
+  font-size:12px;color:var(--cyan);letter-spacing:.08em;
+}
+
+/* ════════════════════════════════════════════════════
+   WHATSAPP FLOAT
+   ════════════════════════════════════════════════════ */
+.wa-float{
+  position:fixed;bottom:28px;right:28px;z-index:99;
+  width:58px;height:58px;background:#25D366;
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 6px 28px rgba(37,211,102,.5);
+  transition:transform .2s,box-shadow .2s;text-decoration:none;
+  animation:waBounce 3s ease-in-out infinite 4s;
+}
+.wa-float:hover{transform:scale(1.1);box-shadow:0 8px 36px rgba(37,211,102,.65)}
+@keyframes waBounce{0%,100%{transform:scale(1)}10%,30%{transform:scale(1.12)}20%,40%{transform:scale(1.04)}}
+.wa-float svg{width:30px;height:30px;fill:#fff}
+
+/* ════════════════════════════════════════════════════
+   SCROLL REVEAL
+   ════════════════════════════════════════════════════ */
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s ease;will-change:opacity,transform}
+.reveal.visible{opacity:1;transform:none;will-change:auto}
+
+/* ════════════════════════════════════════════════════
+   RESPONSIVE
+   ════════════════════════════════════════════════════ */
+@media(max-width:900px){
+  .hero-visual{display:none}
+  .about-grid,.porque-wrap,.contact-wrap{grid-template-columns:1fr}
+  .footer-grid{grid-template-columns:1fr 1fr}
+  .proceso-grid::before{display:none}
+}
+@media(max-width:680px){
+  nav .nav-links,.nav-cta{display:none}
+  .hamburger{display:flex}
+  nav.open .nav-links{
+    display:flex;flex-direction:column;position:fixed;
+    top:72px;left:0;right:0;background:rgba(10,10,20,.97);
+    padding:24px 5%;gap:20px;border-bottom:1px solid rgba(0,87,255,.2);
+  }
+  nav.open .nav-cta{display:inline-flex;text-align:center;margin-top:8px;justify-content:center}
+  h1{font-size:38px}
+  .hero-stats{gap:24px}
+  .stat-num{font-size:28px}
+  .footer-grid{grid-template-columns:1fr}
+  .form-row{grid-template-columns:1fr}
+  .valores-grid{grid-template-columns:1fr}
+  section{padding:60px 5%}
+}
+
+/* ════════════════════════════════════════════════════
+   MÓDULO RASTREAR EQUIPO
+   ════════════════════════════════════════════════════ */
+#rastrear{padding:100px 5%;position:relative;overflow:hidden}
+#rastrear::before{
+  content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 60% 50% at 50% 0%,rgba(0,87,255,.1) 0%,transparent 70%),
+    radial-gradient(ellipse 40% 30% at 80% 100%,rgba(0,194,255,.06) 0%,transparent 60%);
+  pointer-events:none;
+}
+.track-wrap{max-width:760px;margin:0 auto;position:relative;z-index:1}
+.track-header{text-align:center;margin-bottom:40px}
+.track-search-box{
+  display:flex;gap:12px;flex-wrap:wrap;
+  background:rgba(22,22,40,.8);border:1px solid rgba(0,87,255,.25);
+  border-radius:14px;padding:20px;backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  box-shadow:0 0 40px rgba(0,87,255,.08);margin-bottom:32px;
+}
+.track-input-wrap{
+  flex:1;min-width:200px;display:flex;align-items:center;
+  background:rgba(10,10,20,.7);border:1px solid rgba(0,87,255,.3);
+  border-radius:8px;padding:0 16px;transition:border-color .25s,box-shadow .25s;
+}
+.track-input-wrap:focus-within{
+  border-color:var(--blue);
+  box-shadow:0 0 0 3px rgba(0,87,255,.15),0 0 20px rgba(0,87,255,.12);
+}
+.track-prefix{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:18px;
+  color:var(--cyan);letter-spacing:.1em;margin-right:4px;user-select:none}
+.track-input{
+  flex:1;background:transparent;border:none;outline:none;
+  font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;
+  color:var(--white);letter-spacing:.15em;padding:14px 0;width:100%;
+}
+.track-input::placeholder{color:rgba(136,136,170,.4);font-weight:400}
+.track-btn{
+  display:inline-flex;align-items:center;gap:10px;
+  background:var(--grad);color:#fff;border:none;cursor:pointer;
+  padding:14px 28px;border-radius:8px;font-family:'Rajdhani',sans-serif;
+  font-weight:700;font-size:15px;letter-spacing:.1em;text-transform:uppercase;
+  box-shadow:0 0 24px rgba(0,87,255,.45);
+  transition:opacity .2s,transform .2s,box-shadow .2s;white-space:nowrap;
+}
+.track-btn:hover{opacity:.88;transform:translateY(-2px);box-shadow:0 0 40px rgba(0,87,255,.6)}
+.track-btn:active{transform:translateY(0)}
+.track-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.track-btn svg{width:18px;height:18px;fill:#fff}
+.track-btn.loading svg{animation:trk-spin .8s linear infinite}
+@keyframes trk-spin{to{transform:rotate(360deg)}}
+.track-loading{
+  display:flex;align-items:center;justify-content:center;gap:14px;
+  padding:40px;font-family:'Rajdhani',sans-serif;color:var(--dim);
+  font-size:16px;letter-spacing:.08em;
+}
+.track-loading.hidden,.track-error.hidden,.track-result.hidden{display:none}
+.trk-spinner{
+  width:28px;height:28px;border:3px solid rgba(0,87,255,.2);
+  border-top-color:var(--blue);border-radius:50%;animation:trk-spin .8s linear infinite;
+}
+.track-error{
+  background:rgba(255,40,80,.07);border:1px solid rgba(255,40,80,.3);
+  border-radius:12px;padding:20px 24px;display:flex;align-items:center;gap:14px;
+  font-family:'Rajdhani',sans-serif;color:#ff6b8a;font-size:16px;font-weight:600;letter-spacing:.04em;
+}
+.track-error svg{width:22px;height:22px;fill:#ff6b8a;flex-shrink:0}
+.track-result{animation:trk-up .4s ease}
+@keyframes trk-up{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.track-card{
+  background:rgba(22,22,40,.85);border:1px solid rgba(0,87,255,.22);
+  border-radius:16px;overflow:hidden;backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+  box-shadow:0 0 60px rgba(0,87,255,.08);
+}
+.track-card-header{
+  padding:22px 28px;border-bottom:1px solid rgba(0,87,255,.12);
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;
+  background:linear-gradient(135deg,rgba(0,87,255,.08) 0%,transparent 60%);
+}
+.track-order-id{font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;
+  letter-spacing:.18em;color:var(--cyan);text-transform:uppercase}
+.track-badge{font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;padding:5px 14px;border-radius:20px}
+.badge-received{background:rgba(0,87,255,.15);color:var(--cyan);border:1px solid rgba(0,87,255,.3)}
+.badge-diagnosing{background:rgba(250,180,0,.12);color:#fbbf24;border:1px solid rgba(250,180,0,.3)}
+.badge-pending{background:rgba(255,80,80,.12);color:#f87171;border:1px solid rgba(255,80,80,.3)}
+.badge-ready{background:rgba(0,200,120,.12);color:#34d399;border:1px solid rgba(0,200,120,.3)}
+.badge-delivered{background:rgba(100,100,140,.15);color:var(--dim);border:1px solid rgba(100,100,140,.3)}
+.track-equipment{padding:20px 28px;border-bottom:1px solid rgba(0,87,255,.1);display:flex;align-items:center;gap:16px}
+.track-equip-icon{
+  width:48px;height:48px;flex-shrink:0;background:rgba(0,87,255,.12);
+  border:1px solid rgba(0,87,255,.25);border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+}
+.track-equip-icon svg{width:26px;height:26px}
+.track-equip-name{font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;color:var(--white);letter-spacing:.02em}
+.track-equip-sub{font-size:13px;color:var(--dim);margin-top:3px}
+.track-timeline{padding:28px 28px 24px}
+.track-tl-title{font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;
+  letter-spacing:.18em;color:var(--dim);text-transform:uppercase;margin-bottom:24px}
+.tl-steps{display:flex;align-items:flex-start}
+.tl-connector{flex:1;height:2px;margin-top:18px;background:rgba(0,87,255,.15)}
+.tl-connector.done{background:var(--blue)}
+.tl-connector.active-conn{background:linear-gradient(90deg,var(--blue) 0%,rgba(0,87,255,.2) 100%)}
+.tl-step{display:flex;flex-direction:column;align-items:center;width:64px;flex-shrink:0;text-align:center}
+.tl-dot{
+  width:36px;height:36px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-size:14px;margin-bottom:10px;
+  border:2px solid rgba(0,87,255,.2);background:rgba(10,10,20,.8);
+  color:var(--dim);position:relative;z-index:1;transition:all .3s;
+}
+.tl-dot svg{width:16px;height:16px;fill:currentColor}
+.tl-dot.done{background:var(--blue);border-color:var(--blue);color:#fff;box-shadow:0 0 16px rgba(0,87,255,.5)}
+.tl-dot.active{
+  background:rgba(0,87,255,.15);border-color:var(--cyan);color:var(--cyan);
+  animation:trk-pulse 2s infinite;
+}
+@keyframes trk-pulse{
+  0%,100%{box-shadow:0 0 0 4px rgba(0,87,255,.12),0 0 20px rgba(0,194,255,.3)}
+  50%{box-shadow:0 0 0 8px rgba(0,87,255,.06),0 0 32px rgba(0,194,255,.5)}
+}
+.tl-label{font-family:'Rajdhani',sans-serif;font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;line-height:1.3;color:var(--dim)}
+.tl-label.active{color:var(--cyan)}
+.tl-label.done{color:rgba(0,194,255,.7)}
+.track-card-footer{
+  padding:14px 28px;border-top:1px solid rgba(0,87,255,.1);
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;
+  background:rgba(10,10,20,.4);
+}
+.track-footer-item{font-size:12px;color:var(--dim);display:flex;align-items:center;gap:6px}
+.track-footer-item svg{width:14px;height:14px;fill:currentColor;opacity:.7}
+@media(max-width:600px){
+  .track-search-box{flex-direction:column}
+  .track-btn{width:100%;justify-content:center}
+  .tl-step{width:50px}
+  .tl-dot{width:28px;height:28px;font-size:11px}
+  .tl-label{font-size:9px}
+  .track-card-header,.track-equipment,.track-timeline{padding-left:16px;padding-right:16px}
+}
+
+/* ════════════════════════════════════════════════════
+   TIENDA DE SEGUNDA — IMÁGENES SVG PREMIUM
+   ════════════════════════════════════════════════════ */
+#tienda{padding:100px 5%;position:relative}
+#tienda::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 60% 40% at 80% 50%,rgba(0,194,255,.07) 0%,transparent 70%);
+  pointer-events:none;
+}
+.tienda-header{text-align:center;margin-bottom:56px}
+.tienda-header h2{font-size:clamp(2rem,4vw,2.8rem);font-family:'Rajdhani',sans-serif;font-weight:700;color:var(--white);line-height:1.1;margin-bottom:12px}
+.tienda-header p{color:var(--muted);max-width:520px;margin:0 auto 24px}
+.tienda-badges{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-bottom:48px}
+.tb{padding:6px 14px;border-radius:20px;font-size:12px;font-family:'Rajdhani',sans-serif;
+  font-weight:600;letter-spacing:.08em;text-transform:uppercase;display:inline-flex;align-items:center;gap:6px}
+.tb svg{width:14px;height:14px}
+.tb-blue{background:rgba(0,87,255,.15);color:var(--blue);border:1px solid rgba(0,87,255,.3)}
+.tb-cyan{background:rgba(0,194,255,.12);color:var(--cyan);border:1px solid rgba(0,194,255,.3)}
+.tb-green{background:rgba(0,200,100,.12);color:#00c864;border:1px solid rgba(0,200,100,.3)}
+
+.prod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:24px;margin-bottom:48px}
+.prod-card{
+  background:var(--card);border:1px solid var(--border);border-radius:16px;
+  overflow:hidden;transition:transform .25s,border-color .25s,box-shadow .25s;position:relative;
+  display:flex;flex-direction:column;
+}
+.prod-card:hover{transform:translateY(-6px);border-color:rgba(0,194,255,.4);box-shadow:0 16px 48px rgba(0,87,255,.18)}
+
+.prod-img{
+  height:200px;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,rgba(0,87,255,.18),rgba(0,194,255,.08));
+  position:relative;overflow:hidden;
+}
+.prod-img svg{width:78%;height:78%;filter:drop-shadow(0 8px 20px rgba(0,87,255,.3))}
+.prod-img::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 60%,rgba(10,10,20,.6));pointer-events:none}
+.prod-warranty{
+  position:absolute;top:12px;right:12px;
+  background:rgba(0,87,255,.85);backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+  color:#fff;font-size:10px;font-family:'Rajdhani',sans-serif;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;padding:4px 10px;border-radius:20px;z-index:2;
+}
+.prod-body{padding:20px;display:flex;flex-direction:column;flex:1}
+.prod-cat{font-size:11px;font-family:'Rajdhani',sans-serif;font-weight:600;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--cyan);margin-bottom:6px}
+.prod-name{font-size:1.05rem;font-weight:600;color:var(--white);margin-bottom:8px;line-height:1.3}
+.prod-desc{
+  font-size:13px;color:var(--muted);line-height:1.5;margin-bottom:14px;
+  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;
+  overflow:hidden;text-overflow:ellipsis;
+}
+.prod-price{
+  font-family:'Rajdhani',sans-serif;font-size:1.4rem;font-weight:700;
+  background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;margin-bottom:4px;margin-top:auto;
+}
+.prod-state{font-size:11px;color:var(--dim);margin-bottom:16px}
+.prod-btn{
+  display:flex;align-items:center;justify-content:center;gap:8px;width:100%;
+  padding:10px;border-radius:10px;background:rgba(0,87,255,.12);border:1px solid rgba(0,87,255,.3);
+  color:var(--blue);font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;text-decoration:none;
+}
+.prod-btn svg{width:14px;height:14px;fill:currentColor}
+.prod-btn:hover{background:var(--grad);border-color:transparent;color:#fff;box-shadow:0 4px 20px rgba(0,87,255,.4)}
+
+.tienda-footer{
+  display:flex;flex-direction:column;align-items:center;gap:16px;
+  padding:32px;background:var(--card);border:1px solid var(--border);border-radius:16px;text-align:center;
+}
+.tienda-footer p{color:var(--muted);font-size:14px;max-width:580px;line-height:1.6}
+.btn-tyc{
+  display:inline-flex;align-items:center;gap:8px;padding:12px 24px;
+  border-radius:10px;background:transparent;border:1px solid var(--blue);
+  color:var(--blue);font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;font-family:inherit;
+}
+.btn-tyc:hover{background:var(--blue);color:#fff}
+
+.modal-overlay{
+  display:none;position:fixed;inset:0;background:rgba(10,10,20,.85);
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  z-index:9000;align-items:center;justify-content:center;padding:20px;
+}
+.modal-overlay.open{display:flex}
+.modal-box{
+  background:#0f1020;border:1px solid rgba(0,194,255,.25);border-radius:20px;
+  max-width:700px;width:100%;max-height:85vh;display:flex;flex-direction:column;overflow:hidden;
+}
+.modal-head{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:24px 28px;border-bottom:1px solid var(--border);
+}
+.modal-head h3{
+  font-family:'Rajdhani',sans-serif;font-size:1.4rem;font-weight:700;
+  background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.modal-close{
+  background:none;border:none;color:var(--muted);font-size:22px;
+  cursor:pointer;line-height:1;padding:4px 8px;transition:color .2s;
+}
+.modal-close:hover{color:var(--white)}
+.modal-body{overflow-y:auto;padding:28px;flex:1}
+.modal-body h4{
+  font-family:'Rajdhani',sans-serif;font-size:1rem;font-weight:700;
+  color:var(--cyan);text-transform:uppercase;letter-spacing:.08em;
+  margin:24px 0 10px;padding-bottom:6px;border-bottom:1px solid rgba(0,194,255,.15);
+}
+.modal-body h4:first-child{margin-top:0}
+.modal-body p,.modal-body li{font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:8px}
+.modal-body ul{padding-left:20px}
+.modal-body li{list-style:disc}
+.modal-body strong{color:var(--white)}
+
+@media(max-width:600px){
+  .modal-box{max-height:92vh}
+  .modal-head,.modal-body{padding-left:16px;padding-right:16px}
+}
+</style>
+</head>
+<body>
+<nav id="navbar">
+  <a href="/#" class="nav-logo" aria-label="REDDI Soluciones Integrales"></a>
+  <ul class="nav-links">
+    <li><a href="/#negocios">Negocios</a></li>
+    <li><a href="/#servicios">Hogar</a></li>
+    <li><a href="/#cobertura">Cobertura</a></li>
+    <li><a href="/#rastrear">Mi orden</a></li>
+    <li><a href="/tienda">Tienda</a></li>
+    <li><a href="/#contacto">Contacto</a></li>
+  </ul>
+  <a href="tel:+573133806300" class="nav-tel" aria-label="Llamar al 313 380 6300" style="color:var(--light);text-decoration:none;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:14px;letter-spacing:.05em;display:inline-flex;align-items:center;gap:6px;margin-right:14px">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20 15.5c-1.2 0-2.5-.2-3.6-.6-.3-.1-.7 0-1 .2l-2.2 2.2c-2.8-1.4-5.1-3.8-6.6-6.6l2.2-2.2c.3-.3.4-.7.2-1-.4-1.1-.6-2.4-.6-3.6 0-.5-.5-1-1-1H4c-.5 0-1 .5-1 1 0 9.4 7.6 17 17 17 .5 0 1-.5 1-1v-3.5c0-.6-.5-1-1-1z"/></svg>
+    313 380 6300
+  </a>
+  <a href="https://wa.me/573133806300?text=Hola%20REDDI%2C%20necesito%20soporte%20t%C3%A9cnico" target="_blank" rel="noopener" class="nav-cta">
+    <svg viewBox="0 0 24 24"><path d="M17.5 14.4c-.3-.1-1.7-.9-2-1-.3-.1-.5-.1-.7.2l-.9 1.2c-.2.2-.3.2-.6.1-.3-.1-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6.1-.1.3-.3.4-.5.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5-.1-.1-.7-1.6-.9-2.2-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.1.2 2.1 3.2 5.1 4.5 2.9 1.3 2.9.8 3.5.8.5-.1 1.7-.7 2-1.4.2-.7.2-1.3.2-1.4-.1-.1-.3-.2-.6-.4z"/></svg>
+    Solicitar Servicio
+  </a>
+  <button class="hamburger" id="hamburger" aria-label="Abrir menú">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<section class="hero" style="padding-top:130px;padding-bottom:40px">
+  <div class="hero-inner">
+    <nav aria-label="Ruta de navegación" style="margin-bottom:22px;font-size:14px;color:var(--dim)">
+      <a href="/" style="color:var(--cyan);text-decoration:none">Inicio</a>
+      <span style="margin:0 8px">›</span>
+      <span>Estado de mi orden</span>
+    </nav>
+    <div class="hero-badge" style="margin-bottom:20px">● Seguimiento en tiempo real</div>
+    <h1 style="font-size:clamp(30px,4.4vw,50px)">Consulta el Estado de <span>tu Equipo</span></h1>
+    <p class="hero-sub" style="max-width:600px">
+      Ingresa el número de orden que aparece en tu comprobante y consulta en qué etapa va tu reparación, qué encontró el técnico y cuándo estará listo.
+    </p>
+  </div>
+</section>
+
+<section id="rastrear" style="padding-top:10px">
+  <div class="track-wrap">
+    <div class="track-search-box reveal">
+      <div class="track-input-wrap">
+        <span class="track-prefix">ORD-</span>
+        <input id="trackInput" class="track-input" type="text" placeholder="0001" autocomplete="off" inputmode="numeric" />
+      </div>
+      <button id="trackBtn" class="track-btn" type="button">
+        <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 1 0-.7.7l.27.28v.79l5 5L21 19l-5-5zm-6 0A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14z"/></svg>
+        Consultar
+      </button>
+    </div>
+
+    <div id="trackLoading" class="track-loading hidden">
+      <div class="trk-spinner"></div>
+      <span>Consultando tu orden…</span>
+    </div>
+
+    <div id="trackError" class="track-error hidden">
+      <svg viewBox="0 0 24 24"><path d="M12 2L1 21h22L12 2zm0 15a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm1-4h-2V9h2v4z"/></svg>
+      <span id="trackErrorMsg">Ocurrió un error.</span>
+    </div>
+
+    <div id="trackResult" class="track-result hidden"></div>
+  </div>
+</section>
+
+<!-- ═══════════════ AYUDA ═══════════════ -->
+<section style="padding:60px 0 80px">
+  <div class="wrap">
+    <div class="services-head" style="flex-direction:column;align-items:center;text-align:center">
+      <div class="reveal" style="display:flex;flex-direction:column;align-items:center">
+        <div class="section-label" style="justify-content:center">Ayuda</div>
+        <h2 style="font-size:clamp(24px,3vw,34px)">Preguntas <span>frecuentes</span></h2>
+      </div>
+    </div>
+    <div style="max-width:720px;margin:0 auto;display:grid;gap:14px">
+      <details style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px 24px">
+        <summary style="cursor:pointer;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:17px;color:var(--white);list-style:none">¿Dónde encuentro mi número de orden?</summary>
+        <p style="color:var(--dim);font-size:14px;line-height:1.7;margin:14px 0 0">Está en el comprobante que recibiste al dejar tu equipo, con el formato ORD-0001. También te lo enviamos por WhatsApp cuando registramos la orden.</p>
+      </details>
+      <details style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px 24px">
+        <summary style="cursor:pointer;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:17px;color:var(--white);list-style:none">¿Qué significa cada etapa?</summary>
+        <p style="color:var(--dim);font-size:14px;line-height:1.7;margin:14px 0 0"><strong>Recibido:</strong> tu equipo está en el taller.<br><strong>Diagnóstico:</strong> lo estamos revisando para identificar la falla.<br><strong>Repuestos:</strong> encontramos la falla y estamos consiguiendo las piezas.<br><strong>Listo:</strong> la reparación terminó y puedes recogerlo.<br><strong>Entregado:</strong> el equipo ya está contigo.</p>
+      </details>
+      <details style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px 24px">
+        <summary style="cursor:pointer;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:17px;color:var(--white);list-style:none">Mi orden no aparece</summary>
+        <p style="color:var(--dim);font-size:14px;line-height:1.7;margin:14px 0 0">Verifica que el número esté completo y bien escrito. Si acabas de dejar el equipo, puede tomar unos minutos en aparecer. Si el problema sigue, escríbenos por WhatsApp y lo revisamos.</p>
+      </details>
+      <details style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px 24px">
+        <summary style="cursor:pointer;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:17px;color:var(--white);list-style:none">¿Cada cuánto se actualiza?</summary>
+        <p style="color:var(--dim);font-size:14px;line-height:1.7;margin:14px 0 0">En el momento. Apenas el técnico cambia el estado de tu orden, lo ves reflejado aquí.</p>
+      </details>
+    </div>
+    <div style="text-align:center;margin-top:34px">
+      <a class="btn-primary" href="https://wa.me/573133806300?text=Hola%20REDDI%2C%20tengo%20una%20consulta%20sobre%20mi%20orden" target="_blank" rel="noopener">Consultar por WhatsApp</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="footer-logo" id="footerLogo"><!-- mismo logo del nav, inyectado por JS --></div>
+      <p>Servicio técnico para hogares y negocios en <span data-loc-zone>Medellín, Támesis, Valparaíso, Caramanta, La Pintada, Supía, Riosucio, Marmato y Manizales</span>. Garantía escrita.</p>
+      <p style="margin-top:12px;color:var(--light);font-size:14px">
+        <strong>WhatsApp / Llamadas:</strong> <a href="tel:+573133806300" style="color:var(--cyan);text-decoration:none">313 380 6300</a><br>
+        <strong>Horario:</strong> Lunes a sábado, 8:00 a.m. – 6:00 p.m.
+      </p>
+      <div class="social-row" id="socialRow"><!-- social buttons dinámicos --></div>
+    </div>
+    <div class="footer-col">
+      <h4>Servicios</h4>
+      <ul>
+        <li><a href="#servicios">Televisores y Pantallas</a></li>
+        <li><a href="#servicios">Electrodomésticos</a></li>
+        <li><a href="#negocios">Soluciones para Negocios</a></li>
+        <li><a href="#servicios">Desarrollo de Software a la Medida</a></li>
+        <li><a href="#servicios">Cómputo y Celulares</a></li>
+        <li><a href="#servicios">Encomiendas</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Empresa</h4>
+      <ul>
+        <li><a href="#nosotros">Quiénes Somos</a></li>
+        <li><a href="#proceso">Nuestro Proceso</a></li>
+        <li><a href="#porque">¿Por qué REDDI?</a></li>
+        <li><a href="#testimonios">Testimonios</a></li>
+        <li><a href="#contacto">Contacto</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Legal</h4>
+      <ul>
+        <li><a href="#" onclick="document.getElementById('modalTyC').classList.add('active');return false;">Términos de Servicio</a></li>
+        <li><a href="#" onclick="document.getElementById('modalTyC').classList.add('active');return false;">Política de Garantía</a></li>
+        <li><a href="#" onclick="alert('Política de Privacidad: REDDI Soluciones Integrales recopila únicamente los datos necesarios para prestar el servicio técnico solicitado (nombre, teléfono, dirección y detalles del equipo). No compartimos información con terceros salvo para prestar el servicio. Ejerce tus derechos escribiendo a nuestro WhatsApp 313 380 6300.');return false;">Política de Privacidad</a></li>
+      </ul>
+      <div style="margin-top:20px">
+        <div class="nit-badge">NIT: 1041611021-1</div>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© <span id="yr"></span> <a href="#">REDDI Soluciones Integrales</a>. Todos los derechos reservados.</p>
+    <p>Hecho por <strong>técnicos calificados y expertos</strong> 🇨🇴</p>
+  </div>
+</footer>
+
+<script>
+const ICONS = {
+  /* —— SERVICIOS —— */
+  tv: `<svg viewBox="0 0 48 48" class="ico"><rect x="4" y="6" width="40" height="28" rx="3" fill="url(#brandGrad)" opacity=".18"/><rect x="4" y="6" width="40" height="28" rx="3" fill="none" stroke="url(#brandGrad)" stroke-width="2"/><path d="M16 40h16M20 34v6M28 34v6" stroke="url(#brandGrad)" stroke-width="2" stroke-linecap="round" fill="none"/><path d="M21 14l10 6-10 6V14z" fill="url(#brandGrad)"/></svg>`,
+
+  fridge: `<svg viewBox="0 0 48 48" class="ico"><rect x="11" y="4" width="26" height="40" rx="3" fill="url(#brandGrad)" opacity=".18"/><rect x="11" y="4" width="26" height="40" rx="3" fill="none" stroke="url(#brandGrad)" stroke-width="2"/><line x1="11" y1="18" x2="37" y2="18" stroke="url(#brandGrad)" stroke-width="2"/><line x1="15" y1="10" x2="15" y2="14" stroke="url(#brandGrad)" stroke-width="2.2" stroke-linecap="round"/><line x1="15" y1="24" x2="15" y2="38" stroke="url(#brandGrad)" stroke-width="2.2" stroke-linecap="round"/><circle cx="32" cy="11" r="1.5" fill="url(#brandGrad)"/></svg>`,
+
+  industrial: `<svg viewBox="0 0 48 48" class="ico"><path d="M5 42V20l9 4V20l9 4V20l9 4V8h7v34" fill="url(#brandGrad)" opacity=".18"/><path d="M5 42V20l9 4V20l9 4V20l9 4V8h7v34H5z" fill="none" stroke="url(#brandGrad)" stroke-width="2" stroke-linejoin="round"/><circle cx="14" cy="34" r="2" fill="url(#brandGrad)"/><circle cx="23" cy="34" r="2" fill="url(#brandGrad)"/><circle cx="32" cy="34" r="2" fill="url(#brandGrad)"/><rect x="38" y="14" width="4" height="3" fill="url(#brandGrad)"/><rect x="38" y="20" width="4" height="3" fill="url(#brandGrad)"/></svg>`,
+
+  laptop: `<svg viewBox="0 0 48 48" class="ico"><rect x="9" y="9" width="30" height="22" rx="2" fill="url(#brandGrad)" opacity=".18"/><rect x="9" y="9" width="30" height="22" rx="2" fill="none" stroke="url(#brandGrad)" stroke-width="2"/><path d="M3 36h42l-3 5H6l-3-5z" fill="url(#brandGrad)" opacity=".25"/><path d="M3 36h42l-3 5H6l-3-5z" fill="none" stroke="url(#brandGrad)" stroke-width="2" stroke-linejoin="round"/><line x1="20" y1="36" x2="28" y2="36" stroke="url(#brandGrad)" stroke-width="2"/></svg>`,
+
+  maintenance: `<svg viewBox="0 0 48 48" class="ico"><path d="M30.5 6c4.7 0 8.5 3.8 8.5 8.5 0 1.7-.5 3.3-1.4 4.6L13.5 43.2a4.4 4.4 0 1 1-6.2-6.2L31.4 12.4c-1.3.9-2.9 1.4-4.6 1.4 1.6 1.6 3.7 2.5 5.9 2.5" fill="url(#brandGrad)" opacity=".22"/><path d="M30.5 6c4.7 0 8.5 3.8 8.5 8.5 0 1.7-.5 3.3-1.4 4.6L13.5 43.2a4.4 4.4 0 1 1-6.2-6.2L31.4 12.4c-1.3.9-2.9 1.4-4.6 1.4" fill="none" stroke="url(#brandGrad)" stroke-width="2" stroke-linejoin="round"/><circle cx="34" cy="14" r="2.5" fill="url(#brandGrad)"/></svg>`,
+
+  truck: `<svg viewBox="0 0 48 48" class="ico"><path d="M3 14h22v20H3z" fill="url(#brandGrad)" opacity=".18"/><path d="M25 20h11l6 6v8H25V20z" fill="url(#brandGrad)" opacity=".22"/><path d="M3 14h22v20H3zM25 20h11l6 6v8H25V20z" fill="none" stroke="url(#brandGrad)" stroke-width="2" stroke-linejoin="round"/><circle cx="13" cy="38" r="3.5" fill="#0a0a14" stroke="url(#brandGrad)" stroke-width="2"/><circle cx="34" cy="38" r="3.5" fill="#0a0a14" stroke="url(#brandGrad)" stroke-width="2"/></svg>`,
+
+  car: `<svg viewBox="0 0 48 48" class="ico"><path d="M5 30v-5l4-2 3-9h24l3 9 4 2v5H5z" fill="url(#brandGrad)" opacity=".22"/><path d="M5 30v-5l4-2 3-9h24l3 9 4 2v5H5z" fill="none" stroke="url(#brandGrad)" stroke-width="2" stroke-linejoin="round"/><line x1="14" y1="14" x2="34" y2="14" stroke="url(#brandGrad)" stroke-width="2" stroke-linecap="round" opacity=".5"/><circle cx="14" cy="34" r="3.5" fill="#0a0a14" stroke="url(#brandGrad)" stroke-width="2"/><circle cx="34" cy="34" r="3.5" fill="#0a0a14" stroke="url(#brandGrad)" stroke-width="2"/><path d="M30 18l4-2 2 4-4 2-2-4z" fill="#00C2FF"/></svg>`,
+
+  paint: `<svg viewBox="0 0 48 48" class="ico"><rect x="6" y="10" width="26" height="10" rx="2" fill="url(#brandGrad)" opacity=".22"/><rect x="6" y="10" width="26" height="10" rx="2" fill="none" stroke="url(#brandGrad)" stroke-width="2"/><path d="M32 13h6c2 0 4 2 4 4v3c0 2-2 4-4 4h-6" fill="none" stroke="url(#brandGrad)" stroke-width="2" stroke-linecap="round"/><line x1="19" y1="20" x2="19" y2="28" stroke="url(#brandGrad)" stroke-width="2.2" stroke-linecap="round"/><rect x="13" y="28" width="12" height="14" rx="2" fill="url(#brandGrad)" opacity=".22"/><rect x="13" y="28" width="12" height="14" rx="2" fill="none" stroke="url(#brandGrad)" stroke-width="2"/><circle cx="19" cy="35" r="2" fill="#00C2FF"/></svg>`,
+
+  package: `<svg viewBox="0 0 48 48" class="ico"><path d="M24 5L42 14v20L24 43 6 34V14L24 5z" fill="url(#brandGrad)" opacity=".18"/><path d="M24 5L42 14v20L24 43 6 34V14L24 5z" fill="none" stroke="url(#brandGrad)" stroke-width="2" stroke-linejoin="round"/><path d="M6 14l18 9 18-9M24 23v20" fill="none" stroke="url(#brandGrad)" stroke-width="2" stroke-linejoin="round"/><path d="M14 9l18 9" fill="none" stroke="url(#brandGrad)" stroke-width="1.6" opacity=".7"/></svg>`,
+
+  /* Negocios — Restaurantes, cafeterías, comercios */
+  business: `<svg viewBox="0 0 48 48" class="ico"><path d="M6 16l3-8h30l3 8v3a4 4 0 0 1-7 2 4 4 0 0 1-6 0 4 4 0 0 1-6 0 4 4 0 0 1-6 0 4 4 0 0 1-6 0 4 4 0 0 1-5-2v-3z" fill="url(#brandGrad)" opacity=".22"/><path d="M6 16l3-8h30l3 8v3a4 4 0 0 1-7 2 4 4 0 0 1-6 0 4 4 0 0 1-6 0 4 4 0 0 1-6 0 4 4 0 0 1-6 0 4 4 0 0 1-5-2v-3z" fill="none" stroke="url(#brandGrad)" stroke-width="2" stroke-linejoin="round"/><path d="M9 24v18h30V24" fill="none" stroke="url(#brandGrad)" stroke-width="2" stroke-linejoin="round"/><rect x="14" y="28" width="8" height="14" fill="url(#brandGrad)" opacity=".55"/><rect x="26" y="28" width="10" height="8" fill="none" stroke="url(#brandGrad)" stroke-width="1.6"/><circle cx="34" cy="32" r="0.8" fill="url(#brandGrad)"/></svg>`,
+
+  /* Cómputo + Celulares combinado */
+  compuPhone: `<svg viewBox="0 0 48 48" class="ico"><rect x="5" y="10" width="26" height="18" rx="2" fill="url(#brandGrad)" opacity=".22"/><rect x="5" y="10" width="26" height="18" rx="2" fill="none" stroke="url(#brandGrad)" stroke-width="2"/><path d="M2 32h32l-2 4H4l-2-4z" fill="url(#brandGrad)" opacity=".30"/><path d="M2 32h32l-2 4H4l-2-4z" fill="none" stroke="url(#brandGrad)" stroke-width="2" stroke-linejoin="round"/><rect x="34" y="14" width="11" height="20" rx="2" fill="url(#brandGrad)" opacity=".30"/><rect x="34" y="14" width="11" height="20" rx="2" fill="none" stroke="url(#brandGrad)" stroke-width="2"/><line x1="38" y1="31" x2="41" y2="31" stroke="url(#brandGrad)" stroke-width="1.4" stroke-linecap="round"/><circle cx="39.5" cy="17" r="0.6" fill="url(#brandGrad)"/></svg>`,
+
+  /* Casa — Servicio a domicilio */
+  home: `<svg viewBox="0 0 48 48" class="ico"><path d="M24 6L6 22v18a2 2 0 0 0 2 2h32a2 2 0 0 0 2-2V22L24 6z" fill="url(#brandGrad)" opacity=".22"/><path d="M24 6L6 22v18a2 2 0 0 0 2 2h32a2 2 0 0 0 2-2V22L24 6z" fill="none" stroke="url(#brandGrad)" stroke-width="2" stroke-linejoin="round"/><path d="M19 42V28h10v14" fill="none" stroke="url(#brandGrad)" stroke-width="2" stroke-linejoin="round"/><circle cx="24" cy="34" r="1.2" fill="url(#brandGrad)"/></svg>`,
+
+  /* —— VALORES —— */
+  honesty: `<svg viewBox="0 0 32 32" class="ico"><path d="M16 3l11 4v9c0 7-5 12-11 14C10 28 5 23 5 16V7l11-4z" fill="url(#brandGrad)" opacity=".22"/><path d="M16 3l11 4v9c0 7-5 12-11 14C10 28 5 23 5 16V7l11-4z" fill="none" stroke="url(#brandGrad)" stroke-width="2" stroke-linejoin="round"/><path d="M11 16l4 4 7-7" fill="none" stroke="#00C2FF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+
+  speed: `<svg viewBox="0 0 32 32" class="ico"><path d="M19 2L6 18h8l-2 12 13-16h-8l2-12z" fill="url(#brandGrad)" opacity=".30"/><path d="M19 2L6 18h8l-2 12 13-16h-8l2-12z" fill="none" stroke="url(#brandGrad)" stroke-width="2" stroke-linejoin="round"/></svg>`,
+
+  warranty: `<svg viewBox="0 0 32 32" class="ico"><path d="M16 3l4 3 5-1 1 5 4 4-3 4 1 5-5 1-3 4-4-3-5 1-1-5-4-4 3-4-1-5 5-1 3-4z" fill="url(#brandGrad)" opacity=".22"/><path d="M16 3l4 3 5-1 1 5 4 4-3 4 1 5-5 1-3 4-4-3-5 1-1-5-4-4 3-4-1-5 5-1 3-4z" fill="none" stroke="url(#brandGrad)" stroke-width="1.8" stroke-linejoin="round"/><path d="M16 11l1.8 3.6 4 .6-2.9 2.8.7 4-3.6-1.9-3.6 1.9.7-4-2.9-2.8 4-.6L16 11z" fill="#00C2FF"/></svg>`,
+
+  closeness: `<svg viewBox="0 0 32 32" class="ico"><path d="M16 28C8 22 3 17 3 11c0-4 3-7 7-7 2.5 0 4.7 1.3 6 3.4C17.3 5.3 19.5 4 22 4c4 0 7 3 7 7 0 6-5 11-13 17z" fill="url(#brandGrad)" opacity=".30"/><path d="M16 28C8 22 3 17 3 11c0-4 3-7 7-7 2.5 0 4.7 1.3 6 3.4C17.3 5.3 19.5 4 22 4c4 0 7 3 7 7 0 6-5 11-13 17z" fill="none" stroke="url(#brandGrad)" stroke-width="2" stroke-linejoin="round"/></svg>`,
+
+  /* —— POR QUÉ NOSOTROS —— */
+  certified: `<svg viewBox="0 0 40 40" class="ico"><circle cx="20" cy="15" r="10" fill="url(#brandGrad)" opacity=".22"/><circle cx="20" cy="15" r="10" fill="none" stroke="url(#brandGrad)" stroke-width="2"/><path d="M14 22l-3 14 9-5 9 5-3-14" fill="none" stroke="url(#brandGrad)" stroke-width="2" stroke-linejoin="round"/><path d="M16 14l3 3 5-5" fill="none" stroke="#00C2FF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+
+  fairPrice: `<svg viewBox="0 0 40 40" class="ico"><circle cx="20" cy="20" r="14" fill="url(#brandGrad)" opacity=".18"/><circle cx="20" cy="20" r="14" fill="none" stroke="url(#brandGrad)" stroke-width="2"/><path d="M16 14h6c2 0 3.5 1.4 3.5 3s-1.5 3-3.5 3h-4c-2 0-3.5 1.4-3.5 3s1.5 3 3.5 3h6" fill="none" stroke="url(#brandGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="20" y1="10" x2="20" y2="30" stroke="url(#brandGrad)" stroke-width="2" stroke-linecap="round"/></svg>`,
+
+  digitalDoc: `<svg viewBox="0 0 40 40" class="ico"><path d="M11 5h14l9 9v19a3 3 0 0 1-3 3H11a3 3 0 0 1-3-3V8a3 3 0 0 1 3-3z" fill="url(#brandGrad)" opacity=".18"/><path d="M11 5h14l9 9v19a3 3 0 0 1-3 3H11a3 3 0 0 1-3-3V8a3 3 0 0 1 3-3z" fill="none" stroke="url(#brandGrad)" stroke-width="2" stroke-linejoin="round"/><path d="M25 5v9h9" fill="none" stroke="url(#brandGrad)" stroke-width="2" stroke-linejoin="round"/><path d="M14 24l3 3 7-7" fill="none" stroke="#00C2FF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><line x1="14" y1="33" x2="26" y2="33" stroke="url(#brandGrad)" stroke-width="2" stroke-linecap="round" opacity=".7"/></svg>`,
+
+  pin: `<svg viewBox="0 0 40 40" class="ico"><path d="M20 4c7 0 12 5 12 12 0 9-12 21-12 21S8 25 8 16c0-7 5-12 12-12z" fill="url(#brandGrad)" opacity=".30"/><path d="M20 4c7 0 12 5 12 12 0 9-12 21-12 21S8 25 8 16c0-7 5-12 12-12z" fill="none" stroke="url(#brandGrad)" stroke-width="2" stroke-linejoin="round"/><circle cx="20" cy="16" r="4.5" fill="#00C2FF"/></svg>`,
+
+  parts: `<svg viewBox="0 0 40 40" class="ico"><path d="M20 4l2.5 4 4.5-1 1 4.5 4 2.5-2 4.5 2 4.5-4 2.5-1 4.5-4.5-1L20 36l-2.5-4-4.5 1-1-4.5-4-2.5 2-4.5-2-4.5 4-2.5 1-4.5 4.5 1L20 4z" fill="url(#brandGrad)" opacity=".22"/><path d="M20 4l2.5 4 4.5-1 1 4.5 4 2.5-2 4.5 2 4.5-4 2.5-1 4.5-4.5-1L20 36l-2.5-4-4.5 1-1-4.5-4-2.5 2-4.5-2-4.5 4-2.5 1-4.5 4.5 1L20 4z" fill="none" stroke="url(#brandGrad)" stroke-width="1.7" stroke-linejoin="round"/><circle cx="20" cy="20" r="5" fill="#00C2FF"/></svg>`,
+
+  /* —— CONTACTO —— */
+  pinSm: `<svg viewBox="0 0 24 24" class="ico"><path d="M12 2c4 0 7 3 7 7 0 5-7 12-7 12S5 14 5 9c0-4 3-7 7-7z" fill="url(#brandGrad)" opacity=".30"/><path d="M12 2c4 0 7 3 7 7 0 5-7 12-7 12S5 14 5 9c0-4 3-7 7-7z" fill="none" stroke="url(#brandGrad)" stroke-width="1.8" stroke-linejoin="round"/><circle cx="12" cy="9" r="2.5" fill="#00C2FF"/></svg>`,
+
+  email: `<svg viewBox="0 0 24 24" class="ico"><rect x="3" y="5" width="18" height="14" rx="2" fill="url(#brandGrad)" opacity=".22"/><rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="url(#brandGrad)" stroke-width="1.8"/><path d="M3 7l9 7 9-7" fill="none" stroke="url(#brandGrad)" stroke-width="1.8" stroke-linejoin="round"/></svg>`,
+
+  chat: `<svg viewBox="0 0 24 24" class="ico"><path d="M4 5h16a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H8l-4 4V7a2 2 0 0 1 2-2z" fill="url(#brandGrad)" opacity=".22"/><path d="M4 5h16a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H8l-4 4V7a2 2 0 0 1 2-2z" fill="none" stroke="url(#brandGrad)" stroke-width="1.8" stroke-linejoin="round"/><circle cx="9" cy="11.5" r="1.2" fill="url(#brandGrad)"/><circle cx="13" cy="11.5" r="1.2" fill="url(#brandGrad)"/><circle cx="17" cy="11.5" r="1.2" fill="url(#brandGrad)"/></svg>`,
+
+  clock: `<svg viewBox="0 0 24 24" class="ico"><circle cx="12" cy="12" r="9" fill="url(#brandGrad)" opacity=".22"/><circle cx="12" cy="12" r="9" fill="none" stroke="url(#brandGrad)" stroke-width="1.8"/><path d="M12 7v5l3.5 2" fill="none" stroke="url(#brandGrad)" stroke-width="2" stroke-linecap="round"/></svg>`,
+
+  /* —— REDES SOCIALES —— */
+  whatsapp: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.1-1.7-.9-2-1-.3-.1-.5-.1-.7.2l-.9 1.2c-.2.2-.3.2-.6.1-.3-.1-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6.1-.1.3-.3.4-.5.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5-.1-.1-.7-1.6-.9-2.2-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.1.2 2.1 3.2 5.1 4.5 2.9 1.3 2.9.8 3.5.8.5-.1 1.7-.7 2-1.4.2-.7.2-1.3.2-1.4-.1-.1-.3-.2-.6-.4zM12 2C6.5 2 2 6.5 2 12c0 1.7.5 3.4 1.3 4.9L2 22l5.3-1.4c1.4.8 3 1.2 4.7 1.2 5.5 0 10-4.5 10-10S17.5 2 12 2z"/></svg>`,
+
+  software: `<svg viewBox="0 0 48 48" class="ico"><rect x="5" y="8" width="38" height="26" rx="3" fill="url(#brandGrad)" opacity=".18"/><rect x="5" y="8" width="38" height="26" rx="3" fill="none" stroke="url(#brandGrad)" stroke-width="2"/><path d="M16 40h16M20 34v6M28 34v6" stroke="url(#brandGrad)" stroke-width="2" stroke-linecap="round" fill="none"/><rect x="11" y="14" width="12" height="9" rx="1.5" fill="none" stroke="url(#brandGrad)" stroke-width="1.6"/><path d="M14 17l2 1.5-2 1.5" fill="none" stroke="url(#brandGrad)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><line x1="18" y1="20.5" x2="20" y2="20.5" stroke="url(#brandGrad)" stroke-width="1.4" stroke-linecap="round"/><circle cx="31" cy="16" r="2" fill="url(#brandGrad)"/><circle cx="37" cy="16" r="2" fill="url(#brandGrad)" opacity=".5"/><rect x="28" y="22" width="11" height="2" rx="1" fill="url(#brandGrad)" opacity=".55"/><rect x="28" y="26" width="7" height="2" rx="1" fill="url(#brandGrad)" opacity=".35"/></svg>`,
+
+  facebook: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.5 2.9h-2.4v7A10 10 0 0 0 22 12z"/></svg>`,
+
+  instagram: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.2c3.2 0 3.6 0 4.8.1 1.2.1 1.8.2 2.2.4.6.2 1 .5 1.4.9.4.4.7.9.9 1.4.2.4.4 1 .4 2.2.1 1.2.1 1.6.1 4.8s0 3.6-.1 4.8c-.1 1.2-.2 1.8-.4 2.2-.2.6-.5 1-.9 1.4-.4.4-.9.7-1.4.9-.4.2-1 .4-2.2.4-1.2.1-1.6.1-4.8.1s-3.6 0-4.8-.1c-1.2-.1-1.8-.2-2.2-.4-.6-.2-1-.5-1.4-.9-.4-.4-.7-.9-.9-1.4-.2-.4-.4-1-.4-2.2-.1-1.2-.1-1.6-.1-4.8s0-3.6.1-4.8c.1-1.2.2-1.8.4-2.2.2-.6.5-1 .9-1.4.4-.4.9-.7 1.4-.9.4-.2 1-.4 2.2-.4 1.2-.1 1.6-.1 4.8-.1zM12 0C8.7 0 8.3 0 7.1.1 5.8.1 5 .3 4.2.6c-.8.3-1.5.7-2.2 1.4C1.3 2.7.9 3.4.6 4.2.3 5 .1 5.8.1 7.1 0 8.3 0 8.7 0 12s0 3.7.1 4.9c0 1.3.2 2.1.5 2.9.3.8.7 1.5 1.4 2.2.7.7 1.4 1.1 2.2 1.4.8.3 1.6.5 2.9.5C8.3 24 8.7 24 12 24s3.7 0 4.9-.1c1.3 0 2.1-.2 2.9-.5.8-.3 1.5-.7 2.2-1.4.7-.7 1.1-1.4 1.4-2.2.3-.8.5-1.6.5-2.9.1-1.2.1-1.6.1-4.9s0-3.7-.1-4.9c0-1.3-.2-2.1-.5-2.9-.3-.8-.7-1.5-1.4-2.2C21.3 1.3 20.6.9 19.8.6 19 .3 18.2.1 16.9.1 15.7 0 15.3 0 12 0zm0 5.8a6.2 6.2 0 1 0 0 12.4 6.2 6.2 0 0 0 0-12.4zm0 10.2a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.4-11.8a1.4 1.4 0 1 0 0 2.9 1.4 1.4 0 0 0 0-2.9z"/></svg>`,
+
+  /* —— UTILIDADES —— */
+  star: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 6.9 7.5.6-5.7 5 1.7 7.4L12 18l-6.5 3.9 1.7-7.4-5.7-5L9 8.9 12 2z"/></svg>`,
+
+  check: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg>`,
+
+  search: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 1 0-.7.7l.27.28v.79l5 5L21 19l-5-5zm-6 0A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14z"/></svg>`,
+
+  calendar: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 4h-1V2h-2v2H8V2H6v2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2z"/></svg>`,
+
+  refresh: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.6 6.4A8 8 0 1 0 4 12h2a6 6 0 1 1 1.8 4.2l1.4-1.4-4.2-1V18l1.4-1.4A8 8 0 0 0 17.6 6.4z"/></svg>`
+};
+
+const waLink = (msg) => `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`;
+
+let _trackerReady = false;
+function initTracker(){
+  if (_trackerReady) return;          // evita doble binding
+  _trackerReady = true;
+  const _cfg = {
+    apiKey:"AIzaSyCVZI7iZpAki73Jn7ij2eCXHGWmNfxL0WE",
+    authDomain:"torque-systems-reddi.firebaseapp.com",
+    projectId:"torque-systems-reddi",
+    storageBucket:"torque-systems-reddi.firebasestorage.app",
+    messagingSenderId:"328793894817",
+    appId:"1:328793894817:web:c624134859e06096efe5e0"
+  };
+  let _db = null;
+  try {
+    if (typeof firebase !== 'undefined'){
+      const _app = firebase.apps.length ? firebase.app() : firebase.initializeApp(_cfg, 'reddi');
+      _db = _app.firestore();
+    }
+  } catch(e){ console.error('[REDDI Tracker] init', e); }
+
+  const ESTADOS = [
+    { key:'received',      icon:ICONS.package,   label:'Recibido' },
+    { key:'diagnosing',    icon:ICONS.search,    label:'Diagnóstico' },
+    { key:'pending_parts', icon:ICONS.parts,     label:'Repuestos' },
+    { key:'ready',         icon:ICONS.check,     label:'Listo' },
+    { key:'delivered',     icon:ICONS.truck,     label:'Entregado' }
+  ];
+  const BADGE = {
+    received:'badge-received', diagnosing:'badge-diagnosing',
+    pending_parts:'badge-pending', ready:'badge-ready', delivered:'badge-delivered'
+  };
+  const LABEL = {
+    received:'Recibido', diagnosing:'En Diagnóstico',
+    pending_parts:'Pend. Repuestos', ready:'Listo para Entrega', delivered:'Entregado'
+  };
+  const EQUIP_ICONS = {
+    laptop:ICONS.laptop, computador:ICONS.laptop, pc:ICONS.laptop,
+    smartphone:ICONS.tv, celular:ICONS.tv, tablet:ICONS.tv,
+    televisor:ICONS.tv, tv:ICONS.tv,
+    lavadora:ICONS.fridge, nevera:ICONS.fridge, refrigerador:ICONS.fridge,
+    impresora:ICONS.industrial,
+    mecanica:ICONS.car, mecánica:ICONS.car, carro:ICONS.car, auto:ICONS.car,
+    pintura:ICONS.paint, encomienda:ICONS.package
+  };
+
+  const equIcon = (t) => {
+    if (!t) return ICONS.maintenance;
+    const l = t.toLowerCase();
+    for (const k in EQUIP_ICONS) if (l.includes(k)) return EQUIP_ICONS[k];
+    return ICONS.maintenance;
+  };
+  const fmtDate = (ts) => {
+    if (!ts) return '—';
+    const d = ts.toDate ? ts.toDate() : new Date(ts);
+    return d.toLocaleDateString('es-CO', { day:'2-digit', month:'short', year:'numeric' });
+  };
+  /* Escapa texto antes de insertarlo en el HTML.
+     Necesario porque el diagnóstico lo escribe una persona y podría
+     contener caracteres que rompan la página. */
+  const esc = (s) => String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+
+  const hide = (id) => document.getElementById(id).classList.add('hidden');
+  const show = (id) => document.getElementById(id).classList.remove('hidden');
+  const hideAll = () => ['trackLoading','trackError','trackResult'].forEach(hide);
+
+  /* ─── Normalización: el usuario puede escribir "1", "0001", "ord-0001", etc.
+         Generamos múltiples variantes para tolerar cualquier formato guardado. */
+  function variantesId(raw){
+    const limpio = raw.replace(/[^a-z0-9-]/gi, '');
+    const soloNum = limpio.replace(/[^0-9]/g, '');
+    const variantes = new Set();
+    if (limpio)  variantes.add(limpio.toUpperCase());
+    if (soloNum) {
+      variantes.add(soloNum);
+      variantes.add(soloNum.padStart(4, '0'));
+      variantes.add('ORD-' + soloNum.padStart(4, '0'));
+      variantes.add('ORD-' + soloNum);
+      const n = parseInt(soloNum, 10);
+      if (!isNaN(n)) variantes.add(String(n)); // por si está guardado como número
+    }
+    return Array.from(variantes);
+  }
+
+  /* ─── Identificador de este negocio.
+         Cada negocio que use TORQUE tiene el suyo; así el buscador de
+         REDDI nunca muestra órdenes de otra empresa. */
+  const REDDI_BUSINESS_ID = 'reddi-soluciones-integrales';
+
+  /* ─── Búsqueda en `public_orders`: copia recortada y segura de la orden.
+         La colección `orders` (con teléfono, cédula y costos internos) ya no
+         se consulta desde la web.
+         El ID del documento es "{businessId}__{ORD-XXXX}", así que basta
+         con una lectura directa: sin consultas, más rápido y más barato. */
+  async function buscarOrden(variantes){
+    if (!_db) throw new Error('Firebase no disponible');
+    const col = _db.collection('public_orders');
+
+    // Solo tienen sentido las variantes con formato ORD-XXXX
+    const ids = variantes.filter(v => /^ORD-\d+$/i.test(v)).map(v => v.toUpperCase());
+
+    for (const id of ids){
+      try {
+        const doc = await col.doc(REDDI_BUSINESS_ID + '__' + id).get();
+        if (doc.exists){
+          const data = doc.data() || {};
+          if (!data.id) data.id = id;
+          return data;
+        }
+      } catch(_){ /* sigue con la siguiente variante */ }
+    }
+
+    // Respaldo: por si alguna copia quedó guardada con otro formato de ID
+    for (const id of ids){
+      try {
+        const snap = await col
+          .where('businessId', '==', REDDI_BUSINESS_ID)
+          .where('id', '==', id)
+          .limit(1).get();
+        if (!snap.empty){
+          const data = snap.docs[0].data() || {};
+          if (!data.id) data.id = id;
+          return data;
+        }
+      } catch(_){ /* sigue */ }
+    }
+
+    return null;
+  }
+
+  async function rastrear(){
+    const inp = document.getElementById('trackInput');
+    const btn = document.getElementById('trackBtn');
+    const raw = (inp.value || '').trim();
+    if (!raw){
+      document.getElementById('trackErrorMsg').textContent = 'Ingresa el número de orden de tu comprobante.';
+      hideAll(); show('trackError'); inp.focus(); return;
+    }
+    const variantes = variantesId(raw);
+    const idMostrar = variantes.find(v => v.startsWith('ORD-')) || raw.toUpperCase();
+
+    hideAll(); show('trackLoading');
+    btn.disabled = true; btn.classList.add('loading');
+    try {
+      if (!_db) throw new Error('Firebase no disponible. Revisa tu conexión.');
+      const data = await buscarOrden(variantes);
+      hide('trackLoading');
+      if (!data){
+        document.getElementById('trackErrorMsg').textContent =
+          'Orden "' + idMostrar + '" no encontrada. Verifica tu comprobante o consúltanos por WhatsApp.';
+        show('trackError');
+      } else {
+        renderResultado(data);
+      }
+    } catch(err){
+      hide('trackLoading');
+      const esRed = err.message && (err.message.toLowerCase().includes('network') || err.code === 'unavailable');
+      document.getElementById('trackErrorMsg').textContent =
+        esRed ? 'Sin conexión. Verifica tu internet e intenta de nuevo.'
+              : (err.message || 'Error al consultar. Intenta de nuevo en unos segundos.');
+      show('trackError');
+      console.error('[REDDI Tracker] consultar', err);
+    } finally {
+      btn.disabled = false; btn.classList.remove('loading');
+    }
+  }
+
+  function renderResultado(data){
+    const status  = data.status || 'received';
+    const stepIdx = ESTADOS.findIndex(e => e.key === status);
+    const equip   = data.equipment || {};
+    const equipStr = [equip.brand, equip.model].filter(Boolean).join(' ') || 'Equipo';
+
+    let tl = '<div class="tl-steps">';
+    ESTADOS.forEach((s, i) => {
+      const done   = i < stepIdx;
+      const active = i === stepIdx;
+      const content = done ? ICONS.check : s.icon;
+      tl += `<div class="tl-step">`
+          + `<div class="tl-dot${done ? ' done' : active ? ' active' : ''}">${content}</div>`
+          + `<div class="tl-label${done ? ' done' : active ? ' active' : ''}">${s.label}</div>`
+          + `</div>`;
+      if (i < ESTADOS.length - 1){
+        tl += `<div class="tl-connector${done ? ' done' : active ? ' active-conn' : ''}"></div>`;
+      }
+    });
+    tl += '</div>';
+
+    /* ─── Bloque de diagnóstico: qué reportó el cliente y qué encontró
+           el técnico. Solo se muestra si hay contenido. */
+    let diagHtml = '';
+    if (data.reported || data.technical){
+      diagHtml = `<div style="padding:18px 22px;border-top:1px solid rgba(255,255,255,.06)">`;
+      if (data.reported){
+        diagHtml += `<div style="margin-bottom:${data.technical ? '14px' : '0'}">`
+                 +  `<div style="font-family:Rajdhani,sans-serif;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--cyan);margin-bottom:5px">Falla reportada</div>`
+                 +  `<div style="font-size:13.5px;color:var(--dim);line-height:1.6">${esc(data.reported)}</div>`
+                 +  `</div>`;
+      }
+      if (data.technical){
+        diagHtml += `<div>`
+                 +  `<div style="font-family:Rajdhani,sans-serif;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--cyan);margin-bottom:5px">Diagnóstico técnico</div>`
+                 +  `<div style="font-size:13.5px;color:var(--dim);line-height:1.6">${esc(data.technical)}</div>`
+                 +  `</div>`;
+      }
+      diagHtml += `</div>`;
+    }
+
+    /* ─── Fotos del equipo tomadas en la recepción ─── */
+    let fotosHtml = '';
+    if (Array.isArray(data.photos) && data.photos.length){
+      fotosHtml = `<div style="padding:18px 22px;border-top:1px solid rgba(255,255,255,.06)">`
+                + `<div style="font-family:Rajdhani,sans-serif;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--cyan);margin-bottom:10px">Fotos del equipo</div>`
+                + `<div style="display:flex;gap:10px;flex-wrap:wrap">`
+                + data.photos.slice(0, 6).map(u =>
+                    `<a href="${esc(u)}" target="_blank" rel="noopener">`
+                  + `<img src="${esc(u)}" alt="Foto del equipo" loading="lazy" `
+                  + `style="width:82px;height:82px;object-fit:cover;border-radius:8px;border:1px solid rgba(255,255,255,.1)"></a>`
+                  ).join('')
+                + `</div></div>`;
+    }
+
+    /* ─── Total, solo cuando ya está definido ─── */
+    let totalHtml = '';
+    if (Number(data.total) > 0){
+      totalHtml = `<div style="padding:16px 22px;border-top:1px solid rgba(255,255,255,.06);display:flex;justify-content:space-between;align-items:center">`
+                + `<span style="font-family:Rajdhani,sans-serif;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)">Total del servicio</span>`
+                + `<span style="font-family:Rajdhani,sans-serif;font-size:20px;font-weight:700;color:var(--cyan)">$${Number(data.total).toLocaleString('es-CO')}</span>`
+                + `</div>`;
+    }
+
+    const nombre = data.customerFirstName || (data.customer && data.customer.name) || '';
+
+    const html =
+      `<div class="track-card">`
+      + `<div class="track-card-header">`
+      +   `<div>`
+      +     `<div class="track-order-id">Orden · ${esc(data.id || '—')}</div>`
+      +     `<div style="font-family:DM Sans,sans-serif;font-size:13px;color:var(--dim);margin-top:4px">`
+      +       `Cliente: ${nombre ? esc(nombre) : 'No especificado'}`
+      +     `</div>`
+      +   `</div>`
+      +   `<div class="track-badge ${BADGE[status] || 'badge-received'}">${LABEL[status] || 'Recibido'}</div>`
+      + `</div>`
+      + `<div class="track-equipment">`
+      +   `<div class="track-equip-icon">${equIcon(equip.type)}</div>`
+      +   `<div>`
+      +     `<div class="track-equip-name">${esc(equipStr)}</div>`
+      +     `<div class="track-equip-sub">${esc(equip.type || '')}</div>`
+      +   `</div>`
+      + `</div>`
+      + `<div class="track-timeline">`
+      +   `<div class="track-tl-title">Progreso del servicio</div>`
+      +   tl
+      + `</div>`
+      + diagHtml
+      + fotosHtml
+      + totalHtml
+      + `<div class="track-card-footer">`
+      +   `<div class="track-footer-item">${ICONS.calendar} Recibido: ${fmtDate(data.date || data.createdAt)}</div>`
+      +   `<div class="track-footer-item">${ICONS.refresh} Actualizado: ${fmtDate(data.updatedAt || data.date || data.createdAt)}</div>`
+      +   `<div class="track-footer-item">`
+      +     `<a href="${waLink('Hola REDDI, consulto por la orden ' + (data.id || ''))}" `
+      +        `style="color:var(--cyan);text-decoration:none;font-family:Rajdhani,sans-serif;font-weight:600;font-size:12px;letter-spacing:.06em;display:inline-flex;align-items:center;gap:6px" `
+      +        `target="_blank" rel="noopener">${ICONS.whatsapp} Preguntar por WhatsApp →</a>`
+      +   `</div>`
+      + `</div>`
+      + `</div>`;
+
+    const out = document.getElementById('trackResult');
+    out.innerHTML = html;
+    show('trackResult');
+    out.scrollIntoView({ behavior:'smooth', block:'nearest' });
+  }
+
+  const _btn = document.getElementById('trackBtn');
+  const _inp = document.getElementById('trackInput');
+  if (_btn) _btn.addEventListener('click', rastrear);
+  if (_inp) _inp.addEventListener('keydown', (e) => { if (e.key === 'Enter') rastrear(); });
+
+  /* ─── Consulta automática desde el enlace ───
+     Permite mandar por WhatsApp un enlace como
+     reddisoluciones.com/rastrear?orden=ORD-0001
+     y que el cliente vea su orden sin escribir nada. */
+  try {
+    const p = new URLSearchParams(window.location.search);
+    const pedida = (p.get('orden') || p.get('ord') || p.get('id') || '').trim();
+    if (pedida && _inp) {
+      _inp.value = pedida.replace(/^ORD-?/i, '');
+      rastrear();
+    }
+  } catch(_){ /* sin parámetro, el cliente escribe su número */ }
+  if (!_db) console.warn('[REDDI Tracker] Firebase aún no está disponible al inicializar.');
+}
+
+/* Arranque: espera a que Firebase esté disponible */
+function _bootRastreo(){
+  if (typeof firebase === 'undefined'){
+    return setTimeout(_bootRastreo, 120);
+  }
+  initTracker();
+}
+if (document.readyState === 'loading'){
+  document.addEventListener('DOMContentLoaded', _bootRastreo);
+} else {
+  _bootRastreo();
+}
+</script>
+</body>
+</html>
