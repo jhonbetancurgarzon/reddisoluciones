@@ -813,6 +813,7 @@ footer{background:var(--deep);border-top:1px solid rgba(255,255,255,.06);padding
 .badge-received{background:rgba(0,87,255,.15);color:var(--cyan);border:1px solid rgba(0,87,255,.3)}
 .badge-diagnosing{background:rgba(250,180,0,.12);color:#fbbf24;border:1px solid rgba(250,180,0,.3)}
 .badge-quoted{background:rgba(167,139,250,.14);color:#a78bfa;border:1px solid rgba(167,139,250,.32)}
+.badge-repair{background:rgba(251,146,60,.14);color:#fb923c;border:1px solid rgba(251,146,60,.32)}
 .badge-pending{background:rgba(255,80,80,.12);color:#f87171;border:1px solid rgba(255,80,80,.3)}
 .badge-ready{background:rgba(0,200,120,.12);color:#34d399;border:1px solid rgba(0,200,120,.3)}
 .badge-delivered{background:rgba(100,100,140,.15);color:var(--dim);border:1px solid rgba(100,100,140,.3)}
@@ -1252,18 +1253,19 @@ function initTracker(){
     { key:'received',      icon:ICONS.package,   label:'Recibido' },
     { key:'diagnosing',    icon:ICONS.search,    label:'Diagnóstico' },
     { key:'quoted',        icon:ICONS.digitalDoc, label:'Presupuesto' },
+    { key:'in_repair',     icon:ICONS.maintenance, label:'Reparando' },
     { key:'pending_parts', icon:ICONS.parts,     label:'Repuestos' },
     { key:'ready',         icon:ICONS.check,     label:'Listo' },
     { key:'delivered',     icon:ICONS.truck,     label:'Entregado' }
   ];
   const BADGE = {
     received:'badge-received', diagnosing:'badge-diagnosing',
-    quoted:'badge-quoted',
+    quoted:'badge-quoted', in_repair:'badge-repair',
     pending_parts:'badge-pending', ready:'badge-ready', delivered:'badge-delivered'
   };
   const LABEL = {
     received:'Recibido', diagnosing:'En Diagnóstico',
-    quoted:'Presupuestado',
+    quoted:'Presupuestado', in_repair:'En Reparación',
     pending_parts:'Pend. Repuestos', ready:'Listo para Entrega', delivered:'Entregado'
   };
   /* ─── Mensaje del estado actual.
@@ -1281,11 +1283,11 @@ function initTracker(){
 
     const listar = (arr) => arr.length <= 1 ? (arr[0] || '')
       : arr.slice(0, -1).join(', ') + ' y ' + arr[arr.length - 1];
-
-    // Quita el punto final para poder encadenar frases
-    const sp = (s) => s.replace(/[.\s]+$/, '');
-    // Primera letra en minúscula, para que encaje dentro de una frase
     const min = (s) => s.charAt(0).toLowerCase() + s.slice(1);
+
+    /* El texto que escribe el técnico va en su propio bloque, no dentro
+       de una frase. Así funciona igual si escribe "cambio de batería"
+       que si escribe "tiene daño de fuente, hay que reparar la tarjeta". */
 
     switch (estado){
 
@@ -1296,63 +1298,74 @@ function initTracker(){
         };
 
       case 'quoted': {
-        let txt;
-        if (esInst){
-          txt = diag ? 'Esto es lo que incluye la instalación: ' + min(sp(diag)) + '.'
-                     : 'Ya tenemos definido todo lo que incluye la instalación.';
-        } else if (esMant){
-          txt = diag ? 'Esto es lo que incluye el mantenimiento: ' + min(sp(diag)) + '.'
-                     : 'Ya tenemos definido todo lo que incluye el mantenimiento.';
-        } else {
-          txt = diag ? 'Ya revisamos tu equipo. Esto es lo que necesita: ' + min(sp(diag)) + '.'
-                     : 'Ya revisamos tu equipo y sabemos qué necesita.';
-        }
         const eso = esInst ? 'La instalación' : esMant ? 'El mantenimiento' : 'El trabajo';
-        txt += plata
-          ? ' ' + eso + ' cuesta ' + plata + '.'
-          : ' Te pasamos el valor por WhatsApp.';
-        txt += ' Si estás de acuerdo, avísanos y arrancamos.';
+        let intro = esInst ? 'Ya definimos todo lo que incluye la instalación.'
+                  : esMant ? 'Ya definimos todo lo que incluye el mantenimiento.'
+                           : 'Ya revisamos tu equipo. Esto fue lo que encontramos:';
+        if ((esInst || esMant) && diag) intro = intro.replace(/\.$/, ':');
+        const cierre = (plata ? eso + ' cuesta ' + plata + '. ' : 'Te pasamos el valor por WhatsApp. ')
+                     + 'Si estás de acuerdo, avísanos y arrancamos.';
         return {
           titulo: (esInst || esMant) ? 'Ya tenemos tu presupuesto' : 'Ya sabemos qué necesita tu equipo',
-          texto:  txt,
-          accion: 'aceptar'
+          texto:  diag ? intro : (esInst || esMant ? intro + ' ' : 'Ya revisamos tu equipo. '),
+          detalle: diag,
+          cierre:  cierre,
+          accion:  'aceptar'
+        };
+      }
+
+      case 'in_repair': {
+        let intro = esInst ? 'Estamos haciendo la instalación en este momento.'
+                  : esMant ? 'Estamos haciendo el mantenimiento en este momento.'
+                           : 'Tu equipo ya está en el banco de trabajo. Estamos reparándolo.';
+        if (diag) intro = intro.replace(/\.$/, ':');
+        return {
+          titulo:  esInst ? 'Instalando' : esMant ? 'Haciendo el mantenimiento' : 'Reparando tu equipo',
+          texto:   intro,
+          detalle: diag,
+          cierre:  'Te avisamos apenas quede listo.'
         };
       }
 
       case 'pending_parts': {
+        // Este estado ocurre durante la reparación: se detuvo el trabajo
+        // porque falta una pieza.
         let txt = rep.length
-          ? 'Estamos consiguiendo ' + (rep.length > 1 ? 'los repuestos' : 'el repuesto')
-            + ' que necesita tu equipo: ' + listar(rep.map(min)) + '.'
-          : 'Estamos consiguiendo los repuestos que necesita tu equipo.';
+          ? 'La reparación está en pausa mientras conseguimos '
+            + (rep.length > 1 ? 'los repuestos' : 'el repuesto') + ' que necesita tu equipo: '
+            + listar(rep.map(min)) + '.'
+          : 'La reparación está en pausa mientras conseguimos los repuestos que necesita tu equipo.';
         txt += rep.length === 1
-          ? ' Apenas llegue seguimos con la reparación y te avisamos.'
-          : ' Apenas lleguen seguimos con la reparación y te avisamos.';
-        return { titulo: 'Buscando los repuestos', texto: txt };
+          ? ' Apenas llegue retomamos el trabajo y te avisamos.'
+          : ' Apenas lleguen retomamos el trabajo y te avisamos.';
+        return { titulo: 'Esperando repuestos', texto: txt };
       }
 
       case 'ready': {
-        let txt;
+        let intro, cierre = '';
         if (esInst){
-          txt = diag ? 'Terminamos la instalación: ' + min(sp(diag)) + '. Quedó probada y funcionando.'
-                     : 'Terminamos la instalación. Quedó probada y funcionando.';
-          if (data.installLocation) txt += ' La dejamos en ' + min(sp(data.installLocation)) + '.';
+          intro = diag ? 'Terminamos la instalación. Esto fue lo que hicimos:'
+                       : 'Terminamos la instalación. Quedó probada y funcionando.';
+          if (data.installLocation) cierre = 'La dejamos en ' + min(data.installLocation.replace(/[.\s]+$/, '')) + '. ';
         } else if (esMant){
-          txt = diag ? 'Ya le hicimos el mantenimiento: ' + min(sp(diag)) + '.'
-                     : 'Ya le hicimos el mantenimiento a tu equipo.';
+          intro = diag ? 'Ya le hicimos el mantenimiento a tu equipo. Esto fue lo que hicimos:'
+                       : 'Ya le hicimos el mantenimiento a tu equipo.';
           if (data.nextMaintenanceDate){
             const f = new Date(data.nextMaintenanceDate + 'T12:00:00');
-            if (!isNaN(f)) txt += ' Te recomendamos el próximo para el '
-              + f.toLocaleDateString('es-CO', { day:'numeric', month:'long', year:'numeric' }) + '.';
+            if (!isNaN(f)) cierre = 'Te recomendamos el próximo para el '
+              + f.toLocaleDateString('es-CO', { day:'numeric', month:'long', year:'numeric' }) + '. ';
           }
         } else {
-          txt = diag ? 'Ya quedó listo: ' + min(sp(diag)) + '. Lo probamos y está funcionando bien.'
-                     : 'Tu equipo ya quedó reparado y funcionando.';
+          intro = diag ? 'Tu equipo ya quedó reparado. Esto fue lo que hicimos:'
+                       : 'Tu equipo ya quedó reparado y funcionando.';
         }
-        if (plata) txt += ' Son ' + plata + '.';
-        if (!esInst && !esMant) txt += ' Cuando quieras pasas por él, o coordinamos la entrega.';
+        if (plata) cierre += 'Son ' + plata + '. ';
+        if (!esInst && !esMant) cierre += 'Cuando quieras pasas por él, o coordinamos la entrega.';
         return {
-          titulo: esInst ? 'Instalación terminada' : esMant ? 'Mantenimiento listo' : 'Tu equipo ya está listo',
-          texto:  txt
+          titulo:  esInst ? 'Instalación terminada' : esMant ? 'Mantenimiento listo' : 'Tu equipo ya está listo',
+          texto:   intro,
+          detalle: diag,
+          cierre:  cierre.trim()
         };
       }
 
@@ -1505,20 +1518,46 @@ function initTracker(){
 
   function renderResultado(data){
     const status  = data.status || 'received';
-    const stepIdx = ESTADOS.findIndex(e => e.key === status);
+    const tipoSrv = data.serviceType || 'electronica';
+
+    /* ─── Qué etapas se le muestran al cliente ───
+       No todas aplican a todos los trabajos:
+       · Un mantenimiento o una instalación no se "diagnostican":
+         se sabe de antemano qué se va a hacer.
+       · La espera de repuestos solo se muestra si la orden realmente
+         estuvo detenida por eso (marca `tuvoRepuestos`), no por tener
+         repuestos cargados en el detalle del documento. */
+    const sinDiagnostico = tipoSrv === 'mantenimiento' || tipoSrv === 'instalacion';
+    const esperoRepuesto = status === 'pending_parts' || data.tuvoRepuestos === true;
+
+    const etapas = ESTADOS.filter(e => {
+      if (e.key === 'diagnosing'    && sinDiagnostico && status !== 'diagnosing')    return false;
+      if (e.key === 'pending_parts' && !esperoRepuesto)                              return false;
+      return true;
+    });
+    const stepIdx = etapas.findIndex(e => e.key === status);
     const equip   = data.equipment || {};
     const equipStr = [equip.brand, equip.model].filter(Boolean).join(' ') || 'Equipo';
 
+    // En mantenimiento e instalación, "Reparando" no es la palabra
+    const etiqueta = (k, base) => {
+      if (k === 'in_repair'){
+        if (tipoSrv === 'mantenimiento') return 'En proceso';
+        if (tipoSrv === 'instalacion')   return 'Instalando';
+      }
+      return base;
+    };
+
     let tl = '<div class="tl-steps">';
-    ESTADOS.forEach((s, i) => {
+    etapas.forEach((s, i) => {
       const done   = i < stepIdx;
       const active = i === stepIdx;
       const content = done ? ICONS.check : s.icon;
       tl += `<div class="tl-step">`
           + `<div class="tl-dot${done ? ' done' : active ? ' active' : ''}">${content}</div>`
-          + `<div class="tl-label${done ? ' done' : active ? ' active' : ''}">${s.label}</div>`
+          + `<div class="tl-label${done ? ' done' : active ? ' active' : ''}">${etiqueta(s.key, s.label)}</div>`
           + `</div>`;
-      if (i < ESTADOS.length - 1){
+      if (i < etapas.length - 1){
         tl += `<div class="tl-connector${done ? ' done' : active ? ' active-conn' : ''}"></div>`;
       }
     });
@@ -1529,6 +1568,16 @@ function initTracker(){
     let msgHtml = `<div style="padding:20px 22px;border-top:1px solid rgba(255,255,255,.06);background:rgba(0,87,255,.05)">`
       + `<div style="font-family:Rajdhani,sans-serif;font-size:16px;font-weight:700;color:var(--white);margin-bottom:6px">${esc(msg.titulo)}</div>`
       + `<div style="font-size:14px;color:var(--dim);line-height:1.65">${esc(msg.texto)}</div>`;
+
+    // Lo que escribió el técnico, en su propio bloque destacado
+    if (msg.detalle){
+      msgHtml += `<div style="margin:12px 0;padding:12px 16px;border-left:3px solid var(--cyan);background:rgba(0,194,255,.05);border-radius:0 8px 8px 0">`
+              +  `<div style="font-size:14.5px;color:var(--light);line-height:1.6">${esc(msg.detalle)}</div>`
+              +  `</div>`;
+    }
+    if (msg.cierre){
+      msgHtml += `<div style="font-size:14px;color:var(--dim);line-height:1.65">${esc(msg.cierre)}</div>`;
+    }
 
     // En "Presupuestado" el cliente puede aprobar el trabajo de una vez
     if (msg.accion === 'aceptar'){
