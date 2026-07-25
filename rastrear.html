@@ -1266,36 +1266,77 @@ function initTracker(){
     quoted:'Presupuestado',
     pending_parts:'Pend. Repuestos', ready:'Listo para Entrega', delivered:'Entregado'
   };
-  /* ─── Mensaje que explica al cliente qué significa el estado
-         actual y qué se espera de él. La línea de etapas dice
-         DÓNDE va; esto dice QUÉ pasa y QUÉ sigue. ─── */
-  const MENSAJE = {
-    received: {
-      titulo: 'Recibimos tu equipo',
-      texto:  'Tu equipo está registrado en nuestro taller. En breve comenzamos la revisión técnica.'
-    },
-    diagnosing: {
-      titulo: 'Estamos revisando tu equipo',
-      texto:  'Nuestro técnico está identificando la falla. Apenas tengamos el diagnóstico te informamos qué encontramos y cuánto cuesta la reparación.'
-    },
-    quoted: {
-      titulo: 'Tenemos el diagnóstico y el presupuesto',
-      texto:  'Ya sabemos qué tiene tu equipo y cuánto vale repararlo. Revisá el detalle aquí abajo y confirmanos si querés que procedamos.',
-      accion: 'aceptar'
-    },
-    pending_parts: {
-      titulo: 'Consiguiendo los repuestos',
-      texto:  'Aprobaste la reparación y estamos gestionando los repuestos necesarios. Te avisamos apenas lleguen y retomemos el trabajo.'
-    },
-    ready: {
-      titulo: 'Tu equipo está listo',
-      texto:  'La reparación terminó y tu equipo quedó funcionando. Ya podés pasar a recogerlo o coordinar la entrega con nosotros.'
-    },
-    delivered: {
-      titulo: 'Equipo entregado',
-      texto:  'Tu equipo ya está contigo. Conservá el comprobante: la reparación cuenta con garantía escrita. Cualquier novedad, escribinos.'
+  /* ─── Mensaje del estado actual.
+         Se arma con lo que el técnico ya escribió en TORQUE: el
+         diagnóstico y los repuestos. Así no hay que redactar nada
+         aparte para cada orden. ─── */
+  function construirMensaje(estado, data){
+    const diag  = (data.technical || '').trim();
+    const total = Number(data.total) || 0;
+    const plata = total > 0 ? '$' + total.toLocaleString('es-CO') : '';
+    const rep   = Array.isArray(data.partsNames) ? data.partsNames.filter(Boolean) : [];
+
+    // Une una lista en lenguaje natural: "a, b y c"
+    const listar = (arr) => arr.length <= 1 ? (arr[0] || '')
+      : arr.slice(0, -1).join(', ') + ' y ' + arr[arr.length - 1];
+
+    // Quita el punto final para poder encadenar frases sin doble punto
+    const sinPunto = (s) => s.replace(/[.\s]+$/, '');
+
+    switch (estado){
+
+      case 'diagnosing':
+        return {
+          titulo: 'Estamos revisando tu equipo',
+          texto:  'Nuestro técnico está identificando la falla. Apenas tengamos el diagnóstico te informamos qué encontramos y cuánto cuesta la reparación.'
+        };
+
+      case 'quoted': {
+        let txt = diag
+          ? 'Esto fue lo que encontramos: ' + sinPunto(diag) + '.'
+          : 'Ya terminamos el diagnóstico de tu equipo.';
+        txt += plata
+          ? ' La reparación tiene un valor de ' + plata + '.'
+          : ' Te pasamos el valor de la reparación por WhatsApp.';
+        txt += ' Confirmanos si querés que procedamos.';
+        return { titulo: 'Tenemos el diagnóstico y el presupuesto', texto: txt, accion: 'aceptar' };
+      }
+
+      case 'pending_parts': {
+        let txt = rep.length
+          ? 'Tu equipo necesita: ' + listar(rep) + '. Ya estamos gestionando '
+            + (rep.length > 1 ? 'los repuestos' : 'el repuesto') + '.'
+          : 'Estamos consiguiendo los repuestos necesarios para tu equipo.';
+        txt += rep.length === 1
+          ? ' Te avisamos apenas llegue y retomemos la reparación.'
+          : ' Te avisamos apenas lleguen y retomemos la reparación.';
+        return { titulo: 'Consiguiendo los repuestos', texto: txt };
+      }
+
+      case 'ready': {
+        let txt = diag
+          ? 'Listo: ' + sinPunto(diag) + '. Tu equipo quedó funcionando y probado.'
+          : 'La reparación terminó y tu equipo quedó funcionando.';
+        txt += plata
+          ? ' El valor a cancelar es de ' + plata + '.'
+          : '';
+        txt += ' Ya podés pasar a recogerlo o coordinar la entrega con nosotros.';
+        return { titulo: 'Tu equipo está listo', texto: txt };
+      }
+
+      case 'delivered':
+        return {
+          titulo: 'Equipo entregado',
+          texto:  'Tu equipo ya está contigo. Conservá el comprobante: la reparación cuenta con garantía escrita. Cualquier novedad, escribinos.'
+        };
+
+      default:
+        return {
+          titulo: 'Recibimos tu equipo',
+          texto:  'Tu equipo está registrado en nuestro taller. En breve comenzamos la revisión técnica.'
+        };
     }
-  };
+  }
 
   const EQUIP_ICONS = {
     laptop:ICONS.laptop, computador:ICONS.laptop, pc:ICONS.laptop,
@@ -1452,7 +1493,7 @@ function initTracker(){
     tl += '</div>';
 
     /* ─── Mensaje contextual del estado actual ─── */
-    const msg = MENSAJE[status] || MENSAJE.received;
+    const msg = construirMensaje(status, data);
     let msgHtml = `<div style="padding:20px 22px;border-top:1px solid rgba(255,255,255,.06);background:rgba(0,87,255,.05)">`
       + `<div style="font-family:Rajdhani,sans-serif;font-size:16px;font-weight:700;color:var(--white);margin-bottom:6px">${esc(msg.titulo)}</div>`
       + `<div style="font-size:14px;color:var(--dim);line-height:1.65">${esc(msg.texto)}</div>`;
@@ -1473,22 +1514,15 @@ function initTracker(){
 
     /* ─── Bloque de diagnóstico: qué reportó el cliente y qué encontró
            el técnico. Solo se muestra si hay contenido. */
+    /* Lo que reportó el cliente al dejar el equipo. El diagnóstico
+       técnico ya no va aquí: se muestra dentro del mensaje de estado,
+       para no repetirlo dos veces en la misma tarjeta. */
     let diagHtml = '';
-    if (data.reported || data.technical){
-      diagHtml = `<div style="padding:18px 22px;border-top:1px solid rgba(255,255,255,.06)">`;
-      if (data.reported){
-        diagHtml += `<div style="margin-bottom:${data.technical ? '14px' : '0'}">`
-                 +  `<div style="font-family:Rajdhani,sans-serif;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--cyan);margin-bottom:5px">Falla reportada</div>`
-                 +  `<div style="font-size:13.5px;color:var(--dim);line-height:1.6">${esc(data.reported)}</div>`
-                 +  `</div>`;
-      }
-      if (data.technical){
-        diagHtml += `<div>`
-                 +  `<div style="font-family:Rajdhani,sans-serif;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--cyan);margin-bottom:5px">Diagnóstico técnico</div>`
-                 +  `<div style="font-size:13.5px;color:var(--dim);line-height:1.6">${esc(data.technical)}</div>`
-                 +  `</div>`;
-      }
-      diagHtml += `</div>`;
+    if (data.reported){
+      diagHtml = `<div style="padding:18px 22px;border-top:1px solid rgba(255,255,255,.06)">`
+               + `<div style="font-family:Rajdhani,sans-serif;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--cyan);margin-bottom:5px">Falla reportada por ti</div>`
+               + `<div style="font-size:13.5px;color:var(--dim);line-height:1.6">${esc(data.reported)}</div>`
+               + `</div>`;
     }
 
     /* ─── Fotos del equipo tomadas en la recepción ─── */
