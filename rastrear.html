@@ -984,6 +984,16 @@ footer{background:var(--deep);border-top:1px solid rgba(255,255,255,.06);padding
   .modal-head,.modal-body{padding-left:16px;padding-right:16px}
 }
 </style>
+<style>
+/* Respaldo: en esta página el contenido debe verse aunque el
+   observador de animaciones no llegue a ejecutarse. Sin esto,
+   el buscador queda invisible y la página parece vacía. */
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity:1 !important; transform:none !important; }
+}
+noscript ~ * .reveal { opacity:1; transform:none; }
+</style>
+<noscript><style>.reveal{opacity:1 !important;transform:none !important}</style></noscript>
 </head>
 <body>
 <nav id="navbar">
@@ -1512,10 +1522,54 @@ function initTracker(){
   if (!_db) console.warn('[REDDI Tracker] Firebase aún no está disponible al inicializar.');
 }
 
+/* ─── Funciones de arranque del sitio (logo y animaciones) ─── */
+function buildLogoSVG(variant){
+  const isHero = variant === 'hero';
+  const cls    = isHero ? 'reddi-logo reddi-logo-hero' : 'reddi-logo reddi-logo-nav';
+  return `<img src="${REDDI_LOGO_DATA_URI}" alt="REDDI Soluciones Integrales" class="${cls}" decoding="async" fetchpriority="high">`;
+}
+
+function injectLogo(){
+  const nl = document.querySelector('.nav-logo');
+  if (nl) nl.innerHTML = buildLogoSVG('nav');
+  const al = document.getElementById('aboutLogo');
+  if (al) al.innerHTML = buildLogoSVG('hero');
+  const fl = document.getElementById('footerLogo');
+  if (fl) fl.innerHTML = buildLogoSVG('nav');
+}
+
+function initReveal(){
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting){
+        e.target.classList.add('visible');
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: .12, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+}
+
 /* Arranque: espera a que Firebase esté disponible */
 function _bootRastreo(){
+  // Logo del encabezado y del pie
+  try { injectLogo(); } catch(e){ console.warn('logo:', e); }
+  // Animaciones de aparición. Si el navegador no las soporta,
+  // se muestran todos los bloques de una vez para no dejar la
+  // página en blanco.
+  try {
+    if ('IntersectionObserver' in window) { initReveal(); }
+    else { document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible')); }
+  } catch(e){
+    document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
+  }
+  // Red de seguridad: si en 1,2 s algo quedó oculto, se muestra igual.
+  setTimeout(() => {
+    document.querySelectorAll('.reveal:not(.visible)').forEach(el => el.classList.add('visible'));
+  }, 1200);
+
   if (typeof firebase === 'undefined'){
-    return setTimeout(_bootRastreo, 120);
+    return setTimeout(() => { try { initTracker(); } catch(e){ console.error(e); } }, 400);
   }
   initTracker();
 }
