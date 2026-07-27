@@ -1,88 +1,146 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
+  <!-- Home -->
   <url>
     <loc>https://reddisoluciones.com/</loc>
+    <lastmod>2026-07-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
 
+  <!-- Páginas por tipo de negocio -->
   <url>
-    <loc>https://reddisoluciones.com/servicio-tecnico-restaurantes</loc>
+    <loc>https://reddisoluciones.com/restaurantes</loc>
+    <lastmod>2026-07-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://reddisoluciones.com/servicio-tecnico-hoteles</loc>
+    <loc>https://reddisoluciones.com/hoteles</loc>
+    <lastmod>2026-07-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://reddisoluciones.com/servicio-tecnico-gimnasios</loc>
+    <loc>https://reddisoluciones.com/gimnasios</loc>
+    <lastmod>2026-07-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://reddisoluciones.com/servicio-tecnico-comercios</loc>
+    <loc>https://reddisoluciones.com/comercios</loc>
+    <lastmod>2026-07-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://reddisoluciones.com/servicio-tecnico-entidades-publicas</loc>
+    <loc>https://reddisoluciones.com/entidades-publicas</loc>
+    <lastmod>2026-07-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
 
+  <!-- Páginas de línea hogar -->
   <url>
-    <loc>https://reddisoluciones.com/servicio-tecnico-valparaiso</loc>
+    <loc>https://reddisoluciones.com/reparacion-lavadoras-neveras</loc>
+    <lastmod>2026-07-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://reddisoluciones.com/servicio-tecnico-la-pintada</loc>
+    <loc>https://reddisoluciones.com/reparacion-hornos</loc>
+    <lastmod>2026-07-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://reddisoluciones.com/servicio-tecnico-tamesis</loc>
+    <loc>https://reddisoluciones.com/reparacion-freidoras</loc>
+    <lastmod>2026-07-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://reddisoluciones.com/servicio-tecnico-caramanta</loc>
+    <loc>https://reddisoluciones.com/reparacion-cafeteras-licuadoras</loc>
+    <lastmod>2026-07-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://reddisoluciones.com/servicio-tecnico-medellin</loc>
+    <loc>https://reddisoluciones.com/reparacion-aspiradoras</loc>
+    <lastmod>2026-07-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://reddisoluciones.com/servicio-tecnico-supia</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://reddisoluciones.com/servicio-tecnico-riosucio</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://reddisoluciones.com/servicio-tecnico-marmato</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://reddisoluciones.com/servicio-tecnico-manizales</loc>
+    <loc>https://reddisoluciones.com/reparacion-pequenos-electrodomesticos</loc>
+    <lastmod>2026-07-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 
+  <!-- Páginas de municipio -->
+  <url>
+    <loc>https://reddisoluciones.com/medellin</loc>
+    <lastmod>2026-07-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://reddisoluciones.com/la-pintada</loc>
+    <lastmod>2026-07-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://reddisoluciones.com/tamesis</loc>
+    <lastmod>2026-07-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://reddisoluciones.com/valparaiso</loc>
+    <lastmod>2026-07-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://reddisoluciones.com/caramanta</loc>
+    <lastmod>2026-07-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://reddisoluciones.com/supia</loc>
+    <lastmod>2026-07-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://reddisoluciones.com/riosucio</loc>
+    <lastmod>2026-07-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://reddisoluciones.com/marmato</loc>
+    <lastmod>2026-07-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://reddisoluciones.com/manizales</loc>
+    <lastmod>2026-07-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Tienda -->
   <url>
     <loc>https://reddisoluciones.com/tienda</loc>
+    <lastmod>2026-07-27</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.6</priority>
   </url>
 
 </urlset>
