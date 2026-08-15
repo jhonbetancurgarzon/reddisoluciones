@@ -183,8 +183,13 @@ p{margin-bottom:14px}
 .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;transition:border-color .25s,transform .25s}
 .card:hover{border-color:rgba(0,87,255,.45);transform:translateY(-3px)}
 .card h3{margin-top:0}
-.brand-chip{background:var(--card);border:1px solid var(--border);border-radius:999px;padding:8px 18px;font-family:'Rajdhani',sans-serif;font-weight:600;color:var(--light);font-size:14px;display:inline-block}
-.brands{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.marca-logo{background:var(--card);border:1px solid var(--border);border-radius:12px;height:88px;display:flex;align-items:center;justify-content:center;padding:14px 18px;transition:border-color .25s,transform .25s,background .25s}
+.marca-logo img{max-width:100%;max-height:46px;object-fit:contain;opacity:.6;transition:opacity .25s}
+.marca-logo img.alto{max-height:60px}
+.marca-logo:hover{border-color:rgba(0,194,255,.35);transform:translateY(-3px);background:rgba(0,87,255,.06)}
+.marca-logo:hover img{opacity:1}
+@media(max-width:520px){.marca-logo{height:74px;padding:12px 14px} .marca-logo img{max-height:38px} .marca-logo img.alto{max-height:48px}}
+
 ul{padding-left:20px;margin-bottom:14px}
 li{margin-bottom:6px}
 .faq details{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px 20px;margin-bottom:10px}
@@ -207,7 +212,7 @@ footer a{color:var(--cyan);text-decoration:none;margin:0 8px}
 <body>
 
 <nav>
-  <a href="https://reddisoluciones.com/" class="brand">REDDI</a>
+  <a href="https://reddisoluciones.com/" class="brand"><img src="favicon.png" alt="REDDI Soluciones Integrales" style="height:40px;width:auto"></a>
   <div class="nav-actions">
     <a href="tel:+573133806300" class="btn btn-tel">📞 313 380 6300</a>
     <a href="https://wa.me/573133806300?text=Hola%20REDDI%2C%20necesito%20servicio%20t%C3%A9cnico%20de%20electrodom%C3%A9sticos%20en%20Marmato" target="_blank" rel="noopener" class="btn btn-wa">WhatsApp</a>
@@ -291,19 +296,19 @@ footer a{color:var(--cyan);text-decoration:none;margin:0 8px}
   <div class="wrap" style="text-align:center">
     <h2>Servicio técnico para <span>todas las marcas</span></h2>
     <p style="max-width:600px;margin:0 auto 26px">Reparamos electrodomésticos de las marcas más vendidas en Caldas y en toda Colombia.</p>
-    <div class="brands">
-      <span class="brand-chip">Samsung</span>
-      <span class="brand-chip">LG</span>
-      <span class="brand-chip">Whirlpool</span>
-      <span class="brand-chip">Haceb</span>
-      <span class="brand-chip">Mabe</span>
-      <span class="brand-chip">Centrales</span>
-      <span class="brand-chip">Electrolux</span>
-      <span class="brand-chip">General Electric</span>
-      <span class="brand-chip">Bosch</span>
-      <span class="brand-chip">Challenger</span>
-      <span class="brand-chip">Abba</span>
-      <span class="brand-chip">Frigidaire</span>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px;max-width:1000px;margin:0 auto">
+      <div class="marca-logo"><img src="samsung.png" width="213" height="120" alt="Servicio técnico Samsung — REDDI" loading="lazy"></div>
+      <div class="marca-logo"><img src="lg.png" width="198" height="120" class="alto" alt="Servicio técnico LG — REDDI" loading="lazy"></div>
+      <div class="marca-logo"><img src="whirlpool.png" width="360" height="120" alt="Servicio técnico Whirlpool — REDDI" loading="lazy"></div>
+      <div class="marca-logo"><img src="haceb.png" width="361" height="120" alt="Servicio técnico Haceb — REDDI" loading="lazy"></div>
+      <div class="marca-logo"><img src="mabe.png" width="405" height="120" alt="Servicio técnico Mabe — REDDI" loading="lazy"></div>
+      <div class="marca-logo"><img src="centrales.png" width="229" height="120" class="alto" alt="Servicio técnico Centrales — REDDI" loading="lazy"></div>
+      <div class="marca-logo"><img src="electrolux.png" width="520" height="120" alt="Servicio técnico Electrolux — REDDI" loading="lazy"></div>
+      <div class="marca-logo"><img src="general-electric.png" width="119" height="120" class="alto" alt="Servicio técnico General Electric — REDDI" loading="lazy"></div>
+      <div class="marca-logo"><img src="bosch.png" width="484" height="120" alt="Servicio técnico Bosch — REDDI" loading="lazy"></div>
+      <div class="marca-logo"><img src="challenger.png" width="997" height="120" alt="Servicio técnico Challenger — REDDI" loading="lazy"></div>
+      <div class="marca-logo"><img src="abba.png" width="432" height="120" alt="Servicio técnico Abba — REDDI" loading="lazy"></div>
+      <div class="marca-logo"><img src="frigidaire.png" width="1074" height="120" alt="Servicio técnico Frigidaire — REDDI" loading="lazy"></div>
     </div>
   </div>
 </section>
