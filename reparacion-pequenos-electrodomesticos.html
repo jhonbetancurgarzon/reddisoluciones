@@ -1060,7 +1060,8 @@ footer{background:var(--deep);border-top:1px solid rgba(255,255,255,.06);padding
 
 <!-- HERO -->
 <section class="hero" style="padding-top:140px;padding-bottom:70px">
-  <div class="hero-inner">
+  <div class="hero-inner" style="display:grid;grid-template-columns:1.1fr .9fr;gap:48px;align-items:center;position:relative;z-index:2">
+    <div>
     <nav aria-label="Ruta de navegación" style="margin-bottom:26px;font-size:14px;color:var(--dim)">
       <a href="/" style="color:var(--cyan);text-decoration:none">Inicio</a>
       <span style="margin:0 8px">›</span>
@@ -1073,8 +1074,18 @@ footer{background:var(--deep);border-top:1px solid rgba(255,255,255,.06);padding
       <a class="btn-primary" href="https://wa.me/573133806300?text=Hola%20REDDI%2C%20necesito%20reparar%20un%20electrodom%C3%A9stico%20peque%C3%B1o" target="_blank" rel="noopener">Escribir por WhatsApp</a>
       <a class="btn-ghost" href="tel:+573133806300">Llamar 313 380 6300</a>
     </div>
+    </div>
+    <div class="hero-foto" style="position:relative">
+      <img src="pequenos-electrodomesticos-reddi.png" alt="Reparación de planchas, ventiladores y pequeños electrodomésticos - REDDI" loading="eager" style="width:100%;height:auto;border-radius:16px;border:1px solid rgba(0,194,255,.25);box-shadow:0 20px 60px rgba(0,0,0,.5);display:block">
+    </div>
   </div>
 </section>
+<style>
+@media(max-width:860px){
+  .hero-inner{grid-template-columns:1fr !important;gap:32px !important}
+  .hero-foto{order:-1;max-width:520px;margin:0 auto}
+}
+</style>
 
 <!-- QUÉ REPARAMOS -->
 <section style="padding:70px 0">
@@ -1178,7 +1189,7 @@ footer{background:var(--deep);border-top:1px solid rgba(255,255,255,.06);padding
       </div>
     </div>
     <div style="max-width:760px;margin:0 auto;background:rgba(0,87,255,.06);border:1px solid rgba(0,194,255,.2);border-radius:14px;padding:22px 26px;text-align:center">
-      <p style="color:var(--dim);font-size:14px;line-height:1.7;margin:0">Reparamos planchas, ventiladores, ollas arroceras y línea menor de todas las marcas: <strong>Oster, Imusa, Universal, Black+Decker, Haceb, Samsung, LG, Kalley, Challenger, Universal</strong> y más. ¿Tenés otro equipo? Escribinos igual.</p>
+      <p style="color:var(--dim);font-size:14px;line-height:1.7;margin:0">Reparamos planchas, ventiladores, ollas arroceras y línea menor de todas las marcas: <strong>Oster, Imusa, Universal, Black+Decker, Haceb, Samsung, LG, Kalley, Challenger</strong> y más. ¿Tenés otro equipo? Escribinos igual.</p>
     </div>
   </div>
 </section>
