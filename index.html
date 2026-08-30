@@ -299,11 +299,19 @@ h1 span{
   width:48%;max-width:620px;z-index:1;
 }
 .hero-card-stack{position:relative;width:100%;padding-bottom:70%}
+.hero-card-stack::before{
+  content:'';position:absolute;inset:-6% -4%;
+  background:linear-gradient(135deg,rgba(5,8,16,.82),rgba(5,8,16,.62)),url('tarjeta-electronica-reddi.png');
+  background-size:cover;background-position:center;
+  border-radius:20px;border:1px solid rgba(0,194,255,.22);
+  box-shadow:0 24px 70px rgba(0,0,0,.55);z-index:0;
+}
 .floating-card{
-  position:absolute;background:var(--card);border:1px solid rgba(0,87,255,.25);
+  position:absolute;background:rgba(10,15,25,.92);border:1px solid rgba(0,194,255,.35);
   border-radius:16px;padding:20px 24px;
-  box-shadow:0 20px 60px rgba(0,0,0,.5);
-  will-change:transform;
+  box-shadow:0 20px 60px rgba(0,0,0,.6);
+  backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);
+  will-change:transform;z-index:2;
 }
 .fc1{width:72%;left:14%;top:0;animation:float1 6s ease-in-out infinite}
 .fc2{width:55%;right:0;top:30%;animation:float2 7s ease-in-out infinite .5s}
