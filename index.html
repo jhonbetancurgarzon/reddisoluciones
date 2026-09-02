@@ -299,19 +299,11 @@ h1 span{
   width:48%;max-width:620px;z-index:1;
 }
 .hero-card-stack{position:relative;width:100%;padding-bottom:70%}
-.hero-card-stack::before{
-  content:'';position:absolute;inset:-6% -4%;
-  background:linear-gradient(135deg,rgba(5,8,16,.82),rgba(5,8,16,.62)),url('tarjeta-electronica-reddi.png');
-  background-size:cover;background-position:center;
-  border-radius:20px;border:1px solid rgba(0,194,255,.22);
-  box-shadow:0 24px 70px rgba(0,0,0,.55);z-index:0;
-}
 .floating-card{
-  position:absolute;background:rgba(10,15,25,.92);border:1px solid rgba(0,194,255,.35);
+  position:absolute;background:var(--card);border:1px solid rgba(0,87,255,.25);
   border-radius:16px;padding:20px 24px;
-  box-shadow:0 20px 60px rgba(0,0,0,.6);
-  backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);
-  will-change:transform;z-index:2;
+  box-shadow:0 20px 60px rgba(0,0,0,.5);
+  will-change:transform;
 }
 .fc1{width:72%;left:14%;top:0;animation:float1 6s ease-in-out infinite}
 .fc2{width:55%;right:0;top:30%;animation:float2 7s ease-in-out infinite .5s}
@@ -1102,7 +1094,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <li><a href="/visitas-programadas">Agenda</a></li>
     <li><a href="#cobertura">Cobertura</a></li>
     <li><a href="/rastrear">Mi orden</a></li>
-    <li><a href="/tienda">Tienda</a></li>
+    <!-- Tienda oculta temporalmente: sin stock de equipos de segunda por ahora.
+         Para reactivar, solo quita este comentario y el de abajo. -->
+    <!-- <li><a href="/tienda">Tienda</a></li> -->
     <li><a href="#contacto">Contacto</a></li>
   </ul>
   <a href="tel:+573133806300" class="nav-tel" aria-label="Llamar al 313 380 6300" style="color:var(--light);text-decoration:none;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:14px;letter-spacing:.05em;display:inline-flex;align-items:center;gap:6px;margin-right:14px">
@@ -1522,7 +1516,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- ═══════════════ MÓDULO RASTREAR EQUIPO ═══════════════ -->
 
 <!-- ═══════════════ TIENDA DE SEGUNDA ═══════════════ -->
-<section id="tienda">
+<!-- Oculta temporalmente: sin stock de equipos de segunda por ahora.
+     Para reactivar, quita el style="display:none" de la línea de abajo
+     (y el comentario del ítem de menú "Tienda", más arriba en <nav>). -->
+<section id="tienda" style="display:none">
   <div class="tienda-header reveal">
     <div class="section-label" style="justify-content:center">Tienda</div>
     <h2>Productos de segunda mano<br><span>con garantía REDDI</span></h2>
