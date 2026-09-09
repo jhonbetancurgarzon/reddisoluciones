@@ -1,141 +1,171 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-
   <url>
     <loc>https://reddisoluciones.com/</loc>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
-
-  <!-- SERVICIOS COMERCIALES -->
+  <url>
+    <loc>https://reddisoluciones.com/reparacion-tarjetas-electronicas</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://reddisoluciones.com/reparacion-baterias</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://reddisoluciones.com/reparacion-cocinas-induccion</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://reddisoluciones.com/reparacion-lavadoras-neveras</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://reddisoluciones.com/reparacion-hornos</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://reddisoluciones.com/reparacion-freidoras</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://reddisoluciones.com/reparacion-cafeteras-licuadoras</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://reddisoluciones.com/reparacion-aspiradoras</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://reddisoluciones.com/reparacion-pequenos-electrodomesticos</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://reddisoluciones.com/diagnostico-equipos</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://reddisoluciones.com/visitas-programadas</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
   <url>
     <loc>https://reddisoluciones.com/servicio-tecnico-restaurantes</loc>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://reddisoluciones.com/servicio-tecnico-hoteles</loc>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
+    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://reddisoluciones.com/servicio-tecnico-gimnasios</loc>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
+    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://reddisoluciones.com/servicio-tecnico-comercios</loc>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
+    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://reddisoluciones.com/servicio-tecnico-entidades-publicas</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <!-- MUNICIPIOS -->
-  <url>
-    <loc>https://reddisoluciones.com/servicio-tecnico-valparaiso</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://reddisoluciones.com/servicio-tecnico-la-pintada</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://reddisoluciones.com/servicio-tecnico-tamesis</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://reddisoluciones.com/servicio-tecnico-caramanta</loc>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://reddisoluciones.com/servicio-tecnico-medellin</loc>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://reddisoluciones.com/servicio-tecnico-supia</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://reddisoluciones.com/servicio-tecnico-riosucio</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://reddisoluciones.com/servicio-tecnico-marmato</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
   <url>
     <loc>https://reddisoluciones.com/servicio-tecnico-manizales</loc>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
-
-  <!-- TIENDA -->
+  <url>
+    <loc>https://reddisoluciones.com/servicio-tecnico-valparaiso</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://reddisoluciones.com/servicio-tecnico-tamesis</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://reddisoluciones.com/servicio-tecnico-caramanta</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://reddisoluciones.com/servicio-tecnico-la-pintada</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://reddisoluciones.com/servicio-tecnico-supia</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://reddisoluciones.com/servicio-tecnico-riosucio</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://reddisoluciones.com/servicio-tecnico-marmato</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
   <url>
     <loc>https://reddisoluciones.com/tienda</loc>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.5</priority>
   </url>
-
-  <!-- REPARACIÓN LÍNEA HOGAR -->
   <url>
-    <loc>https://reddisoluciones.com/reparacion-lavadoras-neveras</loc>
+    <loc>https://reddisoluciones.com/rastrear</loc>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.85</priority>
+    <priority>0.4</priority>
   </url>
-  <url>
-    <loc>https://reddisoluciones.com/reparacion-hornos</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>https://reddisoluciones.com/reparacion-freidoras</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>https://reddisoluciones.com/reparacion-cafeteras-licuadoras</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>https://reddisoluciones.com/reparacion-aspiradoras</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>https://reddisoluciones.com/reparacion-pequenos-electrodomesticos</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <!-- DIAGNÓSTICO (página de entrada) -->
-  <url>
-    <loc>https://reddisoluciones.com/diagnostico-equipos</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <url>
-    <loc>https://reddisoluciones.com/visitas-programadas</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <url>
-    <loc>https://reddisoluciones.com/reparacion-cocinas-induccion</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.85</priority>
-  </url>
-
 </urlset>
