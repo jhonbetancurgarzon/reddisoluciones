@@ -151,4 +151,21 @@
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
   </url>
+
+  <!-- PÁGINAS RECUPERADAS -->
+  <url>
+    <loc>https://reddisoluciones.com/reparacion-tarjetas-electronicas</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://reddisoluciones.com/reparacion-baterias</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://reddisoluciones.com/automatizacion-negocios</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
 </urlset>
