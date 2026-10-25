@@ -61,13 +61,6 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- TIENDA -->
-  <url>
-    <loc>https://reddisoluciones.com/tienda</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
   <!-- REPARACIÓN LÍNEA HOGAR -->
   <url>
     <loc>https://reddisoluciones.com/reparacion-lavadoras-neveras</loc>
