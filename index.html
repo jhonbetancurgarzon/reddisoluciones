@@ -307,12 +307,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 
-/* PERFORMANCE: secciones lejanas no se renderizan hasta acercarse al viewport.
-   Reduce work del CPU/GPU en la primera carga, ganando fluidez (~30% menos paint). */
-section:not(#hero){
-  content-visibility:auto;
-  contain-intrinsic-size:auto 800px;
-}
+section[id]{scroll-margin-top:84px}
 /* Hint al browser para que el hero termine pintando primero */
 #hero{contain:layout style paint}
 /* Imágenes con intrínseca size para no causar layout shifts */
@@ -1410,6 +1405,15 @@ footer{background:var(--deep);border-top:1px solid rgba(255,255,255,.06);padding
   nav.open .menu-wa a{background:#25D366;color:#fff;border-radius:10px;text-align:center;font-weight:700;padding:15px}
   nav.open .menu-tel a{margin-top:10px;border:1px solid rgba(255,255,255,.18);border-radius:10px;text-align:center;padding:14px}
 }
+
+/* Lista de municipios en Cobertura */
+.muni-list{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:0 auto 56px}
+.muni-group{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px 20px}
+.muni-title{font-family:'Rajdhani',sans-serif;font-weight:700;color:var(--cyan);font-size:12px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px}
+.muni-chips{display:flex;flex-wrap:wrap;gap:8px}
+.muni-chip{display:inline-block;padding:7px 13px;border:1px solid var(--border);border-radius:999px;font-size:13px;color:var(--light);text-decoration:none;transition:border-color .2s,color .2s}
+.muni-chip:hover{border-color:var(--cyan);color:var(--white)}
+@media(max-width:760px){.muni-list{grid-template-columns:1fr;gap:12px}.muni-group{padding:16px}.muni-chip{font-size:12.5px;padding:6px 11px}}
 </style>
 </head>
 <body>
@@ -1763,7 +1767,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <h2>¿Llegamos a tu <span>municipio</span>?</h2>
       <p class="section-sub" style="margin:14px auto 0">Servicio en sitio en Medellín, el Valle de Aburrá y el Oriente antioqueño.</p>
     </div>
-    <div class="city-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:56px">
+    <div class="city-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:28px">
       <a href="/servicio-tecnico-medellin" style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;text-decoration:none;color:var(--light);display:block;transition:border-color .25s,transform .25s" onmouseover="this.style.borderColor='rgba(0,87,255,.45)';this.style.transform='translateY(-3px)'" onmouseout="this.style.borderColor='';this.style.transform=''">
         <div style="font-family:'Rajdhani',sans-serif;font-weight:700;color:var(--cyan);font-size:12px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px">Antioquia</div>
         <div style="font-family:'Rajdhani',sans-serif;font-weight:700;font-size:22px;color:var(--white)">Medellín</div>
@@ -1784,6 +1788,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <div style="font-family:'Rajdhani',sans-serif;font-weight:700;font-size:22px;color:var(--white)">Tarjetas por envío</div>
         <div style="font-size:13px;color:var(--dim);margin-top:4px">Recibimos tu tarjeta por transportadora</div>
       </a>
+    </div>
+    <div class="muni-list">
+      <div class="muni-group"><div class="muni-title">Valle de Aburrá</div><div class="muni-chips"><a href="/servicio-tecnico-medellin" class="muni-chip">Medellín</a><a href="/servicio-tecnico-medellin" class="muni-chip">Envigado</a><a href="/servicio-tecnico-medellin" class="muni-chip">Sabaneta</a><a href="/servicio-tecnico-medellin" class="muni-chip">Itagüí</a><a href="/servicio-tecnico-medellin" class="muni-chip">Bello</a><a href="/servicio-tecnico-medellin" class="muni-chip">La Estrella</a></div></div>
+      <div class="muni-group"><div class="muni-title">Oriente antioqueño</div><div class="muni-chips"><a href="/servicio-tecnico-oriente-antioqueno#rionegro" class="muni-chip">Rionegro</a><a href="/servicio-tecnico-oriente-antioqueno#llanogrande" class="muni-chip">Llanogrande</a><a href="/servicio-tecnico-oriente-antioqueno#guarne" class="muni-chip">Guarne</a><a href="/servicio-tecnico-oriente-antioqueno#el-retiro" class="muni-chip">El Retiro</a><a href="/servicio-tecnico-oriente-antioqueno#la-ceja" class="muni-chip">La Ceja</a><a href="/servicio-tecnico-oriente-antioqueno#marinilla" class="muni-chip">Marinilla</a><a href="/servicio-tecnico-oriente-antioqueno#el-carmen-de-viboral" class="muni-chip">El Carmen de Viboral</a><a href="/servicio-tecnico-oriente-antioqueno#guatape" class="muni-chip">Guatapé</a><a href="/servicio-tecnico-oriente-antioqueno#guatape" class="muni-chip">El Peñol</a></div></div>
     </div>
     <div class="reveal" style="text-align:center;margin-bottom:24px">
       <div class="section-label" style="justify-content:center">Marcas que reparamos</div>

@@ -59,12 +59,7 @@
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 
-/* PERFORMANCE: secciones lejanas no se renderizan hasta acercarse al viewport.
-   Reduce work del CPU/GPU en la primera carga, ganando fluidez (~30% menos paint). */
-section:not(#hero){
-  content-visibility:auto;
-  contain-intrinsic-size:auto 800px;
-}
+section[id]{scroll-margin-top:84px}
 /* Hint al browser para que el hero termine pintando primero */
 #hero{contain:layout style paint}
 /* Imágenes con intrínseca size para no causar layout shifts */
