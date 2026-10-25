@@ -1008,6 +1008,9 @@ footer{background:var(--deep);border-top:1px solid rgba(255,255,255,.06);padding
 .town-cta{margin-top:auto;padding-top:16px;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:15px;letter-spacing:.04em;color:var(--cyan);text-decoration:none}
 .town-cta::after{content:"";position:absolute;inset:0;border-radius:14px}
 .town-cta:focus-visible{outline:2px solid var(--cyan);outline-offset:4px}
+
+/* La ruta "Inicio › ..." no debe heredar el menú fijo */
+nav[aria-label="Ruta de navegación"]{position:static!important;inset:auto!important;padding:0!important;background:none!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;border:0!important;box-shadow:none!important;display:block!important;height:auto!important;transform:none!important;z-index:auto!important}
 </style>
 </head>
 <body>

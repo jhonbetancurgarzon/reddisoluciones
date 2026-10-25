@@ -1039,6 +1039,9 @@ footer{background:var(--deep);border-top:1px solid rgba(255,255,255,.06);padding
   transition:border-color .25s,background .25s
 }
 .btn-ghost:hover{border-color:var(--cyan);background:rgba(0,194,255,.06)}
+
+/* La ruta "Inicio › ..." no debe heredar el menú fijo */
+nav[aria-label="Ruta de navegación"]{position:static!important;inset:auto!important;padding:0!important;background:none!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;border:0!important;box-shadow:none!important;display:block!important;height:auto!important;transform:none!important;z-index:auto!important}
 </style>
 </head>
 <body>

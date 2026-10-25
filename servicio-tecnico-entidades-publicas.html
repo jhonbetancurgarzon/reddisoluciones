@@ -59,7 +59,6 @@
     "name":"Servicios para entidades públicas",
     "itemListElement":[
       {"@type":"Offer","itemOffered":{"@type":"Service","name":"Mantenimiento de aires acondicionados de oficina"}},
-      {"@type":"Offer","itemOffered":{"@type":"Service","name":"Reparación de equipos de cómputo e impresoras"}},
       {"@type":"Offer","itemOffered":{"@type":"Service","name":"Reparación de Smart TV y pantallas institucionales"}},
       {"@type":"Offer","itemOffered":{"@type":"Service","name":"Mantenimiento de sonido de auditorio"}},
       {"@type":"Offer","itemOffered":{"@type":"Service","name":"Revisión electrónica de videobeams y proyectores"}},
@@ -1048,6 +1047,9 @@ footer{background:var(--deep);border-top:1px solid rgba(255,255,255,.06);padding
   transition:border-color .25s,background .25s
 }
 .btn-ghost:hover{border-color:var(--cyan);background:rgba(0,194,255,.06)}
+
+/* La ruta "Inicio › ..." no debe heredar el menú fijo */
+nav[aria-label="Ruta de navegación"]{position:static!important;inset:auto!important;padding:0!important;background:none!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;border:0!important;box-shadow:none!important;display:block!important;height:auto!important;transform:none!important;z-index:auto!important}
 </style>
 </head>
 <body>
@@ -1103,10 +1105,6 @@ footer{background:var(--deep);border-top:1px solid rgba(255,255,255,.06);padding
       <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px">
         <h3 style="font-family:'Rajdhani',sans-serif;font-size:19px;color:var(--white);margin-bottom:10px">Aires acondicionados de oficina</h3>
         <p style="color:var(--dim);font-size:14px;line-height:1.65;margin:0">Split, mini split y equipos de despacho. Fallas de enfriamiento, tarjetas de control, sensores, mandos y mantenimiento preventivo por dependencia.</p>
-      </div>
-      <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px">
-        <h3 style="font-family:'Rajdhani',sans-serif;font-size:19px;color:var(--white);margin-bottom:10px">Cómputo e impresoras</h3>
-        <p style="color:var(--dim);font-size:14px;line-height:1.65;margin:0">Computadores de escritorio, portátiles, impresoras y periféricos. Diagnóstico, cambio de componentes y reinstalación de software.</p>
       </div>
       <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px">
         <h3 style="font-family:'Rajdhani',sans-serif;font-size:19px;color:var(--white);margin-bottom:10px">Smart TV y pantallas</h3>
@@ -1188,7 +1186,6 @@ footer{background:var(--deep);border-top:1px solid rgba(255,255,255,.06);padding
       <h3 style="font-family:'Rajdhani',sans-serif;font-size:21px;color:var(--white);margin-bottom:16px">Qué incluye</h3>
       <ul style="list-style:none;padding:0;margin:0 0 24px;display:grid;gap:12px">
         <li style="color:var(--dim);font-size:14.5px;line-height:1.6;padding-left:26px;position:relative"><span style="position:absolute;left:0;color:var(--cyan)">✓</span> Revisión programada de aires acondicionados por dependencia</li>
-        <li style="color:var(--dim);font-size:14.5px;line-height:1.6;padding-left:26px;position:relative"><span style="position:absolute;left:0;color:var(--cyan)">✓</span> Mantenimiento de equipos de cómputo, impresoras y periféricos</li>
         <li style="color:var(--dim);font-size:14.5px;line-height:1.6;padding-left:26px;position:relative"><span style="position:absolute;left:0;color:var(--cyan)">✓</span> Revisión de sonido de auditorio y equipos audiovisuales</li>
         <li style="color:var(--dim);font-size:14.5px;line-height:1.6;padding-left:26px;position:relative"><span style="position:absolute;left:0;color:var(--cyan)">✓</span> Inspección de tableros eléctricos, protecciones e iluminación</li>
         <li style="color:var(--dim);font-size:14.5px;line-height:1.6;padding-left:26px;position:relative"><span style="position:absolute;left:0;color:var(--cyan)">✓</span> Acta de servicio y reporte técnico por cada visita</li>
