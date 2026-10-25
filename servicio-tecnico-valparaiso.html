@@ -221,12 +221,23 @@ footer a{color:var(--cyan);text-decoration:none;margin:0 8px}
   transition:border-color .25s,background .25s
 }
 .btn-ghost:hover{border-color:var(--cyan);background:rgba(0,194,255,.06)}
+
+/* Encabezado en celular: logo y botones en una sola línea */
+nav .brand img{display:block}
+@media(max-width:600px){
+  nav{flex-wrap:nowrap!important;gap:10px}
+  nav .brand img{height:34px!important}
+  .nav-actions{gap:8px!important;flex-wrap:nowrap!important}
+  .nav-actions .btn{padding:9px 12px!important;font-size:12px!important;white-space:nowrap}
+  .nav-actions .btn-tel{font-size:0!important;padding:9px 11px!important}
+  .btn-tel::before{content:"📞";font-size:16px}
+}
 </style>
 </head>
 <body>
 
 <nav>
-  <a href="https://reddisoluciones.com/" class="brand"><img src="favicon.png" alt="REDDI Soluciones Integrales" style="height:40px;width:auto"></a>
+  <a href="https://reddisoluciones.com/" class="brand"><img src="/logo-reddi.webp" alt="REDDI Soluciones Integrales" width="134" height="45" style="height:45px;width:auto"></a>
   <div class="nav-actions">
     <a href="tel:+573133806300" class="btn btn-tel">📞 313 380 6300</a>
     <a href="https://wa.me/573133806300?text=Hola%20REDDI%2C%20necesito%20servicio%20t%C3%A9cnico%20de%20electrodom%C3%A9sticos%20en%20Valparaíso" target="_blank" rel="noopener" class="btn btn-wa">WhatsApp</a>
