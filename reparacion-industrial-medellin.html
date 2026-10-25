@@ -981,6 +981,19 @@ footer{background:var(--deep);border-top:1px solid rgba(255,255,255,.06);padding
   .modal-box{max-height:92vh}
   .modal-head,.modal-body{padding-left:16px;padding-right:16px}
 }
+
+/* Contenedor y botón secundario usados en páginas de servicio */
+.wrap{max-width:1100px;margin:0 auto;padding:0 16px}
+@media(min-width:768px){.wrap{padding:0 5%}}
+.btn-ghost{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  background:transparent;color:var(--white);padding:13px 28px;
+  border:1.5px solid rgba(255,255,255,.2);border-radius:8px;
+  font-family:'Rajdhani',sans-serif;font-weight:700;font-size:15px;
+  letter-spacing:.06em;text-transform:uppercase;text-decoration:none;
+  transition:border-color .25s,background .25s
+}
+.btn-ghost:hover{border-color:var(--cyan);background:rgba(0,194,255,.06)}
 </style>
 </head>
 <body>
@@ -1074,7 +1087,7 @@ footer{background:var(--deep);border-top:1px solid rgba(255,255,255,.06);padding
   <div class="footer-grid">
     <div class="footer-brand">
       <div class="footer-logo" id="footerLogo"><!-- mismo logo del nav, inyectado por JS --></div>
-      <p>Servicio técnico para hogares y negocios en <span data-loc-zone>Medellín, Támesis, Valparaíso, Caramanta, La Pintada, Supía, Riosucio, Marmato y Manizales</span>. Garantía escrita.</p>
+      <p>Servicio técnico para hogares y negocios en <span data-loc-zone>Medellín, Támesis, Valparaíso, Caramanta, La Pintada y el Oriente antioqueño</span>. Garantía escrita.</p>
       <p style="margin-top:12px;color:var(--light);font-size:14px">
         <strong>WhatsApp / Llamadas:</strong> <a href="tel:+573133806300" style="color:var(--cyan);text-decoration:none">313 380 6300</a><br>
         <strong>Horario:</strong> Lunes a sábado, 8:00 a.m. – 6:00 p.m.

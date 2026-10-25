@@ -60,26 +60,6 @@
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
-  <url>
-    <loc>https://reddisoluciones.com/servicio-tecnico-supia</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://reddisoluciones.com/servicio-tecnico-riosucio</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://reddisoluciones.com/servicio-tecnico-marmato</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://reddisoluciones.com/servicio-tecnico-manizales</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
 
   <!-- TIENDA -->
   <url>
@@ -167,5 +147,22 @@
     <loc>https://reddisoluciones.com/automatizacion-negocios</loc>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
+  </url>
+  <!-- ORIENTE ANTIOQUEÑO -->
+  <url>
+    <loc>https://reddisoluciones.com/servicio-tecnico-oriente-antioqueno</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <!-- CARGADORES CARROS ELÉCTRICOS -->
+  <url>
+    <loc>https://reddisoluciones.com/reparacion-cargadores-carros-electricos</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://reddisoluciones.com/servicio-tecnico-manizales</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
   </url>
 </urlset>
