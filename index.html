@@ -2318,6 +2318,35 @@ document.addEventListener('DOMContentLoaded', () => {
   initModal();
 
 });
+
+/* ════════════════════════════════════════════════════
+   MEDICIÓN – contactos desde esta página
+   Empuja eventos a dataLayer para que GTM/GA4 los
+   registre como conversión.
+   ════════════════════════════════════════════════════ */
+(function(){
+  function empujar(evento, detalle){
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+      event: evento,
+      pagina: 'inicio',
+      ubicacion: detalle || 'sin-ubicacion'
+    });
+  }
+  function ubicacion(a){
+    if (a.closest('nav'))    return 'menu';
+    if (a.closest('.hero'))  return 'hero';
+    if (a.closest('footer')) return 'pie';
+    return 'cuerpo';
+  }
+  document.addEventListener('click', function(e){
+    var a = e.target.closest ? e.target.closest('a[href]') : null;
+    if (!a) return;
+    var href = a.getAttribute('href') || '';
+    if (href.indexOf('wa.me') !== -1)      empujar('contacto_whatsapp', ubicacion(a));
+    else if (href.indexOf('tel:') === 0)   empujar('contacto_llamada',  ubicacion(a));
+  }, true);
+})();
 </script>
 </body>
 </html>
