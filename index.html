@@ -1418,13 +1418,13 @@ footer{background:var(--deep);border-top:1px solid rgba(255,255,255,.06);padding
 .marca-chip{display:inline-block;padding:8px 16px;border:1px solid var(--border);border-radius:999px;background:var(--card);font-family:'Rajdhani',sans-serif;font-weight:700;font-size:15px;letter-spacing:.04em;color:var(--light)}
 
 /* Foto real en la portada */
-.hero-card-stack{padding-bottom:100%!important}
-.hero-photo{position:absolute;top:6%;right:0;width:86%;height:86%;object-fit:cover;border-radius:18px;border:1px solid rgba(0,194,255,.25);box-shadow:0 30px 80px rgba(0,0,0,.55),0 0 60px rgba(0,87,255,.15);z-index:0}
+.hero-card-stack{padding-bottom:0!important;height:clamp(380px,calc(100vh - 230px),540px)}
+.hero-photo{position:absolute;top:9%;right:0;width:84%;height:80%;object-fit:cover;border-radius:18px;border:1px solid rgba(0,194,255,.25);box-shadow:0 30px 80px rgba(0,0,0,.55),0 0 60px rgba(0,87,255,.15);z-index:0}
 .hero-card-stack .floating-card{z-index:2}
 .hero-photo{opacity:.55;-webkit-mask-image:linear-gradient(to left,#000 55%,transparent 100%),linear-gradient(to top,transparent 0%,#000 30%);-webkit-mask-composite:source-in;mask-image:linear-gradient(to left,#000 55%,transparent 100%),linear-gradient(to top,transparent 0%,#000 30%);mask-composite:intersect;border:0!important;box-shadow:none!important}
 .hero-card-stack .fc1{display:none}
-.hero-card-stack .fc2{top:0!important;width:52%!important}
-.hero-card-stack .fc3{bottom:2%!important;left:0!important;width:58%!important}
+.hero-card-stack .fc2{top:0!important;width:50%!important}
+.hero-card-stack .fc3{bottom:0!important;left:0!important;width:56%!important}
 .hero-card-stack{width:calc(100% - 70px)!important}
 .hero-card-stack .fc2{right:0!important}
 .hero-photo-mobile{display:none}
