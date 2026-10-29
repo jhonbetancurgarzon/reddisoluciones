@@ -1410,6 +1410,8 @@ footer{background:var(--deep);border-top:1px solid rgba(255,255,255,.06);padding
 
 /* Marcas de equipos de negocio (texto, sin logos) */
 .marcas-pro{max-width:1000px;margin:22px auto 0;text-align:center}
+.marcas-grid-pro{margin-top:4px!important}
+.marcas-pro + .marcas-grid-pro + .marcas-pro{margin-top:14px}
 .marcas-pro-label{font-family:'Rajdhani',sans-serif;font-weight:700;color:var(--cyan);font-size:12px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px}
 .marcas-pro-chips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
 .marca-chip{display:inline-block;padding:8px 16px;border:1px solid var(--border);border-radius:999px;background:var(--card);font-family:'Rajdhani',sans-serif;font-weight:700;font-size:15px;letter-spacing:.04em;color:var(--light)}
@@ -1802,7 +1804,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <div class="marca-logo"><img src="abba.webp" width="432" height="120" alt="Servicio técnico Abba — REDDI" loading="lazy"></div>
       <div class="marca-logo"><img src="frigidaire.webp" width="1074" height="120" alt="Servicio técnico Frigidaire — REDDI" loading="lazy"></div>
     </div>
-    <div class="marcas-pro"><div class="marcas-pro-label">Equipos de negocio y alto valor</div><div class="marcas-pro-chips"><span class="marca-chip">Rational</span><span class="marca-chip">Unox</span><span class="marca-chip">Panasonic</span><span class="marca-chip">Menumaster</span><span class="marca-chip">Vitamix</span><span class="marca-chip">Blendtec</span><span class="marca-chip">Taylor</span><span class="marca-chip">De'Longhi</span><span class="marca-chip">Jura</span><span class="marca-chip">Wallbox</span></div></div>
+    <div class="marcas-pro"><div class="marcas-pro-label">Equipos de negocio y alto valor</div></div>
+    <div class="marcas-grid marcas-grid-pro" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px;max-width:1000px;margin:0 auto">
+      <div class="marca-logo"><img src="rational.webp" width="453" height="120" alt="Servicio técnico Rational — REDDI" loading="lazy"></div>
+      <div class="marca-logo"><img src="unox.webp" width="267" height="120" alt="Servicio técnico Unox — REDDI" loading="lazy"></div>
+      <div class="marca-logo"><img src="panasonic.webp" width="730" height="120" alt="Servicio técnico Panasonic — REDDI" loading="lazy"></div>
+      <div class="marca-logo"><img src="vitamix.webp" width="516" height="120" alt="Servicio técnico Vitamix — REDDI" loading="lazy"></div>
+      <div class="marca-logo"><img src="taylor.webp" width="554" height="120" alt="Servicio técnico Taylor — REDDI" loading="lazy"></div>
+      <div class="marca-logo"><img src="wallbox.webp" width="494" height="120" alt="Servicio técnico Wallbox — REDDI" loading="lazy"></div>
+    </div>
+    <div class="marcas-pro"><div class="marcas-pro-chips"><span class="marca-chip">Menumaster</span><span class="marca-chip">Blendtec</span><span class="marca-chip">De'Longhi</span><span class="marca-chip">Jura</span></div></div>
     <p class="marcas-note">Reparamos equipos de estas y otras marcas. REDDI es un servicio técnico independiente; no somos centro de servicio autorizado de los fabricantes.</p>
 
     <!-- RESEÑAS -->
