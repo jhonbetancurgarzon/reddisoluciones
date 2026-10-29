@@ -1416,6 +1416,28 @@ footer{background:var(--deep);border-top:1px solid rgba(255,255,255,.06);padding
 .marcas-pro-label{font-family:'Rajdhani',sans-serif;font-weight:700;color:var(--cyan);font-size:12px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px}
 .marcas-pro-chips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
 .marca-chip{display:inline-block;padding:8px 16px;border:1px solid var(--border);border-radius:999px;background:var(--card);font-family:'Rajdhani',sans-serif;font-weight:700;font-size:15px;letter-spacing:.04em;color:var(--light)}
+
+/* Foto real en la portada */
+.hero-card-stack{padding-bottom:100%!important}
+.hero-photo{position:absolute;top:6%;right:0;width:86%;height:86%;object-fit:cover;border-radius:18px;border:1px solid rgba(0,194,255,.25);box-shadow:0 30px 80px rgba(0,0,0,.55),0 0 60px rgba(0,87,255,.15);z-index:0}
+.hero-card-stack .floating-card{z-index:2}
+.hero-photo{opacity:.55;-webkit-mask-image:linear-gradient(to left,#000 55%,transparent 100%),linear-gradient(to top,transparent 0%,#000 30%);-webkit-mask-composite:source-in;mask-image:linear-gradient(to left,#000 55%,transparent 100%),linear-gradient(to top,transparent 0%,#000 30%);mask-composite:intersect;border:0!important;box-shadow:none!important}
+.hero-card-stack .fc1{display:none}
+.hero-card-stack .fc2{top:0!important;width:52%!important}
+.hero-card-stack .fc3{bottom:2%!important;left:0!important;width:58%!important}
+.hero-card-stack{width:calc(100% - 70px)!important}
+.hero-card-stack .fc2{right:0!important}
+.hero-photo-mobile{display:none}
+@media(max-width:1180px){
+  .hero-visual{display:none!important}
+  .hero-content{max-width:720px}
+}
+@media(max-width:1180px){
+  #hero{position:relative;overflow:hidden}
+  .hero-photo-mobile{display:block;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 35%;opacity:.24;z-index:1;filter:saturate(.7);pointer-events:none;-webkit-mask-image:linear-gradient(to bottom,rgba(0,0,0,.35) 0%,#000 45%,#000 70%,transparent 100%);mask-image:linear-gradient(to bottom,rgba(0,0,0,.35) 0%,#000 45%,#000 70%,transparent 100%)}
+  .hero-content{position:relative;z-index:2}
+}
+@media(max-width:640px){.hero-photo-mobile{opacity:.16}}
 </style>
 </head>
 <body>
@@ -1471,6 +1493,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <!-- ═══════════════ HERO ═══════════════ -->
 <section id="hero">
+  <img class="hero-photo-mobile" src="diagnostico-tarjeta-wallbox-carro-electrico.webp" width="900" height="900" decoding="async" aria-hidden="true" alt="">
   <div class="hero-bg"></div>
   <div class="circuit-lines" aria-hidden="true"></div>
   <div class="hero-content reveal">
@@ -1491,8 +1514,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <a href="#servicios" class="btn-secondary">Es para mi casa</a>
     </div>
   </div>
-  <div class="hero-visual" aria-hidden="true">
+  <div class="hero-visual">
     <div class="hero-card-stack">
+      <img class="hero-photo" src="diagnostico-tarjeta-wallbox-carro-electrico.webp" width="900" height="900" fetchpriority="high" decoding="async" alt="Técnico de REDDI midiendo con pinza amperimétrica la tarjeta de potencia de un cargador de carro eléctrico en Medellín">
       <div class="floating-card fc1" id="rotCardTop">
         <div class="fc-tag" id="rotTagTop">Negocios</div>
         <div class="fc-title" id="rotTitleTop">Cocina industrial</div>
