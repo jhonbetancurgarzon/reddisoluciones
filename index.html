@@ -44,7 +44,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   "telephone": "+573133806300",
   "priceRange": "$$",
   "image": "https://reddisoluciones.com/logo.png",
-  "description": "Servicio técnico electrónico en sitio para restaurantes, hoteles, heladerías, comercios y hogares en Medellín y el Oriente antioqueño. Cocina industrial, vineras, granizadoras, línea blanca, Smart TV y tarjetas de control. Garantía escrita.",
+  "description": "Servicio técnico electrónico a domicilio para restaurantes, hoteles, heladerías, comercios y hogares en Medellín y el Oriente antioqueño. Cocina industrial, vineras, granizadoras, línea blanca, Smart TV y tarjetas de control. Garantía escrita.",
   "address": {
     "@type": "PostalAddress",
     "addressLocality": "Valparaíso",
@@ -256,7 +256,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 }
 </script>
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"Organization","name":"REDDI Soluciones Integrales","url":"https://reddisoluciones.com/","logo":"https://reddisoluciones.com/logo.png","contactPoint":[{"@type":"ContactPoint","telephone":"+573133806300","contactType":"customer service","areaServed":"CO","availableLanguage":["es"]}],"taxID":"1041611021-1"}
+{"@context":"https://schema.org","@type":"Organization","name":"REDDI Soluciones Integrales","url":"https://reddisoluciones.com/","logo":"https://reddisoluciones.com/logo.png","contactPoint":[{"@type":"ContactPoint","telephone":"+573133806300","contactType":"customer service","areaServed":"CO","availableLanguage":["es"]}]}
 </script>
 
 <!-- Favicon (pestaña del navegador) — se inyecta desde el logo de la marca vía JS al final -->
@@ -1407,6 +1407,12 @@ footer{background:var(--deep);border-top:1px solid rgba(255,255,255,.06);padding
 .muni-chip{display:inline-block;padding:7px 13px;border:1px solid var(--border);border-radius:999px;font-size:13px;color:var(--light);text-decoration:none;transition:border-color .2s,color .2s}
 .muni-chip:hover{border-color:var(--cyan);color:var(--white)}
 @media(max-width:760px){.muni-list{grid-template-columns:1fr;gap:12px}.muni-group{padding:16px}.muni-chip{font-size:12.5px;padding:6px 11px}}
+
+/* Marcas de equipos de negocio (texto, sin logos) */
+.marcas-pro{max-width:1000px;margin:22px auto 0;text-align:center}
+.marcas-pro-label{font-family:'Rajdhani',sans-serif;font-weight:700;color:var(--cyan);font-size:12px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px}
+.marcas-pro-chips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
+.marca-chip{display:inline-block;padding:8px 16px;border:1px solid var(--border);border-radius:999px;background:var(--card);font-family:'Rajdhani',sans-serif;font-weight:700;font-size:15px;letter-spacing:.04em;color:var(--light)}
 </style>
 </head>
 <body>
@@ -1467,11 +1473,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <div class="hero-content reveal">
     <div class="hero-tag">
       <span class="dot"></span>
-      <span data-loc-zone>Servicio en sitio</span>
+      <span data-loc-zone>Servicio a domicilio</span>
     </div>
     <h1>Servicio técnico electrónico en <span>Medellín y el Oriente</span></h1>
     <p class="hero-sub">
-      Reparamos la parte electrónica de <strong>cocina industrial, cocinas de inducción, cargadores de carros eléctricos y línea blanca</strong>. En sitio y con garantía escrita.
+      Reparamos la parte electrónica de <strong>cocina industrial, cocinas de inducción, cargadores de carros eléctricos y línea blanca</strong>. Arreglamos a nivel de tarjeta lo que otros prefieren cambiar.
     </p>
     <div class="hero-btns">
       <a href="https://wa.me/573133806300?text=Hola%20REDDI%2C%20necesito%20servicio%20t%C3%A9cnico" target="_blank" rel="noopener" class="btn-primary">
@@ -1487,14 +1493,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <div class="floating-card fc1" id="rotCardTop">
         <div class="fc-tag" id="rotTagTop">Negocios</div>
         <div class="fc-title" id="rotTitleTop">Cocina industrial</div>
-        <div class="fc-text" id="rotTextTop">Freidoras, hornos y planchas: termostatos, resistencias y controles.</div>
+        <div class="fc-text" id="rotTextTop">Hornos de convección, microondas comerciales y licuadoras Vitamix.</div>
       </div>
       <div class="floating-card fc2">
         <div class="fc-icon">
           <svg viewBox="0 0 24 24"><path d="M13 2L3 14h7v8l10-12h-7l0-8z"/></svg>
         </div>
-        <div class="fc-title">Garantía escrita</div>
-        <div class="fc-text">En cada reparación</div>
+        <div class="fc-title">Reparamos lo que otros cambian</div>
+        <div class="fc-text">Diagnóstico a nivel de tarjeta</div>
       </div>
       <div class="floating-card fc3" id="rotCardBot">
         <div class="fc-tag" id="rotTagBot">Hogar</div>
@@ -1509,7 +1515,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 /* Rotación de tarjetas del hero — muestra lo que repara REDDI */
 (function(){
   var topSet = [
-    { tag:'Negocios', title:'Cocina industrial',      text:'Freidoras, hornos y planchas: termostatos, resistencias y controles.' },
+    { tag:'Negocios', title:'Cocina industrial',      text:'Hornos de convección, microondas comerciales y licuadoras Vitamix.' },
     { tag:'Carros eléctricos', title:'Cargadores wallbox', text:'Reparación a nivel de tarjeta e instalación de puntos de carga.' },
     { tag:'Negocios', title:'Tarjetas electrónicas',  text:'Diagnóstico y reparación a nivel de componente.' },
     { tag:'Edificios y hoteles', title:'Puntos de carga', text:'Cargadores para conjuntos, hoteles y parqueaderos.' }
@@ -1547,8 +1553,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <!-- ═══════════════ FRANJA DE CONFIANZA ═══════════════ -->
 <div class="trust-strip">
-  <div class="trust-item"><b>Vamos al sitio</b><span>Reparamos donde está el equipo. Las tarjetas también nos las puedes enviar por transportadora.</span></div>
-  <div class="trust-item"><b>Garantía escrita</b><span>Hasta 6 meses según la reparación, por escrito.</span></div>
+  <div class="trust-item"><b>Vamos a tu casa o negocio</b><span>Diagnosticamos donde está el equipo. Si la reparación necesita taller, coordinamos el traslado. Las tarjetas también nos las puedes enviar por transportadora.</span></div>
+  <div class="trust-item"><b>Garantía escrita</b><span>En cada reparación, con orden de servicio firmada.</span></div>
   <div class="trust-item"><b>Orden de servicio digital</b><span>Cada trabajo queda documentado en PDF con firma del cliente.</span></div>
   <div class="trust-item"><b>Medellín y Oriente</b><span>Valle de Aburrá, Rionegro, Llanogrande, La Ceja y El Retiro.</span></div>
 </div>
@@ -1571,25 +1577,21 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <div class="eq-title">Cocina Industrial</div>
         <div class="eq-sub">Hornos de convección, microondas, Vitamix, freidoras</div>
       </a>
-      <a href="/reparacion-vineras-vitrinas-fabricadoras-hielo" class="eq-card">
-        <div class="eq-title">Vineras, Vitrinas y Hielo</div>
-        <div class="eq-sub">Refrigeración comercial (electrónica)</div>
-      </a>
       <a href="/reparacion-cargadores-carros-electricos" class="eq-card">
         <div class="eq-title">Cargadores Carros Eléctricos</div>
         <div class="eq-sub">Reparación e instalación</div>
-      </a>
-      <a href="/reparacion-granizadoras" class="eq-card">
-        <div class="eq-title">Granizadoras</div>
-        <div class="eq-sub">Máquinas de granizado</div>
       </a>
       <a href="/reparacion-tarjetas-electronicas" class="eq-card">
         <div class="eq-title">Tarjetas Electrónicas</div>
         <div class="eq-sub">Placas de control y potencia</div>
       </a>
-      <a href="/reparacion-industrial-medellin" class="eq-card">
-        <div class="eq-title">Industrial Medellín</div>
-        <div class="eq-sub">Servicio para el Área Metropolitana</div>
+      <a href="/reparacion-vineras-vitrinas-fabricadoras-hielo" class="eq-card">
+        <div class="eq-title">Vineras, Vitrinas y Hielo</div>
+        <div class="eq-sub">Refrigeración comercial (electrónica)</div>
+      </a>
+      <a href="/reparacion-granizadoras" class="eq-card">
+        <div class="eq-title">Granizadoras</div>
+        <div class="eq-sub">Máquinas de granizado</div>
       </a>
     </div>
   </div>
@@ -1597,29 +1599,29 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <div class="eq-group">
     <div class="eq-group-label">Hogar</div>
     <div class="eq-grid">
+      <a href="/reparacion-cocinas-induccion" class="eq-card">
+        <div class="eq-title">Cocinas de Inducción</div>
+        <div class="eq-sub">Inducción y vitrocerámica</div>
+      </a>
       <a href="/reparacion-lavadoras-neveras" class="eq-card">
         <div class="eq-title">Lavadoras y Neveras</div>
         <div class="eq-sub">Convencionales e inverter</div>
+      </a>
+      <a href="/reparacion-hornos" class="eq-card">
+        <div class="eq-title">Hornos</div>
+        <div class="eq-sub">Empotrar, convección y microondas</div>
+      </a>
+      <a href="/reparacion-cafeteras-licuadoras" class="eq-card">
+        <div class="eq-title">Cafeteras y Licuadoras</div>
+        <div class="eq-sub">Espresso, superautomáticas y licuadoras</div>
       </a>
       <a href="https://wa.me/573133806300?text=Hola%20REDDI%2C%20necesito%20reparar%20un%20Smart%20TV" target="_blank" rel="noopener" class="eq-card">
         <div class="eq-title">Smart TV y Pantallas</div>
         <div class="eq-sub">LED, LCD, fuentes y tarjetas</div>
       </a>
-      <a href="/reparacion-cocinas-induccion" class="eq-card">
-        <div class="eq-title">Cocinas de Inducción</div>
-        <div class="eq-sub">Inducción y vitrocerámica</div>
-      </a>
-      <a href="/reparacion-hornos" class="eq-card">
-        <div class="eq-title">Hornos</div>
-        <div class="eq-sub">Microondas, tostadores, empotrar</div>
-      </a>
       <a href="/reparacion-freidoras" class="eq-card">
         <div class="eq-title">Freidoras</div>
         <div class="eq-sub">De aire y de aceite</div>
-      </a>
-      <a href="/reparacion-cafeteras-licuadoras" class="eq-card">
-        <div class="eq-title">Cafeteras y Licuadoras</div>
-        <div class="eq-sub">De cocina</div>
       </a>
       <a href="/reparacion-aspiradoras" class="eq-card">
         <div class="eq-title">Aspiradoras</div>
@@ -1660,12 +1662,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <div class="reveal" style="text-align:center;max-width:720px;margin:0 auto 36px">
     <div class="section-label" style="justify-content:center">Para negocios</div>
     <h2>¿Qué tipo de <span>negocio</span> tienes?</h2>
-    <p class="section-sub" style="margin:12px auto 0">Reparación en sitio, respuesta prioritaria y garantía escrita.</p>
+    <p class="section-sub" style="margin:12px auto 0">Diagnóstico a domicilio, respuesta prioritaria y garantía escrita.</p>
   </div>
   <div class="sec-grid">
       <a href="/servicio-tecnico-restaurantes" class="sec-card">
         <span class="sec-ico"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2h1v10a1 1 0 0 0 2 0V11h1c1.1 0 2-.9 2-2V2M7 2v7"/><path d="M20 2c-1.5 0-3 1-3 4v6c0 1 1 2 2 2h1v7a1 1 0 0 0 2 0V2z"/></svg></span>
-        <span><span class="sec-title">Restaurantes y cafeterías</span><span class="sec-sub">Freidoras, hornos, planchas, cafeteras y refrigeración.</span></span>
+        <span><span class="sec-title">Restaurantes y cafeterías</span><span class="sec-sub">Hornos de convección, freidoras, microondas y cafeteras espresso.</span></span>
       </a>
       <a href="/reparacion-cargadores-carros-electricos#negocios-cargadores" class="sec-card">
         <span class="sec-ico"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg></span>
@@ -1754,7 +1756,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="reveal" style="text-align:center;margin-bottom:44px">
       <div class="section-label" style="justify-content:center">Zonas de Atención</div>
       <h2>¿Llegamos a tu <span>municipio</span>?</h2>
-      <p class="section-sub" style="margin:14px auto 0">Servicio en sitio en Medellín, el Valle de Aburrá y el Oriente antioqueño.</p>
+      <p class="section-sub" style="margin:14px auto 0">Servicio a domicilio en Medellín, el Valle de Aburrá y el Oriente antioqueño.</p>
     </div>
     <div class="city-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:28px">
       <a href="/servicio-tecnico-medellin" style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;text-decoration:none;color:var(--light);display:block;transition:border-color .25s,transform .25s" onmouseover="this.style.borderColor='rgba(0,87,255,.45)';this.style.transform='translateY(-3px)'" onmouseout="this.style.borderColor='';this.style.transform=''">
@@ -1783,8 +1785,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <div class="muni-group"><div class="muni-title">Oriente antioqueño</div><div class="muni-chips"><a href="/servicio-tecnico-oriente-antioqueno#rionegro" class="muni-chip">Rionegro</a><a href="/servicio-tecnico-oriente-antioqueno#llanogrande" class="muni-chip">Llanogrande</a><a href="/servicio-tecnico-oriente-antioqueno#guarne" class="muni-chip">Guarne</a><a href="/servicio-tecnico-oriente-antioqueno#el-retiro" class="muni-chip">El Retiro</a><a href="/servicio-tecnico-oriente-antioqueno#la-ceja" class="muni-chip">La Ceja</a><a href="/servicio-tecnico-oriente-antioqueno#marinilla" class="muni-chip">Marinilla</a><a href="/servicio-tecnico-oriente-antioqueno#el-carmen-de-viboral" class="muni-chip">El Carmen de Viboral</a><a href="/servicio-tecnico-oriente-antioqueno#guatape" class="muni-chip">Guatapé</a><a href="/servicio-tecnico-oriente-antioqueno#guatape" class="muni-chip">El Peñol</a></div></div>
     </div>
     <div class="reveal" style="text-align:center;margin-bottom:24px">
-      <div class="section-label" style="justify-content:center">Marcas que reparamos</div>
-      <h2 style="font-size:clamp(22px,2.6vw,30px)">Trabajamos con todas las <span>marcas</span></h2>
+      <div class="section-label" style="justify-content:center">Marcas</div>
+      <h2 style="font-size:clamp(22px,2.6vw,30px)">Marcas que <span>reparamos</span></h2>
     </div>
     <div class="marcas-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px;max-width:1000px;margin:0 auto">
       <div class="marca-logo"><img src="samsung.webp" width="213" height="120" alt="Servicio técnico Samsung — REDDI" loading="lazy"></div>
@@ -1800,6 +1802,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <div class="marca-logo"><img src="abba.webp" width="432" height="120" alt="Servicio técnico Abba — REDDI" loading="lazy"></div>
       <div class="marca-logo"><img src="frigidaire.webp" width="1074" height="120" alt="Servicio técnico Frigidaire — REDDI" loading="lazy"></div>
     </div>
+    <div class="marcas-pro"><div class="marcas-pro-label">Equipos de negocio y alto valor</div><div class="marcas-pro-chips"><span class="marca-chip">Rational</span><span class="marca-chip">Unox</span><span class="marca-chip">Panasonic</span><span class="marca-chip">Menumaster</span><span class="marca-chip">Vitamix</span><span class="marca-chip">Blendtec</span><span class="marca-chip">Taylor</span><span class="marca-chip">De'Longhi</span><span class="marca-chip">Jura</span><span class="marca-chip">Wallbox</span></div></div>
     <p class="marcas-note">Reparamos equipos de estas y otras marcas. REDDI es un servicio técnico independiente; no somos centro de servicio autorizado de los fabricantes.</p>
 
     <!-- RESEÑAS -->
@@ -1929,13 +1932,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <li><a href="#" onclick="alert('Política de Privacidad: REDDI Soluciones Integrales recopila únicamente los datos necesarios para prestar el servicio técnico solicitado (nombre, teléfono, dirección y detalles del equipo). No compartimos información con terceros salvo para prestar el servicio. Ejerce tus derechos escribiendo a nuestro WhatsApp 313 380 6300.');return false;">Política de Privacidad</a></li>
       </ul>
       <div style="margin-top:20px">
-        <div class="nit-badge">NIT: 1041611021-1</div>
       </div>
     </div>
   </div>
   <div class="footer-bottom">
     <p>© <span id="yr"></span> <a href="#">REDDI Soluciones Integrales</a>. Todos los derechos reservados.</p>
-    <p>Servicio técnico electrónico en sitio · Antioquia 🇨🇴</p>
+    <p>Servicio técnico electrónico · Medellín y Oriente antioqueño 🇨🇴</p>
   </div>
 </footer>
 
@@ -2055,7 +2057,7 @@ const DATA = {
   proceso: [
     { num:1, h:'Contacto',    p:'Escríbenos por WhatsApp con marca, modelo y falla del equipo.' },
     { num:2, h:'Diagnóstico', p:'Revisamos el equipo en sitio y te damos el presupuesto antes de empezar.' },
-    { num:3, h:'Reparación',  p:'Reparamos en sitio. Si hace falta un repuesto, va incluido en el presupuesto.' },
+    { num:3, h:'Reparación',  p:'Reparamos en sitio o, si el equipo lo necesita, en taller. Si hace falta un repuesto, va incluido en el presupuesto.' },
     { num:4, h:'Entrega',     p:'Orden de servicio en PDF con firma y garantía escrita.' }
   ],
 
