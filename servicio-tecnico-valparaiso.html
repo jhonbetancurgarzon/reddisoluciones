@@ -25,7 +25,8 @@
 <meta property="og:site_name" content="REDDI Soluciones Integrales">
 <meta name="theme-color" content="#0057FF">
 
-<script type="application/ld+json">{
+<script type="application/ld+json">
+{
   "@context": "https://schema.org",
   "@type": "ApplianceRepair",
   "name": "REDDI Soluciones Integrales — Valparaíso",
@@ -75,17 +76,23 @@
         "Tuesday",
         "Wednesday",
         "Thursday",
-        "Friday",
-        "Saturday"
+        "Friday"
       ],
       "opens": "08:00",
       "closes": "18:00"
+    },
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": "Saturday",
+      "opens": "08:00",
+      "closes": "16:00"
     }
   ],
   "sameAs": [
     "https://wa.me/573133806300"
   ]
-}</script>
+}
+</script>
 <script type="application/ld+json">{
   "@context": "https://schema.org",
   "@type": "FAQPage",
@@ -230,16 +237,25 @@ nav .brand img{display:block}
   .nav-actions{gap:8px!important;flex-wrap:nowrap!important}
   .nav-actions .btn{padding:9px 12px!important;font-size:12px!important;white-space:nowrap}
   .nav-actions .btn-tel{font-size:0!important;padding:9px 11px!important}
-  .btn-tel::before{content:"📞";font-size:16px}
+  .btn-tel::before{content:"";}
 }
+
+/* ═══ Menú de escritorio (igual al resto del sitio) ═══ */
+.nav-mini{display:flex;gap:24px;margin:0 auto}
+.nav-mini a{font-family:'Rajdhani',sans-serif;font-weight:600;font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim,#94a3b8);text-decoration:none;transition:color .2s}
+.nav-mini a:hover{color:var(--white,#fff)}
+@media(max-width:1080px){.nav-mini{display:none}}
 </style>
 </head>
 <body>
 
 <nav>
   <a href="https://reddisoluciones.com/" class="brand"><img src="/logo-reddi.webp" alt="REDDI Soluciones Integrales" width="134" height="45" style="height:45px;width:auto"></a>
+  <div class="nav-mini">
+    <a href="/#servicios">Equipos</a><a href="/#negocios">Negocios</a><a href="/#software">Software</a><a href="/#cobertura">Cobertura</a><a href="/rastrear">Mi orden</a>
+  </div>
   <div class="nav-actions">
-    <a href="tel:+573133806300" class="btn btn-tel">📞 313 380 6300</a>
+    <a href="https://wa.me/573133806300" target="_blank" rel="noopener" class="btn btn-tel">313 380 6300</a>
     <a href="https://wa.me/573133806300?text=Hola%20REDDI%2C%20necesito%20servicio%20t%C3%A9cnico%20de%20electrodom%C3%A9sticos%20en%20Valparaíso" target="_blank" rel="noopener" class="btn btn-wa">WhatsApp</a>
   </div>
 </nav>
@@ -252,7 +268,6 @@ nav .brand img{display:block}
   <p>Técnico a domicilio para <strong>lavadoras, neveras, Smart TV, secadoras y calentadores</strong> en Valparaíso y Támesis, Caramanta, La Pintada. Diagnóstico rápido, repuestos originales y garantía escrita.</p>
   <div class="hero-ctas">
     <a href="https://wa.me/573133806300?text=Hola%20REDDI%2C%20necesito%20servicio%20t%C3%A9cnico%20de%20electrodom%C3%A9sticos%20en%20Valparaíso" target="_blank" rel="noopener" class="btn btn-wa">Escribir por WhatsApp</a>
-    <a href="tel:+573133806300" class="btn btn-tel">Llamar 313 380 6300</a>
   </div>
 </header>
 
@@ -262,7 +277,7 @@ nav .brand img{display:block}
     <p>Valparaíso es un municipio cafetero del sur de Antioquia con una economía basada en el café y la ganadería. En sus fincas y hogares atendemos reparación de neveras, lavadoras y equipos de cocina con visita programada por el corredor La Pintada–Támesis.</p>
     <div class="grid grid-3" style="margin-top:26px">
       <div class="card">
-        <h3>Técnicos calificados</h3>
+        <h3>Experiencia en electrónica</h3>
         <p>Más de 5 años de experiencia reparando electrodomésticos residenciales y comerciales en Medellín, el Oriente y el Suroeste antioqueño.</p>
       </div>
       <div class="card">
@@ -419,8 +434,8 @@ nav .brand img{display:block}
 
 <footer>
   <p><strong>REDDI Soluciones Integrales</strong> — Reparación de electrodomésticos con garantía escrita.</p>
-  <p style="margin-top:10px"><a href="tel:+573133806300">📞 313 380 6300</a> · <a href="https://wa.me/573133806300?text=Hola%20REDDI%2C%20necesito%20servicio%20t%C3%A9cnico%20de%20electrodom%C3%A9sticos%20en%20Valparaíso" target="_blank" rel="noopener">WhatsApp</a> · <a href="https://reddisoluciones.com/">Inicio</a></p>
-  <p style="margin-top:10px;font-size:12px">Lunes a sábado 8:00 a.m. – 6:00 p.m. · © REDDI Soluciones Integrales</p>
+  <p style="margin-top:10px"><a href="https://wa.me/573133806300" target="_blank" rel="noopener">WhatsApp 313 380 6300</a> · <a href="https://wa.me/573133806300?text=Hola%20REDDI%2C%20necesito%20servicio%20t%C3%A9cnico%20de%20electrodom%C3%A9sticos%20en%20Valparaíso" target="_blank" rel="noopener">WhatsApp</a> · <a href="https://reddisoluciones.com/">Inicio</a></p>
+  <p style="margin-top:10px;font-size:12px">Lun – Vie 8:00 a.m. – 6:00 p.m. · Sáb 8:00 a.m. – 4:00 p.m. · © REDDI Soluciones Integrales</p>
 </footer>
 
 <a href="https://wa.me/573133806300?text=Hola%20REDDI%2C%20necesito%20servicio%20t%C3%A9cnico%20de%20electrodom%C3%A9sticos%20en%20Valparaíso" target="_blank" rel="noopener" class="wa-float" aria-label="WhatsApp">
